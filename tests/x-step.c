@@ -12,12 +12,14 @@ const int aref = AREF_GROUND;
 const char device_name[] = "/dev/comedi0";
 const char data_file[] = "x-step.csv";
 
+int dump_sensor_data(void);
+
 comedi_t *device;
 
 int main(int argc, char *argv){
   device = comedi_open(device_name);
   if(device == NULL){
-    printf("Error opening file, %s\n", filename);
+    printf("Error opening file, %s\n", device_name);
     exit(1);
   }
   dump_sensor_data();
@@ -30,7 +32,7 @@ int dump_sensor_data(){
   comedi_range *range_info;
   double physical_value;
 
-  int sensors[] = {0, 1, 2, 3, 4, 9, 10}
+  int sensors[] = {0, 1, 2, 3, 4, 9, 10};
   int len = sizeof(sensors) / sizeof(int);
 
   int sampl_nr = 0;
@@ -51,8 +53,8 @@ int dump_sensor_data(){
     for(int i = 0; i < len; i++){
       comedi_data_read(device, 0, sensors[i], range, aref, &data);
       comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
-      range_info = comedi_get_range(device, subdev, sensors[i], range);
-      maxdata = comedi_get_maxdata(device, subdev, sensors[i]);
+      range_info = comedi_get_range(device, 0, sensors[i], range);
+      maxdata = comedi_get_maxdata(device, 0, sensors[i]);
       physical_value= comedi_to_phys(data, range_info, maxdata);
       fprintf(fp, "%g,", physical_value);
       printf("Data from sensor %d: %g\n", sensors[i], physical_value);
