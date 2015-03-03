@@ -12,13 +12,15 @@ const int aref = AREF_GROUND;
 const char device_name[] = "/dev/comedi0";
 const char data_file[] = "x-step.csv";
 
+comedi_t *device;
+
 int main(int argc, char *argv){
-  comedi_t *device = comedi_open(device_name);
+  device = comedi_open(device_name);
   if(device == NULL){
     printf("Error opening file, %s\n", filename);
     exit(1);
-  }  
-  comedi_data_write(device, 1, 0, range, aref, UINT_MAX
+  }
+  dump_sensor_data();
 }
 
 int dump_sensor_data(){
@@ -31,13 +33,21 @@ int dump_sensor_data(){
   int sensors[] = {0, 1, 2, 3, 4, 9, 10}
   int len = sizeof(sensors) / sizeof(int);
 
+  int sampl_nr = 0;
+
   if(fp == NULL){
     printf("Could not create file %s\n", data_file);
+    exit(1);
   }
 
   fprintf(fp, "ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
 
   while(1){
+    
+    if(sampl_nr++ == 500){
+        comedi_data_write(device, 1, 0, range, aref, UINT_MAX);
+    }
+    
     for(int i = 0; i < len; i++){
       comedi_data_read(device, 0, sensors[i], range, aref, &data);
       comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
