@@ -18,7 +18,7 @@ int main(int argc, char *argv){
     printf("Error opening file, %s\n", filename);
     exit(1);
   }  
-  comedi_data_write(device, 1, 0, range, aref, motor_out);
+  comedi_data_write(device, 1, 0, range, aref, UINT_MAX
 }
 
 int dump_sensor_data(){
