@@ -27,23 +27,25 @@ int dump_sensor_data(){
   lsampl_t data, maxdata;
   comedi_range *range_info;
   double physical_value;
-  int i;
+
+  int sensors[] = {0, 1, 2, 3, 4, 9, 10}
+  int len = sizeof(sensors) / sizeof(int);
 
   if(fp == NULL){
     printf("Could not create file %s\n", data_file);
   }
 
-  fprintf(fp, "ANGLE,XPOS,YPOS,XTACHO,YTACHO\n");
+  fprintf(fp, "ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
 
   while(1){
-    for(i = 0; i < 5; i++){
-      comedi_data_read(device, 0, i, range, aref, &data);
+    for(int i = 0; i < len; i++){
+      comedi_data_read(device, 0, sensors[i], range, aref, &data);
       comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
-      range_info = comedi_get_range(device, subdev, i, range);
-      maxdata = comedi_get_maxdata(device, subdev, i);
+      range_info = comedi_get_range(device, subdev, sensors[i], range);
+      maxdata = comedi_get_maxdata(device, subdev, sensors[i]);
       physical_value= comedi_to_phys(data, range_info, maxdata);
       fprintf(fp, "%g,", physical_value);
-      printf("Data from sensor %d: %g\n", i, physical_value);
+      printf("Data from sensor %d: %g\n", sensors[i], physical_value);
     }
     fprintf(fp, "\n");
     usleep(250 * 1000);
