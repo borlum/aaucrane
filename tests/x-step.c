@@ -70,6 +70,7 @@ int dump_sensor_data(){
     fprintf(fp, "\n");
     usleep(250 * 1000);
     sampl_nr++;
+    printf("%d\n", sampl_nr)
   }
 }
 
