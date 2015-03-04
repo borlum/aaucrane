@@ -48,7 +48,7 @@ int dump_sensor_data(){
 
   while(1){
     
-    if(sampl_nr++ == 10){
+    if(sampl_nr == 10){
         comedi_data_write(device, 1, 0, range, aref, UINT_MAX);
 	printf("Starting motor");
     }
@@ -69,6 +69,7 @@ int dump_sensor_data(){
     
     fprintf(fp, "\n");
     usleep(250 * 1000);
+    sampl_nr++;
   }
 }
 
