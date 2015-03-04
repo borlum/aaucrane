@@ -5,6 +5,7 @@
 #include <math.h>
 #include <unistd.h>
 #include <limits.h>
+#include <sys/time.h>
 
 const int range = 0;
 const int aref = AREF_GROUND;
@@ -27,28 +28,31 @@ int main(int argc, char *argv){
 
 int dump_sensor_data(){
   FILE *fp = fopen(data_file, "w");
+  struct timeval ts;
+  int sensors[] = {0, 1, 2, 3, 4, 9, 10};
+  int len = sizeof(sensors) / sizeof(int);
+  int sampl_nr = 0;
 
+
+  /*Comedi vars */
   lsampl_t data, maxdata;
   comedi_range *range_info;
   double physical_value;
-
-  int sensors[] = {0, 1, 2, 3, 4, 9, 10};
-  int len = sizeof(sensors) / sizeof(int);
-
-  int sampl_nr = 0;
 
   if(fp == NULL){
     printf("Could not create file %s\n", data_file);
     exit(1);
   }
 
-  fprintf(fp, "ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
+  fprintf(fp, "ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT,TIMESTAMP\n");
 
   while(1){
     
     if(sampl_nr++ == 500){
         comedi_data_write(device, 1, 0, range, aref, UINT_MAX);
     }
+    
+    gettimeofday(&ts, NULL); /* UTC */
     
     for(int i = 0; i < len; i++){
       comedi_data_read(device, 0, sensors[i], range, aref, &data);
@@ -59,6 +63,9 @@ int dump_sensor_data(){
       fprintf(fp, "%g,", physical_value);
       printf("Data from sensor %d: %g\n", sensors[i], physical_value);
     }
+
+    fprintf(fp, "%lu, %lu", ts.tv_sec, ts.tv_usec);
+    
     fprintf(fp, "\n");
     usleep(250 * 1000);
   }
