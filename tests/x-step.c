@@ -50,6 +50,7 @@ int dump_sensor_data(){
     
     if(sampl_nr++ == 500){
         comedi_data_write(device, 1, 0, range, aref, UINT_MAX);
+	printf("Starting motor");
     }
     
     gettimeofday(&ts, NULL); /* UTC */
@@ -61,7 +62,7 @@ int dump_sensor_data(){
       maxdata = comedi_get_maxdata(device, 0, sensors[i]);
       physical_value= comedi_to_phys(data, range_info, maxdata);
       fprintf(fp, "%g,", physical_value);
-      printf("Data from sensor %d: %g\n", sensors[i], physical_value);
+      //printf("Data from sensor %d: %g\n", sensors[i], physical_value);
     }
 
     fprintf(fp, "%lu, %lu", ts.tv_sec, ts.tv_usec);
