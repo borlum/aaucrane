@@ -42,9 +42,9 @@ int dump_sensor_data(){
   fp = fopen(data_file, "w");
   fprintf(fp, "ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT,TIMESTAMP\n");
   fclose(fp);
-  
+
   while(1){
-    fp = fopen(data_file, "w");
+    fp = fopen(data_file, "a");
     if(fp == NULL){
       printf("Could not create file %s\n", data_file);
       exit(1);
