@@ -49,7 +49,7 @@ int dump_sensor_data(){
   while(1){
     
     if(sampl_nr == 10){
-        comedi_data_write(device, 1, 0, range, aref, UINT_MAX);
+        comedi_data_write(device, 1, 0, range, aref, 0);
 	printf("Starting motor\n");
     }
     
@@ -62,7 +62,7 @@ int dump_sensor_data(){
       maxdata = comedi_get_maxdata(device, 0, sensors[i]);
       physical_value= comedi_to_phys(data, range_info, maxdata);
       fprintf(fp, "%g,", physical_value);
-      //printf("Data from sensor %d: %g\n", sensors[i], physical_value);
+      printf("Data from sensor %d: %g\n", sensors[i], physical_value);
     }
 
     fprintf(fp, "%lu, %lu", ts.tv_sec, ts.tv_usec);
@@ -70,7 +70,6 @@ int dump_sensor_data(){
     fprintf(fp, "\n");
     usleep(250 * 1000);
     sampl_nr++;
-    printf("%d\n", sampl_nr);
   }
 }
 
