@@ -52,7 +52,7 @@ int main() {
     hard_rt_running = 1;
     hard_rt_continue = 1;
     static RTIME t_sample;
-    rt_set_periodic_mode();
+    //rt_set_periodic_mode();
     /*Initialize timer*/
     if (hard_rt_running == rt_is_hard_timer_running()) {
         printf("Real-Time Timer Running...\n");
