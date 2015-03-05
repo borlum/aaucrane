@@ -71,7 +71,7 @@ int dump_sensor_data(){
     
     fprintf(fp, "\n");
     fclose(fp);
-    usleep(250 * 1000);
+    usleep(10 * 1000);
     sampl_nr++;
   }
 }
