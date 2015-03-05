@@ -14,7 +14,7 @@ static RT_TASK *t2;
 /*Threads*/
 static pthread_t foo_thread;
 
-void task_body(void *args) {
+void *task_body(void *args) {
     /*Sampling time*/
     RTIME t_sample = (RTIME *) args;
     /*Expected start time of task*/
@@ -69,7 +69,7 @@ int main() {
         exit(1);
     }
 
-    pthread_create(&foo_thread, NULL, task_body, (void *)t_sample);
+    pthread_create(&foo_thread, NULL, &task_body, (void *)t_sample);
     printf("WOOOOOW...!\n");
 
     while (hard_rt_continue);
