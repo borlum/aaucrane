@@ -43,7 +43,7 @@ int dump_sensor_data(){
 
   while(1){
     fp = fopen(data_file, "w");
-
+    printf("Hvad foregår der..?\n");
     if(fp == NULL){
       printf("Could not create file %s\n", data_file);
       exit(1);
