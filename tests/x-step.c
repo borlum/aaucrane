@@ -39,11 +39,12 @@ int dump_sensor_data(){
   comedi_range *range_info;
   double physical_value;
 
+  fp = fopen(data_file, "w");
   fprintf(fp, "ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT,TIMESTAMP\n");
-
+  fclose(fp);
+  
   while(1){
     fp = fopen(data_file, "w");
-    printf("Hvad foregår der..?\n");
     if(fp == NULL){
       printf("Could not create file %s\n", data_file);
       exit(1);
