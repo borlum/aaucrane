@@ -23,7 +23,7 @@ void *task_body(void *args) {
     printf("WOOOOOW!\n");
 
     if (!(t2 = rt_task_init_schmod(nam2num("TASK2"),2,0,0,SCHED_FIFO,0))) {
-        printf("ERROR: Could not init. task [TASK1]\n");
+        printf("ERROR: Could not init. task [TASK2]\n");
         exit(1); 
     }
 
@@ -64,11 +64,11 @@ int main() {
     t_sample = nano2count(TICK_TIME);
 
     /*Name, prio., stack size, msg. size, policy, CPUs allowed*/
-    //if (!(t1 = rt_task_init_schmod(nam2num("TASK1"),1,0,0,SCHED_FIFO,0))) {
-    //    printf("ERROR: Could not init. task [TASK1]\n");
-    //    exit(1);
-    //}
-
+    if (!(t1 = rt_task_init_schmod(nam2num("TASK1"),1,0,0,SCHED_FIFO,0))) {
+        printf("ERROR: Could not init. task [TASK1]\n");
+        exit(1);
+    }
+    printf("LOOOL!\n");
     pthread_create(&foo_thread, NULL, &task_body, (void *)t_sample);
     printf("WOOOOOW...!\n");
 
