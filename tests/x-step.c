@@ -27,7 +27,7 @@ int main(int argc, char *argv){
 }
 
 int dump_sensor_data(){
-  FILE *fp = fopen(data_file, "w");
+  FILE *fp;
   struct timeval ts;
   int sensors[] = {0, 1, 2, 3, 4, 9, 10};
   int len = sizeof(sensors) / sizeof(int);
@@ -39,18 +39,19 @@ int dump_sensor_data(){
   comedi_range *range_info;
   double physical_value;
 
-  if(fp == NULL){
-    printf("Could not create file %s\n", data_file);
-    exit(1);
-  }
-
   fprintf(fp, "ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT,TIMESTAMP\n");
 
   while(1){
-    
+    fp = fopen(data_file, "w");
+
+    if(fp == NULL){
+      printf("Could not create file %s\n", data_file);
+      exit(1);
+    }
+
     if(sampl_nr == 10){
         comedi_data_write(device, 1, 0, range, aref, 0);
-	printf("Starting motor\n");
+	      printf("Starting motor\n");
     }
     
     gettimeofday(&ts, NULL); /* UTC */
@@ -68,6 +69,7 @@ int dump_sensor_data(){
     fprintf(fp, "%lu, %lu", ts.tv_sec, ts.tv_usec);
     
     fprintf(fp, "\n");
+    fclose(fp);
     usleep(250 * 1000);
     sampl_nr++;
   }
