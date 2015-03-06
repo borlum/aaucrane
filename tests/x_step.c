@@ -12,7 +12,7 @@ const char device_name[] = "/dev/comedi0";
 comedi_t *device;
 
 RT_TASK *rt_sampler;
-pthread_t *thread_sampler;
+pthread_t thread_sampler;
 
 void *sampler(void *args) {
     RTIME t_sample = nano2count(10 * TICK_TIME);
@@ -44,7 +44,7 @@ int main() {
         exit(1);
     }
 
-    pthread_create(thread_sampler, NULL, &sampler, NULL);
+    pthread_create(&thread_sampler, NULL, &sampler, NULL);
 
     while (1) {
         printf("See ya!\n");
