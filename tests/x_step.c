@@ -29,7 +29,7 @@ void sig_handler(int sig) {
 }
 
 void *sampler(void *args) {
-    int channel = *args;
+    int channel = (int) *args;
     int run = 1;
 
     RTIME t_sample = nano2count(10 * TICK_TIME);
