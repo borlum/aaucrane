@@ -13,7 +13,7 @@ comedi_t *device;
 
 FILE *fp;
 
-int run = NULL;
+int run = 0;
 
 RT_TASK *rt_sampler;
 pthread_t thread_sampler;
