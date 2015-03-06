@@ -1,12 +1,7 @@
-export LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+all: x_step
 
-all: x-step
-
-x-step: x-step.c
-	gcc -std=gnu11 x-step.c -lm -lcomedi -o x-step
-
-test: x-step.c
-	gcc -std=gnu11 x-step.c -o x-step
+x-step: x_step.c
+	gcc -std=gnu11 x_step.c -lm -lcomedi -lpthread -I /usr/realtime/include -I /usr/realtime/bin -I /usr/local/lib -o x_step
 
 clean:
-	rm x-step
+	rm x_step
