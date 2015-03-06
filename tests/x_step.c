@@ -18,6 +18,9 @@ int run = 0;
 RT_TASK *rt_sampler;
 pthread_t thread_sampler;
 
+int sensors[] = {0, 1, 2, 3, 4, 9, 10};
+int len = sizeof(sensors) / sizeof(int);
+
 void sig_handler(int sig) {
     run = 0;
     usleep(100 * 1000);
@@ -27,6 +30,11 @@ void sig_handler(int sig) {
 void *sampler(void *args) {
     RTIME t_sample = nano2count(10 * TICK_TIME);
     RTIME t_expected = rt_get_time() + t_sample;
+
+    lsampl_t data, maxdata;
+    comedi_range *range_info;
+    double physical_value;
+    int sampl_nr = 0;
 
     int ID = nam2num("sampler");
     if (!(rt_sampler = rt_task_init_schmod(ID,1,0,0,SCHED_FIFO,0))) {
@@ -38,8 +46,19 @@ void *sampler(void *args) {
     rt_make_hard_real_time();
 
     fp = fopen("data.csv", "w");
+    fprintf(fp, "TIMESTAMP,ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
     while (run) {
         fprintf(fp, "%lld,\n", rt_get_time_ns());
+
+        for (int i = 0; i < len; i++) {
+            comedi_data_read(device, 0, sensors[i], range, aref, &data);
+            comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
+            range_info     = comedi_get_range(device,   0, sensors[i], range);
+            maxdata        = comedi_get_maxdata(device, 0, sensors[i]);
+            physical_value = comedi_to_phys(data, range_info, maxdata);
+            fprintf(fp, "%g,", physical_value);
+        }
+        
         rt_task_wait_period();
     }
 
