@@ -4,7 +4,7 @@
 #include <rtai_lxrt.h>
 #include <pthread.h>
 
-#define TICK_TIME 1E3
+#define TICK_TIME 1E6
 
 const int range = 0;
 const int aref = AREF_GROUND;
@@ -29,8 +29,8 @@ void *sampler(void *args) {
 
     RTIME t_pre = rt_get_time();
     while (1) {
-        printf("T = %d;\n", (int)(rt_get_time() - t_pre));
-        t_pre = rt_get_time();
+        printf("T = %f s;\n", (float)rt_get_time_ns()/1E9 - t_pre));
+        t_pre = (float)rt_get_time_ns()/1E9;
         rt_task_wait_period();
     }
 
