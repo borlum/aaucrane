@@ -47,8 +47,9 @@ void *sampler(void *args) {
 
     fp = fopen("data.csv", "w");
     fprintf(fp, "TIMESTAMP,ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
+    RTIME t_init = rt_get_time_ns();
     while (run) {
-        fprintf(fp, "%lld,", rt_get_time_ns());
+        fprintf(fp, "%lld,", rt_get_time_ns() - t_init);
 
         for (int i = 0; i < len; i++) {
             comedi_data_read(device, 0, sensors[i], range, aref, &data);
