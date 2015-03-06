@@ -81,7 +81,7 @@ int main() {
     }
 
     /* RESET */
-    comedi_data_write(device, 1, 0, range, aref, 0);
+    comedi_data_write(device, 1, 0, range, aref, 4000);
     usleep(5000 * 1000);
 
     run = 1;
