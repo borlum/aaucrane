@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <comedilib.h>
 #include <rtai_lxrt.h>
+#include <rtai_msg.h>
 #include <pthread.h>
 
 #define TICK_TIME 1E6
@@ -87,7 +88,7 @@ int main(int argc, char* argv[]) {
       channel = atoi(argv[1]);
     }
     
-    printf("Using channel %d", channeæ)
+    printf("Using channel %d", channel);
 
     signal(SIGINT, sig_handler);
     device = comedi_open(device_name);
@@ -99,8 +100,6 @@ int main(int argc, char* argv[]) {
     /* RESET */
     comedi_data_write(device, 1, 0, range, aref, 4000);
     usleep(5000 * 1000);
-
-    run = 1;
 
     pthread_create(&thread_sampler, NULL, &sampler, NULL);
 
