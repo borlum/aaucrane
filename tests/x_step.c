@@ -19,7 +19,7 @@ RT_TASK *rt_sampler;
 pthread_t thread_sampler;
 
 void sig_handler(int sig) {
-    run = NULL;
+    run = 0;
     usleep(100 * 1000);
     fclose(fp); 
 }
