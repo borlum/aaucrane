@@ -13,8 +13,6 @@ comedi_t *device;
 
 FILE *fp;
 
-int run = 0;
-
 RT_TASK *rt_sampler;
 pthread_t thread_sampler;
 
@@ -22,12 +20,16 @@ int sensors[] = {0, 1, 2, 3, 4, 9, 10};
 int len = sizeof(sensors) / sizeof(int);
 
 void sig_handler(int sig) {
-    run = 0;
+    if(rt_send(rt_sampler) == 0){
+      exit(1);
+    }
     usleep(100 * 1000);
-    fclose(fp); 
+    exit(0);
 }
 
 void *sampler(void *args) {
+    int run = 1;
+
     RTIME t_sample = nano2count(10 * TICK_TIME);
     RTIME t_expected = rt_get_time() + t_sample;
 
@@ -35,6 +37,8 @@ void *sampler(void *args) {
     comedi_range *range_info;
     double physical_value;
     int sampl_nr = 0;
+
+    unsigned int *msg;
 
     int ID = nam2num("sampler");
     if (!(rt_sampler = rt_task_init_schmod(ID,1,0,0,SCHED_FIFO,0))) {
@@ -50,8 +54,8 @@ void *sampler(void *args) {
     RTIME t_init = rt_get_time_ns();
     while (run) {
         if (sampl_nr == 100) {
-            comedi_data_write(device, 1, 0, range, aref, 0);
-        }
+	  //comedi_data_write(device, 1, 0, range, aref, 0);
+        }	  
 
         fprintf(fp, "%lld,", rt_get_time_ns() - t_init);
 
@@ -64,15 +68,27 @@ void *sampler(void *args) {
             fprintf(fp, "%g,", physical_value);
         }
         fprintf(fp, "\n");
-        rt_task_wait_period();
+	sampl_nr++;
 
-        sampl_nr++;
+	if( !(rt_receive_if(rt_sampler, msg) == NULL) ){
+       	    run = 0;
+	    fclose(fp);
+	}
+	
+        rt_task_wait_period();
     }
 
     rt_task_delete(rt_sampler);
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+    int channel = 0;
+    if(argc == 2){
+      channel = atoi(argv[1]);
+    }
+    
+    printf("Using channel %d", channeæ)
+
     signal(SIGINT, sig_handler);
     device = comedi_open(device_name);
     if (device == NULL) {
@@ -88,7 +104,7 @@ int main() {
 
     pthread_create(&thread_sampler, NULL, &sampler, NULL);
 
-    while (run) {
+    while (1) {
         usleep(100 * 1000);
     }
 
