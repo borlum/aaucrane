@@ -29,7 +29,7 @@ void sig_handler(int sig) {
 }
 
 void *sampler(void *args) {
-    int channel = (int) *args;
+    int *channel = args;
     int run = 1;
 
     RTIME t_sample = nano2count(10 * TICK_TIME);
@@ -51,14 +51,14 @@ void *sampler(void *args) {
     rt_task_make_periodic(rt_sampler, t_expected, t_sample);
     rt_make_hard_real_time();
 
-    printf("Started step response using RTAI for channel: %d\n", channel);
+    printf("Started step response using RTAI for channel: %d\n", *channel);
 
     fp = fopen("data.csv", "w");
     fprintf(fp, "TIMESTAMP,ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
     RTIME t_init = rt_get_time_ns();
     while (run) {
         if (sampl_nr == 100) {
-	  //comedi_data_write(device, 1, 0, range, aref, 0);
+	  //comedi_data_write(device, 1, 0, range, aref, *channel);
         }	  
 
         fprintf(fp, "%lld,", rt_get_time_ns() - t_init);
