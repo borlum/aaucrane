@@ -7,6 +7,8 @@
 #include <sys/time.h>
 #include <time.h>
 
+#define ON_CRANE 2
+
 #ifdef ON_CRANE
 #include <comedilib.h>
 const int range = 0;
