@@ -27,7 +27,7 @@ void *sampler(void *args) {
     rt_task_make_periodic(rt_sampler, t_expected, t_sample);
     rt_make_hard_real_time();
 
-    RTIME t_pre = rt_get_time();
+    float t_pre = (float)rt_get_time_ns()/1E9;
     while (1) {
         printf("T = %f s;\n", (float)rt_get_time_ns()/1E9 - t_pre);
         t_pre = (float)rt_get_time_ns()/1E9;
@@ -46,8 +46,8 @@ int main() {
 
     pthread_create(&thread_sampler, NULL, &sampler, NULL);
 
+    printf("FARVEL!\n");
     while (1) {
-        printf("See ya!\n");
         usleep(100 * 1000);
     }
 
