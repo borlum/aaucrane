@@ -48,7 +48,7 @@ void *sampler(void *args) {
     fp = fopen("data.csv", "w");
     fprintf(fp, "TIMESTAMP,ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
     while (run) {
-        fprintf(fp, "%lld,\n", rt_get_time_ns());
+        fprintf(fp, "%lld,", rt_get_time_ns());
 
         for (int i = 0; i < len; i++) {
             comedi_data_read(device, 0, sensors[i], range, aref, &data);
@@ -58,7 +58,7 @@ void *sampler(void *args) {
             physical_value = comedi_to_phys(data, range_info, maxdata);
             fprintf(fp, "%g,", physical_value);
         }
-        
+        fprintf(fp, "\n");
         rt_task_wait_period();
     }
 
