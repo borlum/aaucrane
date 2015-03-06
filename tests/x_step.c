@@ -80,6 +80,10 @@ int main() {
         exit(1);
     }
 
+    /* RESET */
+    comedi_data_write(device, 1, 0, range, aref, 0);
+    usleep(5000 * 1000);
+
     run = 1;
 
     pthread_create(&thread_sampler, NULL, &sampler, NULL);
