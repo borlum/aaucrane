@@ -29,7 +29,7 @@ void *sampler(void *args) {
 
     RTIME t_pre = rt_get_time();
     while (1) {
-        printf("T = %f s;\n", (float)rt_get_time_ns()/1E9 - t_pre));
+        printf("T = %f s;\n", (float)rt_get_time_ns()/1E9 - t_pre);
         t_pre = (float)rt_get_time_ns()/1E9;
         rt_task_wait_period();
     }
