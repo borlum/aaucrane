@@ -49,6 +49,10 @@ void *sampler(void *args) {
     fprintf(fp, "TIMESTAMP,ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
     RTIME t_init = rt_get_time_ns();
     while (run) {
+        if (sampl_nr == 100) {
+            comedi_data_write(device, 1, 0, range, aref, 0);
+        }
+
         fprintf(fp, "%lld,", rt_get_time_ns() - t_init);
 
         for (int i = 0; i < len; i++) {
@@ -61,6 +65,8 @@ void *sampler(void *args) {
         }
         fprintf(fp, "\n");
         rt_task_wait_period();
+
+        sampl_nr++;
     }
 
     rt_task_delete(rt_sampler);
