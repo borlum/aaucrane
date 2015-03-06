@@ -21,7 +21,7 @@ int sensors[] = {0, 1, 2, 3, 4, 9, 10};
 int len = sizeof(sensors) / sizeof(int);
 
 void sig_handler(int sig) {
-  if(rt_send(rt_sampler, 42) == 0){
+  if(rt_send(rt_sampler, 42) == NULL){
       exit(1);
     }
     usleep(100 * 1000);
@@ -29,6 +29,7 @@ void sig_handler(int sig) {
 }
 
 void *sampler(void *args) {
+    int channel = *args;
     int run = 1;
 
     RTIME t_sample = nano2count(10 * TICK_TIME);
@@ -49,6 +50,8 @@ void *sampler(void *args) {
 
     rt_task_make_periodic(rt_sampler, t_expected, t_sample);
     rt_make_hard_real_time();
+
+    printf("Started step response using RTAI for channel: %d\n", channel);
 
     fp = fopen("data.csv", "w");
     fprintf(fp, "TIMESTAMP,ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
@@ -88,7 +91,7 @@ int main(int argc, char* argv[]) {
       channel = atoi(argv[1]);
     }
     
-    printf("Using channel %d", channel);
+    printf("Using channel %d\n", channel);
 
     signal(SIGINT, sig_handler);
     device = comedi_open(device_name);
@@ -101,7 +104,7 @@ int main(int argc, char* argv[]) {
     comedi_data_write(device, 1, 0, range, aref, 4000);
     usleep(5000 * 1000);
 
-    pthread_create(&thread_sampler, NULL, &sampler, NULL);
+    pthread_create(&thread_sampler, NULL, &sampler, &channel);
 
     while (1) {
         usleep(100 * 1000);
