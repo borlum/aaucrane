@@ -27,10 +27,10 @@ void *sampler(void *args) {
     rt_task_make_periodic(rt_sampler, t_expected, t_sample);
     rt_make_hard_real_time();
 
-    RTIME t_pre = rt_time_get();
+    RTIME t_pre = rt_get_time();
     while (1) {
-        printf("T = %d;\n", (int)rt_time_get() - t_pre);
-        t_pre = rt_time_get();
+        printf("T = %d;\n", (int)rt_get_time() - t_pre);
+        t_pre = rt_get_time();
         rt_task_wait_period();
     }
 
