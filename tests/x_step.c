@@ -30,7 +30,7 @@ void sig_handler(int sig) {
   /* Gracefully way */
   pthread_kill(thread_sampler);
   if(pthread_timedjoin_np(thread_sampler, bullshit, &ts) == NULL){
-    printf("Terminated gracefully\n")
+    printf("Terminated gracefully\n");
     exit(0);
   } 
   /* Hard way */
@@ -38,7 +38,7 @@ void sig_handler(int sig) {
     ts.tv_sec = ts.tv_sec + 1;
     pthread_cancel(thread_sampler);
     pthread_timedjoin_np(thread_sampler, bullshit, &ts);
-    printf("Terminated.. at last..\n")
+    printf("Terminated.. at last..\n");
     exit(1);
   }
 }
