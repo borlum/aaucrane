@@ -24,24 +24,30 @@ int len = sizeof(sensors) / sizeof(int);
 
 void sig_handler(int sig) {
   printf("sig_handler: signal: %d\n", sig);
-  struct timespec ts;
-  void** bullshit;
-  /* Trying to terminate gracefully */
-  clock_gettime(CLOCK_REALTIME, &ts);
-  ts.tv_sec = ts.tv_sec + 1;
-  /* Gracefully way */
-  pthread_kill(thread_sampler, SIGINT);
-  if(pthread_timedjoin_np(thread_sampler, bullshit, &ts) == 0){
-    printf("Terminated gracefully\n");
-    exit(0);
-  } 
-  /* Hard way */
-  else{
+
+  if(signal == SIGINT){
+    struct timespec ts;
+    void** bullshit;
+    /* Trying to terminate gracefully */
+    clock_gettime(CLOCK_REALTIME, &ts);
     ts.tv_sec = ts.tv_sec + 1;
-    pthread_cancel(thread_sampler);
-    pthread_timedjoin_np(thread_sampler, bullshit, &ts);
-    printf("Terminated.. at last..\n");
-    exit(1);
+    /* Gracefully way */
+    pthread_kill(thread_sampler, 30); /* User-defined signal 1 - see man signal(7) */
+    if(pthread_join(thread_sampler, bullshit, &ts) == 0){
+      printf("Terminated gracefully\n");
+      exit(0);
+    } 
+    /* Hard way */
+    else{
+      ts.tv_sec = ts.tv_sec + 1;
+      pthread_cancel(thread_sampler);
+      pthread_timedjoin_np(thread_sampler, bullshit, &ts);
+      printf("Terminated.. at last..\n");
+      exit(1);
+    }
+  }
+  else if(signal == 30){
+    fclose(fp);
   }
 }
 
