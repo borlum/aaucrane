@@ -81,7 +81,7 @@ void *sampler(void *args) {
   fp = fopen("data.csv", "w");
   fprintf(fp, "TIMESTAMP,ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
   RTIME t_init = rt_get_time_ns();
-  while (true) {
+  while (1) {
     if (sampl_nr == 100) {
       comedi_data_write(device, 1, 0, range, aref, *channel); /* STEP */
     }	  
