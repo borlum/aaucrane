@@ -27,13 +27,13 @@ void sig_handler(int sig) {
 
   if(sig == SIGINT){
     struct timespec ts;
-    void** bullshit;
+    void** ret_val;
     /* Trying to terminate gracefully */
     clock_gettime(CLOCK_REALTIME, &ts);
     ts.tv_sec = ts.tv_sec + 1;
     /* Gracefully way */
     pthread_kill(thread_sampler, 30); /* User-defined signal 1 - see man signal(7) */
-    if(pthread_join(thread_sampler, bullshit, &ts) == 0){
+    if(pthread_join(thread_sampler, ret_val) == 0){
       printf("Terminated gracefully\n");
       exit(0);
     } 
