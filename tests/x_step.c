@@ -30,7 +30,7 @@ void sig_handler(int sig) {
   clock_gettime(CLOCK_REALTIME, &ts);
   ts.tv_sec = ts.tv_sec + 1;
   /* Gracefully way */
-  pthread_kill(thread_sampler, 4);
+  pthread_kill(thread_sampler, SIGINT);
   if(pthread_timedjoin_np(thread_sampler, bullshit, &ts) == 0){
     printf("Terminated gracefully\n");
     exit(0);
