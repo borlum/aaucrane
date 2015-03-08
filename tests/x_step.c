@@ -78,7 +78,7 @@ void *sampler(void *args) {
   RTIME t_init = rt_get_time_ns();
   while (1) {
     if (sampl_nr == 100) {
-      //comedi_data_write(device, 1, 0, range, aref, *channel); /* STEP */
+      comedi_data_write(device, 1, 0, range, aref, *channel); /* STEP */
     }	  
 
     fprintf(fp, "%lld,", rt_get_time_ns() - t_init);
