@@ -41,7 +41,7 @@ void sig_handler(int sig) {
     else{
       ts.tv_sec = ts.tv_sec + 1;
       pthread_cancel(thread_sampler);
-      pthread_timedjoin_np(thread_sampler, bullshit, &ts);
+      pthread_timedjoin_np(thread_sampler, ret_val, &ts);
       printf("Terminated.. at last..\n");
       exit(1);
     }
