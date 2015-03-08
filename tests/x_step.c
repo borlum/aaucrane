@@ -23,9 +23,9 @@ int len = sizeof(sensors) / sizeof(int);
 void sig_handler(int sig) {
   if(rt_send(rt_sampler, 42) == NULL){
       exit(1);
-    }
-    usleep(100 * 1000);
-    exit(0);
+  }
+  usleep(100 * 1000);
+  exit(0);
 }
 
 void *sampler(void *args) {
@@ -74,7 +74,7 @@ void *sampler(void *args) {
         fprintf(fp, "\n");
 	sampl_nr++;
 
-	if( !(rt_receive_if(rt_sampler, msg) == NULL) ){
+	if( !(rt_receive_if(NULL, msg) == NULL) ){
        	    run = 0;
 	    fclose(fp);
 	}
