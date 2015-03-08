@@ -35,6 +35,7 @@ void sig_handler(int sig) {
     pthread_kill(thread_sampler, 30); /* User-defined signal 1 - see man signal(7) */
     if(pthread_join(thread_sampler, ret_val) == 0){
       printf("Terminated gracefully\n");
+      usleep(100 * 1000);
       exit(0);
     } 
     /* Hard way */
@@ -43,12 +44,14 @@ void sig_handler(int sig) {
       pthread_cancel(thread_sampler);
       pthread_timedjoin_np(thread_sampler, ret_val, &ts);
       printf("Terminated.. at last..\n");
+      usleep(100 * 1000);
       exit(1);
     }
   }
   else if(sig == 30){
     fclose(fp);
   }
+  usleep(100 * 1000);
 }
 
 void *sampler(void *args) {
