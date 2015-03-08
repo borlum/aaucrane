@@ -22,14 +22,14 @@ int len = sizeof(sensors) / sizeof(int);
 
 void sig_handler(int sig) {
   printf("sig_handler: signal: %d\n", sig);
-  timespec ts;
+  struct timespec ts;
   void** bullshit;
   /* Trying to terminate gracefully */
   clock_gettime(CLOCK_REALTIME, &ts);
   ts.tv_sec = ts.tv_sec + 1;
   /* Gracefully way */
   pthread_kill(thread_sampler);
-  if(pthread_timedjoin_np(thread_sampler, bullshit, &ts) == NULL){
+  if(pthread_timedjoin_np(thread_sampler, bullshit, &ts) == 0){
     printf("Terminated gracefully\n");
     exit(0);
   } 
