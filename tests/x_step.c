@@ -1,4 +1,5 @@
 #define _GNU_SOURCE
+#define SIG_CLOSE_FP 30 /* User-defined signal 1 - see man signal(7) */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,30 +25,31 @@ int len = sizeof(sensors) / sizeof(int);
 
 void sig_handler(int sig) {
   printf("sig_handler: signal: %d\n", sig);
+  char success_msg[] = "Gracefully termination succeeded\n";
+  char failure_msg[] = "Gracefully termination failed";
 
   if(sig == SIGINT){
     /* Trying to terminate gracefully */
     struct timespec ts;
     void** ret_val;
-    clock_gettime(CLOCK_REALTIME, &ts);
-    ts.tv_sec = ts.tv_sec + 1;
 
-    pthread_kill(thread_sampler, 30); /* User-defined signal 1 - see man signal(7) */
-    if(pthread_join(thread_sampler, ret_val) == 0){
+    if(pthread_kill(thread_sampler, SIG_CLOSE_FP) == 0 && pthread_join(thread_sampler, ret_val) == 0){
       /* Gracefully success */
+      write(STDOUT_FILENO, success_msg, (sizeof(success_msg) / sizeof(char)) );
       exit(0);
     } 
     else{
       /* Gracefully failure */
-      ts.tv_sec = ts.tv_sec + 1;
+      write(STDOUT_FILENO, failure_msg, (sizeof(failure_msg) / sizeof(char)) );
+      clock_gettime(CLOCK_REALTIME, &ts);
+      ts.tv_sec = ts.tv_sec + 1; /* give the thread 1 sec to return, otherwise, crash! */
       pthread_cancel(thread_sampler);
       pthread_timedjoin_np(thread_sampler, ret_val, &ts);
-      printf("Terminated.. at last..\n");
       usleep(100 * 1000);
       exit(1);
     }
   }
-  else if(sig == 30){
+  else if(sig == SIG_CLOSE_FP){
     fclose(fp);
   }
 }
