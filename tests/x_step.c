@@ -50,90 +50,84 @@ void sig_handler(int sig) {
   else if(sig == 30){
     fclose(fp);
   }
-  usleep(100 * 1000);
 }
 
 void *sampler(void *args) {
-    int *channel = args;
-    int run = 1;
+  int *channel = args;
 
-    RTIME t_sample = nano2count(10 * TICK_TIME);
-    RTIME t_expected = rt_get_time() + t_sample;
+  RTIME t_sample = nano2count(10 * TICK_TIME);
+  RTIME t_expected = rt_get_time() + t_sample;
 
-    lsampl_t data, maxdata;
-    comedi_range *range_info;
-    double physical_value;
-    int sampl_nr = 0;
+  lsampl_t data, maxdata;
+  comedi_range *range_info;
+  double physical_value;
+  int sampl_nr = 0;
 
-    unsigned int *msg;
+  unsigned int *msg;
 
-    int ID = nam2num("sampler");
-    if (!(rt_sampler = rt_task_init_schmod(ID,1,0,0,SCHED_FIFO,0))) {
-        printf("ERROR: Could not init. task [sampler]\n");
-        exit(1); 
+  int ID = nam2num("sampler");
+  if (!(rt_sampler = rt_task_init_schmod(ID,1,0,0,SCHED_FIFO,0))) {
+    printf("ERROR: Could not init. task [sampler]\n");
+    exit(1); 
+  }
+
+  rt_task_make_periodic(rt_sampler, t_expected, t_sample);
+  rt_make_hard_real_time();
+
+  printf("Started step response using RTAI for channel: %d\n", *channel);
+
+  fp = fopen("data.csv", "w");
+  fprintf(fp, "TIMESTAMP,ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
+  RTIME t_init = rt_get_time_ns();
+  while (true) {
+    if (sampl_nr == 100) {
+      comedi_data_write(device, 1, 0, range, aref, *channel); /* STEP */
+    }	  
+
+    fprintf(fp, "%lld,", rt_get_time_ns() - t_init);
+
+    for (int i = 0; i < len; i++) {
+      /* Log data */
+      comedi_data_read(device, 0, sensors[i], range, aref, &data);
+      comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
+      range_info     = comedi_get_range(device,   0, sensors[i], range);
+      maxdata        = comedi_get_maxdata(device, 0, sensors[i]);
+      physical_value = comedi_to_phys(data, range_info, maxdata);
+      fprintf(fp, "%g,", physical_value);
     }
-
-    rt_task_make_periodic(rt_sampler, t_expected, t_sample);
-    rt_make_hard_real_time();
-
-    printf("Started step response using RTAI for channel: %d\n", *channel);
-
-    fp = fopen("data.csv", "w");
-    fprintf(fp, "TIMESTAMP,ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
-    RTIME t_init = rt_get_time_ns();
-    while (run) {
-        if (sampl_nr == 100) {
-	  //comedi_data_write(device, 1, 0, range, aref, *channel);
-        }	  
-
-        fprintf(fp, "%lld,", rt_get_time_ns() - t_init);
-
-        for (int i = 0; i < len; i++) {
-            comedi_data_read(device, 0, sensors[i], range, aref, &data);
-            comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
-            range_info     = comedi_get_range(device,   0, sensors[i], range);
-            maxdata        = comedi_get_maxdata(device, 0, sensors[i]);
-            physical_value = comedi_to_phys(data, range_info, maxdata);
-            fprintf(fp, "%g,", physical_value);
-        }
-        fprintf(fp, "\n");
-	sampl_nr++;
-
-	if( !(rt_receive_if(NULL, msg) == NULL) ){
-       	    run = 0;
-	    fclose(fp);
-	}
+    fprintf(fp, "\n");
+    sampl_nr++;
 	
-        rt_task_wait_period();
-    }
+    rt_task_wait_period();
+  }
 
-    rt_task_delete(rt_sampler);
+  rt_task_delete(rt_sampler);
 }
 
 int main(int argc, char* argv[]) {
-    int channel = 0;
-    if(argc == 2){
-      channel = atoi(argv[1]);
-    }
+  int channel = 0;
+  if(argc == 2){
+    channel = atoi(argv[1]);
+  }
     
-    printf("Using channel %d\n", channel);
+  printf("Using channel %d\n", channel);
 
-    signal(SIGINT, sig_handler);
-    device = comedi_open(device_name);
-    if (device == NULL) {
-        printf("Error opening file, %s\n", device_name);
-        exit(1);
-    }
+  signal(SIGINT, sig_handler);
+  device = comedi_open(device_name);
+  if (device == NULL) {
+    printf("Error opening file, %s\n", device_name);
+    exit(1);
+  }
 
-    /* RESET */
-    comedi_data_write(device, 1, 0, range, aref, 4000);
-    usleep(5000 * 1000);
+  /* RESET */
+  comedi_data_write(device, 1, 0, range, aref, 4000);
+  usleep(5000 * 1000);
 
-    pthread_create(&thread_sampler, NULL, &sampler, &channel);
+  pthread_create(&thread_sampler, NULL, &sampler, &channel);
 
-    while (1) {
-        usleep(100 * 1000);
-    }
+  while (1) {
+    usleep(100 * 1000);
+  }
 
-    return 0;
+  return 0;
 }
