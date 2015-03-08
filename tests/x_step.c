@@ -34,13 +34,11 @@ void sig_handler(int sig) {
 
     pthread_kill(thread_sampler, 30); /* User-defined signal 1 - see man signal(7) */
     if(pthread_join(thread_sampler, ret_val) == 0){
-      /* Gracefully way */
-      printf("Terminated gracefully\n");
-      usleep(100 * 1000);
+      /* Gracefully success */
       exit(0);
     } 
     else{
-      /* Hard way */
+      /* Gracefully failure */
       ts.tv_sec = ts.tv_sec + 1;
       pthread_cancel(thread_sampler);
       pthread_timedjoin_np(thread_sampler, ret_val, &ts);
