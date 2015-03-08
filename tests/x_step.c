@@ -26,6 +26,7 @@ void sig_handler(int sig) {
   printf("sig_handler: signal: %d\n", sig);
 
   if(sig == SIGINT){
+    printf("SIGINT\n");
     struct timespec ts;
     void** ret_val;
     /* Trying to terminate gracefully */
