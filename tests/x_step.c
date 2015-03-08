@@ -26,21 +26,21 @@ void sig_handler(int sig) {
   printf("sig_handler: signal: %d\n", sig);
 
   if(sig == SIGINT){
-    printf("SIGINT\n");
+    /* Trying to terminate gracefully */
     struct timespec ts;
     void** ret_val;
-    /* Trying to terminate gracefully */
     clock_gettime(CLOCK_REALTIME, &ts);
     ts.tv_sec = ts.tv_sec + 1;
-    /* Gracefully way */
+
     pthread_kill(thread_sampler, 30); /* User-defined signal 1 - see man signal(7) */
     if(pthread_join(thread_sampler, ret_val) == 0){
+      /* Gracefully way */
       printf("Terminated gracefully\n");
       usleep(100 * 1000);
       exit(0);
     } 
-    /* Hard way */
     else{
+      /* Hard way */
       ts.tv_sec = ts.tv_sec + 1;
       pthread_cancel(thread_sampler);
       pthread_timedjoin_np(thread_sampler, ret_val, &ts);
