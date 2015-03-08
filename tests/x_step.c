@@ -25,7 +25,7 @@ int len = sizeof(sensors) / sizeof(int);
 void sig_handler(int sig) {
   printf("sig_handler: signal: %d\n", sig);
 
-  if(signal == SIGINT){
+  if(sig == SIGINT){
     struct timespec ts;
     void** bullshit;
     /* Trying to terminate gracefully */
@@ -46,7 +46,7 @@ void sig_handler(int sig) {
       exit(1);
     }
   }
-  else if(signal == 30){
+  else if(sig == 30){
     fclose(fp);
   }
 }
