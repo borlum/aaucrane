@@ -25,9 +25,6 @@ int len = sizeof(sensors) / sizeof(int);
 
 void sig_handler(int sig) {
   printf("sig_handler: signal: %d\n", sig);
-  char success_msg[] = "Gracefully termination succeeded\n";
-  char failure_msg[] = "Gracefully termination failed";
-
   if(sig == SIGINT){
     /* Trying to terminate gracefully */
     struct timespec ts;
@@ -35,12 +32,10 @@ void sig_handler(int sig) {
 
     if(pthread_kill(thread_sampler, SIG_CLOSE_FP) == 0 && pthread_join(thread_sampler, ret_val) == 0){
       /* Gracefully success */
-      write(STDOUT_FILENO, success_msg, (sizeof(success_msg) / sizeof(char)) );
       exit(0);
     } 
     else{
       /* Gracefully failure */
-      write(STDOUT_FILENO, failure_msg, (sizeof(failure_msg) / sizeof(char)) );
       clock_gettime(CLOCK_REALTIME, &ts);
       ts.tv_sec = ts.tv_sec + 1; /* give the thread 1 sec to return, otherwise, crash! */
       pthread_cancel(thread_sampler);
