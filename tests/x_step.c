@@ -21,6 +21,7 @@ int sensors[] = {0, 1, 2, 3, 4, 9, 10};
 int len = sizeof(sensors) / sizeof(int);
 
 void sig_handler(int sig) {
+  printf("sig_handler: signal: %d\n", sig);
   if(rt_send(rt_sampler, 42) == NULL){
       exit(1);
   }
