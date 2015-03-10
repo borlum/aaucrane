@@ -39,6 +39,7 @@ void control_magnet() {
   /*52, 17, 49, 47, 19*/
   /*TRYK: 17, 52*/
   /*FLIP: 47, 49*/
+
   comedi_data_read(device, 1, 17, 0, AREF_GROUND, &IN);
   printf("BUTTON READ: %d\n", IN);
   //comedi_dio_write(device, 1, 7, IN);
@@ -52,6 +53,8 @@ int main(int argc, char *argv[])
     comedi_perror(filename);
     return -1;
   }
+
+  comedi_dio_config(device, 0, 17, COMEDI_INPUT);
 
   while(1)
   {
