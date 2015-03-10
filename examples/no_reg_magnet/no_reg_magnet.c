@@ -27,8 +27,8 @@ int read_and_write(int in_channel, int out_channel) {
   }
 
   comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
-  range_info     = comedi_get_range(device, subdev, in_channel, range);
-  maxdata        = comedi_get_maxdata(device, subdev, in_channel);
+  range_info     = comedi_get_range(device, 0, in_channel, range);
+  maxdata        = comedi_get_maxdata(device, 0, in_channel);
   physical_value = comedi_to_phys(data, range_info, maxdata);
   motorX_out     = (((data-2047) * 3000) / 2047) + 500;
   comedi_data_write(device, 1, out_channel, range, aref, motorX_out);
@@ -37,7 +37,9 @@ int read_and_write(int in_channel, int out_channel) {
 void control_magnet() {
   unsigned int IN;
   /*52, 17, 49, 47, 19*/
-  comedi_dio_read(device, 0, 52, &IN);
+  /*TRYK: 17, 52*/
+  /*FLIP: 47, 49*/
+  comedi_dio_read(device, 0, 47, &IN);
   printf("BUTTON READ: %d\n", IN);
   //comedi_dio_write(device, 1, 7, IN);
 }
