@@ -35,12 +35,12 @@ int read_and_write(int in_channel, int out_channel) {
 }
 
 void control_magnet() {
-  unsigned int IN;
+  int IN;
   /*52, 17, 49, 47, 19*/
   /*TRYK: 17, 52*/
   /*FLIP: 47, 49*/
   comedi_dio_read(device, 0, 47, &IN);
-  printf("BUTTON READ: %u\n", IN);
+  printf("BUTTON READ: %d\n", IN);
   //comedi_dio_write(device, 1, 7, IN);
 }
 
