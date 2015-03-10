@@ -41,6 +41,7 @@ void control_magnet() {
   /*FLIP: 47, 49*/
 
   //IO SUBDEV: 10, 7, 2
+  comedi_dio_config(device, 10, 17, COMEDI_INPUT);
   comedi_data_read(device, 10, 17, 0, AREF_GROUND, &IN);
   printf("BUTTON READ: %d\n", IN);
   //comedi_dio_write(device, 1, 7, IN);
