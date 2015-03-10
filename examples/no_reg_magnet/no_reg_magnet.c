@@ -40,7 +40,7 @@ void control_magnet() {
   /*TRYK: 17, 52*/
   /*FLIP: 47, 49*/
 
-  comedi_data_read(device, 2, 47, 0, 0, &IN);
+  comedi_data_read(device, 2, 17, 0, AREF_GROUND, &IN);
   printf("BUTTON READ: %d\n", IN);
   //comedi_dio_write(device, 1, 7, IN);
 }
@@ -57,8 +57,8 @@ int main(int argc, char *argv[])
   while(1)
   {
 
-    read_and_write(14, 0);
-    read_and_write(15, 1);
+    //read_and_write(14, 0);
+    //read_and_write(15, 1);
     control_magnet();
     usleep(250 * 1000); /*ms -> us*/
   }
