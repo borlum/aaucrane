@@ -35,11 +35,11 @@ int read_and_write(int in_channel, int out_channel) {
 }
 
 void control_magnet() {
-  int IN;
+  lsampl_t IN;
   /*52, 17, 49, 47, 19*/
   /*TRYK: 17, 52*/
   /*FLIP: 47, 49*/
-  comedi_dio_read(device, 0, 47, &IN);
+  comedi_data_read(device, 0, 47, 0, 0, &IN);
   printf("BUTTON READ: %d\n", IN);
   //comedi_dio_write(device, 1, 7, IN);
 }
