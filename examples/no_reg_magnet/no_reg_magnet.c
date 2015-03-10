@@ -40,7 +40,7 @@ void control_magnet() {
   /*TRYK: 17, 52*/
   /*FLIP: 47, 49*/
 
-  comedi_data_read(device, 0, 17, 0, 0, &IN);
+  comedi_data_read(device, 2, 17, 0, 0, &IN);
   printf("BUTTON READ: %d\n", IN);
   //comedi_dio_write(device, 1, 7, IN);
 }
