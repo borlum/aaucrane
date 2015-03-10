@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 
       read_and_write(14, 0);
       read_and_write(15, 1);
+      control_magnet();
       //comedi_data_read(device, subdev, 15, range, aref, &data);
       //printf("Data: %lu\n", data);
       usleep(250 * 1000); /*ms -> us*/
