@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-  comedi_dio_config(device, 0, 17, COMEDI_INPUT);
+  comedi_dio_config(device, 2, 17, COMEDI_INPUT);
 
   while(1)
   {
