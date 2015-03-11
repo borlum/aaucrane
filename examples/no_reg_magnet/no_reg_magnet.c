@@ -64,8 +64,7 @@ int main(int argc, char *argv[])
   while(1)
   {
 
-    //read_and_write(14, 0);
-    //read_and_write(15, 1);
+    read_and_write(14, 0);
     control_magnet();
     usleep(250 * 1000); /*ms -> us*/
   }
