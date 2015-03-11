@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <comedilib.h>
+#include <subdevice.h>
 #include <ctype.h>
 #include <math.h>
 #include <unistd.h>
@@ -42,14 +43,9 @@ void control_magnet() {
 
   //IO SUBDEV: 10, 7, 2
   //comedi_dio_config(device, 0, 17, COMEDI_INPUT);
-  if (comedi_data_read(device, 7, 9, 0, AREF_GROUND, &IN) == -1)
+  if (comedi_data_read(device, COMEDI_SUBD_DI, 9, 0, AREF_GROUND, &IN) == -1)
   {
     printf("ÅHHH NEJ! 1\n");
-  }
-  
-  if (comedi_data_read(device, 10, 9, 0, AREF_GROUND, &IN) == -1)
-  {
-    printf("ÅHHH NEJ! 2\n");
   }
   else
   {
