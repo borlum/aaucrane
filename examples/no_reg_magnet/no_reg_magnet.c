@@ -9,6 +9,11 @@ int range = 0;
 int aref = AREF_GROUND;
 comedi_t *device;
 
+#define DIGITAL_IO_SUBDEV 2
+#define MAGNET_BUTTON 1
+//48 = 7
+#define MAGNET_ENABLE 7
+
 const char filename[] = "/dev/comedi0";
 
 int read_and_write(int in_channel, int out_channel) {
@@ -41,15 +46,13 @@ void control_magnet() {
   /*FLIP: 47, 49*/
 
   //IO SUBDEV: 10, 7, 2
-  comedi_dio_config(device, 2, 1, COMEDI_INPUT);
-  if (comedi_dio_read(device, 2, 1, &IN) == -1)
+  comedi_dio_read(device, DIGITAL_IO_SUBDEV, MAGNET_BUTTON, &IN)
+  if (IN != 1)
   {
-    printf("ÅHHH NEJ! 1\n");
+    printf("MAGNET, ENABLE!\n");
+    comedi_dio_write(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, IN);
   }
-  else
-  {
-    printf("BUTTON READ: %d\n", IN);
-  }
+  //48 = 07
 }
 
 int main(int argc, char *argv[])
@@ -61,10 +64,11 @@ int main(int argc, char *argv[])
     return -1;
   }
 
+  comedi_dio_config(device, DIGITAL_IO_SUBDEV, MAGNET_BUTTON, COMEDI_INPUT);
   while(1)
   {
 
-    read_and_write(14, 0);
+    //read_and_write(14, 0);
     control_magnet();
     usleep(250 * 1000); /*ms -> us*/
   }
