@@ -41,8 +41,8 @@ void control_magnet() {
   /*FLIP: 47, 49*/
 
   //IO SUBDEV: 10, 7, 2
-  comedi_dio_config(device, COMEDI_SUBD_DI, 9, COMEDI_INPUT);
-  if (comedi_dio_read(device, COMEDI_SUBD_DI, 9, &IN) == -1)
+  comedi_dio_config(device, COMEDI_SUBD_DI, 1, COMEDI_INPUT);
+  if (comedi_dio_read(device, COMEDI_SUBD_DI, 1, &IN) == -1)
   {
     printf("ÅHHH NEJ! 1\n");
   }
@@ -50,7 +50,7 @@ void control_magnet() {
   {
     printf("BUTTON READ: %d\n", IN);
   }
-  //comedi_dio_write(device, 1, 7, IN);
+  comedi_dio_write(device, COMEDI_SUBD_OUT, 7, IN);
 }
 
 int main(int argc, char *argv[])
