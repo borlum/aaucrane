@@ -46,7 +46,7 @@ void control_magnet() {
   /*FLIP: 47, 49*/
 
   //IO SUBDEV: 10, 7, 2
-  comedi_dio_read(device, DIGITAL_IO_SUBDEV, MAGNET_BUTTON, &IN)
+  comedi_dio_read(device, DIGITAL_IO_SUBDEV, MAGNET_BUTTON, &IN);
   if (IN != 1)
   {
     printf("MAGNET, ENABLE!\n");
