@@ -42,7 +42,7 @@ void control_magnet() {
 
   //IO SUBDEV: 10, 7, 2
   //comedi_dio_config(device, 0, 17, COMEDI_INPUT);
-  if (comedi_data_read(device, 0, 17, 0, AREF_GROUND, &IN) == -1)
+  if (comedi_data_read(device, 2, 9, 0, AREF_GROUND, &IN) == -1)
   {
     printf("ÅHHH NEJ!\n");
   }
