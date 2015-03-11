@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <comedilib.h>
-#include <subdevice.h>
+#include <comedi/subdevice.h>
 #include <ctype.h>
 #include <math.h>
 #include <unistd.h>
