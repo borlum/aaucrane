@@ -50,7 +50,6 @@ void control_magnet() {
   {
     printf("BUTTON READ: %d\n", IN);
   }
-  comedi_dio_write(device, COMEDI_SUBD_OUT, 7, IN);
 }
 
 int main(int argc, char *argv[])
