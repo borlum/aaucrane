@@ -1,114 +1,175 @@
 /**
  * ============================================================================
  * AAU CRANE SENSOR
+ * ----------------
+ * Optical, driven by a dedicated Arduino Due!
  * ============================================================================
  */
 
 #define NR_SENSORS 3
 #define NR_PIXELS  8
 
-typedef struct gpio_ {
+/**
+ * ----------------------------------------------------------------------------
+ * TYPES
+ * ----------------------------------------------------------------------------
+ */
+struct gpio_t {
   Pio *port;
   uint32_t mask;
   uint32_t arduino_pin;
-} gpio;
+};
+
+typedef struct gpio_t gpio_t;
 
 struct sensor_t {
-    uint8_t pin_CLK;
-    uint8_t pin_SI;
-    uint8_t pin_LED;
+    gpio_t pin_SI;
+    gpio_t pin_LED;
     uint8_t pin_AO;
 };
 
-//gpio pin_example = {PIOD, (1 << 27), 13};
-//dio(pin_example->port, pin_example->mask, 1);
-
 typedef struct sensor_t sensor_t;
 
-void init_sensor(sensor_t *sensor, uint8_t clk, uint8_t si, uint8_t led, uint8_t ao);
-void enable_sensor_LED(sensor_t sensor);
-void disable_sensor_LED(sensor_t sensor);
-void enable_sensor_CLK(sensor_t sensor);
-void disable_sensor_CLK(sensor_t sensor);
-void enable_sensor_SI(sensor_t sensor);
-void disable_sensor_SI(sensor_t sensor);
-int read_sensor(sensor_t sensor);
+/**
+ * ----------------------------------------------------------------------------
+ * PROTOTYPES
+ * ----------------------------------------------------------------------------
+ */
+
+void enable_CLK();
+void disable_CLK();
+void init_sensor(sensor_t *sensor, gpio_t si, gpio_t led, uint8_t ao);
+void enable_sensor_LED(sensor_t *sensor);
+void disable_sensor_LED(sensor_t *sensor);
+void enable_sensor_SI(sensor_t *sensor);
+void disable_sensor_SI(sensor_t *sensor);
+uint32_t read_sensor(sensor_t sensor);
 void dio(Pio *port, uint32_t mask, uint8_t state);
 
+/**
+ * ----------------------------------------------------------------------------
+ * GLOBALS
+ * ----------------------------------------------------------------------------
+ */
 sensor_t sensor1, sensor2, sensor3;
-sensor_t sensor_array[NR_SENSORS] = {sensor1, sensor2, sensor3};
+sensor_t sensor_array[NR_SENSORS];
 
+gpio_t CLK  = {PIOB, (1 << 27), 13};
+
+/**
+ * ----------------------------------------------------------------------------
+ * SETUP...
+ * ----------------------------------------------------------------------------
+ */
 void setup()
 {
     Serial.begin(9600);
-    init_sensor(&sensor1, 5, 6,  13,  0);
-    init_sensor(&sensor2, 5, 6,  13,  0);
-    init_sensor(&sensor3, 5, 6,  13,  0);
+    /*Initialize pins!*/
+    gpio_t SI1  = {PIOB, (1 << 27), 13};
+    gpio_t LED1 = {PIOB, (1 << 27), 13};
+
+    gpio_t SI2  = {PIOD, (1 << 27), 13};
+    gpio_t LED2 = {PIOD, (1 << 27), 13};
+
+    gpio_t SI3  = {PIOD, (1 << 27), 13};
+    gpio_t LED3 = {PIOD, (1 << 27), 13};
+
+    init_sensor(&sensor1, SI1, LED1,  0);
+    init_sensor(&sensor2, SI2, LED2,  1);
+    init_sensor(&sensor3, SI3, LED3,  2);
+    
+    sensor_array[0] = sensor1;
+    sensor_array[1] = sensor2;
+    sensor_array[2] = sensor3;
+
 }
 
+/**
+ * ----------------------------------------------------------------------------
+ * LOOP...
+ * ----------------------------------------------------------------------------
+ */
 void loop()
 {   
-    disable_sensor_LED(sensor1);
-    delay(1000);
-    enable_sensor_LED(sensor1);
-    delay(1000);
-    /*for (uint8_t sensor_nr = 0; sensor_nr < NR_SENSORS; sensor_nr++) {
-        enable_sensor_LED(sensor_array[sensor_nr]);
-    }*/
+    uint32_t data[NR_SENSORS][NR_PIXELS];
+    /*Collect data...*/
+    for (uint8_t sensor_nr = 0; sensor_nr < NR_SENSORS; sensor_nr++) {
+        enable_sensor_LED(&sensor_array[sensor_nr]);
+        enable_sensor_SI(&sensor_array[sensor_nr]);
+        enable_CLK();
+        delayMicroseconds(1);
+        disable_sensor_SI(&sensor_array[sensor_nr]);
+        disable_CLK();
+        delayMicroseconds(1);
+        for (uint8_t pixel_nr = 0; pixel_nr < NR_PIXELS; pixel_nr++) {
+            data[sensor_nr][pixel_nr] = read_sensor(sensor_array[sensor_nr]);
+            enable_CLK();
+            delayMicroseconds(1);
+            disable_CLK();
+            delayMicroseconds(1);
+        }
+    }
+    /*Process...*/
+    /*???*/
+    /*Output...*/
 }
 
-void enable_sensor_LED(sensor_t sensor)
+/**
+ * ----------------------------------------------------------------------------
+ * FUNCTIONS
+ * ----------------------------------------------------------------------------
+ */
+
+void enable_CLK()
 {
-    digitalWrite(sensor.pin_LED, HIGH);
+    dio(&(*CLK.port), CLK.mask, 1);
 }
 
-void disable_sensor_LED(sensor_t sensor)
+void disable_CLK()
 {
-    digitalWrite(sensor.pin_LED, LOW);
+    dio(&(*CLK.port), CLK.mask, 0);
 }
 
-void enable_sensor_CLK(sensor_t sensor)
+void enable_sensor_LED(sensor_t *sensor)
 {
-    digitalWrite(sensor.pin_CLK, HIGH);
+    dio(&(*(sensor->pin_LED).port), (sensor->pin_LED).mask, 1);
 }
 
-void disable_sensor_CLK(sensor_t sensor)
+void disable_sensor_LED(sensor_t *sensor)
 {
-    digitalWrite(sensor.pin_CLK, LOW);
+    dio(&(*(sensor->pin_LED).port), (sensor->pin_LED).mask, 0);
 }
 
-void enable_sensor_SI(sensor_t sensor)
+void enable_sensor_SI(sensor_t *sensor)
 {
-    digitalWrite(sensor.pin_SI, HIGH);
+    dio(&(*(sensor->pin_SI).port), (sensor->pin_SI).mask, 1);
 }
 
-void disable_sensor_SI(sensor_t sensor)
+void disable_sensor_SI(sensor_t *sensor)
 {
-    digitalWrite(sensor.pin_SI, LOW);
+    dio(&(*(sensor->pin_SI).port), (sensor->pin_SI).mask, 0);
 }
 
-int read_sensor(sensor_t sensor)
+uint32_t read_sensor(sensor_t sensor)
 {
     return analogRead(sensor.pin_AO);
 }
 
-void init_sensor(sensor_t *sensor, uint8_t clk, uint8_t si, uint8_t led, uint8_t ao)
+void init_sensor(sensor_t *sensor, gpio_t si, gpio_t led, uint8_t ao)
 {
-    pinMode(clk, OUTPUT);
-    pinMode(si,  OUTPUT);
-    pinMode(led, OUTPUT);
-    sensor->pin_CLK = clk;
     sensor->pin_SI  = si;
     sensor->pin_LED = led;
     sensor->pin_AO  = ao;
+    pinMode(sensor->pin_SI.arduino_pin,  OUTPUT);
+    pinMode(sensor->pin_LED.arduino_pin, OUTPUT);
 }
 
 void dio(Pio *port, uint32_t mask, uint8_t state)
 {
-  if (state) {
-    port->PIO_SODR |= mask;
-  }
-  else {
-    port->PIO_CODR |= mask;
-  }
+    if (state) {
+        port->PIO_SODR |= mask;
+    }
+    else {
+        port->PIO_CODR |= mask;
+    }
 }
