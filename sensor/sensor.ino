@@ -3,6 +3,9 @@
  * AAU CRANE SENSOR
  * ----------------
  * Optical, driven by a dedicated Arduino Due!
+ * No use of digital write, instead a custom function
+ * Use http://arduino.cc/en/Hacking/PinMappingSAM3X to see corresponding
+ * pins and ports on SAM3X.
  * ============================================================================
  */
 
@@ -51,10 +54,9 @@ void dio(Pio *port, uint32_t mask, uint8_t state);
  * GLOBALS
  * ----------------------------------------------------------------------------
  */
-sensor_t sensor1, sensor2, sensor3;
 sensor_t sensor_array[NR_SENSORS];
 
-gpio_t CLK  = {PIOB, (1 << 27), 13};
+gpio_t CLK  = {PIOB, (1 << 12), 20}; //20
 
 /**
  * ----------------------------------------------------------------------------
@@ -64,15 +66,18 @@ gpio_t CLK  = {PIOB, (1 << 27), 13};
 void setup()
 {
     Serial.begin(9600);
-    /*Initialize pins!*/
-    gpio_t SI1  = {PIOB, (1 << 27), 13};
-    gpio_t LED1 = {PIOB, (1 << 27), 13};
 
-    gpio_t SI2  = {PIOD, (1 << 27), 13};
+    sensor_t sensor1, sensor2, sensor3;
+    
+    /* Initialize pins! */
+    gpio_t SI2  = {PIOA, (1 << 12), 17};
+    gpio_t LED1 = {PIOD, (1 <<  5), 15};
+
+    gpio_t SI1  = {PIOA, (1 << 11), 18};
     gpio_t LED2 = {PIOD, (1 << 27), 13};
 
-    gpio_t SI3  = {PIOD, (1 << 27), 13};
-    gpio_t LED3 = {PIOD, (1 << 27), 13};
+    gpio_t SI3  = {PIOA, (1 << 10), 19};
+    gpio_t LED3 = {PIOD, (1 <<  4), 14};
 
     init_sensor(&sensor1, SI1, LED1,  0);
     init_sensor(&sensor2, SI2, LED2,  1);
@@ -82,6 +87,8 @@ void setup()
     sensor_array[1] = sensor2;
     sensor_array[2] = sensor3;
 
+    pinMode(CLK.arduino_pin, OUTPUT);
+    enable_sensor_SI(&sensor_array[0]);
 }
 
 /**
@@ -91,9 +98,29 @@ void setup()
  */
 void loop()
 {   
-    uint32_t data[NR_SENSORS][NR_PIXELS];
+    enable_CLK();
+    delayMicroseconds(5);
+    disable_CLK();
+
+
+    /*enable_sensor_SI(&sensor_array[1]);
+    enable_sensor_SI(&sensor_array[2]);
+    enable_sensor_LED(&sensor_array[0]);
+    enable_sensor_LED(&sensor_array[1]);
+    enable_sensor_LED(&sensor_array[2]);
+    delayMicroseconds(5);
+    disable_CLK();
+    disable_sensor_SI(&sensor_array[0]);
+    disable_sensor_SI(&sensor_array[1]);
+    disable_sensor_SI(&sensor_array[2]);
+    disable_sensor_LED(&sensor_array[0]);
+    disable_sensor_LED(&sensor_array[1]);
+    disable_sensor_LED(&sensor_array[2]);
+    delayMicroseconds(5);*/
+
+    //uint32_t data[NR_SENSORS][NR_PIXELS];
     /*Collect data...*/
-    for (uint8_t sensor_nr = 0; sensor_nr < NR_SENSORS; sensor_nr++) {
+    /*for (uint8_t sensor_nr = 0; sensor_nr < NR_SENSORS; sensor_nr++) {
         enable_sensor_LED(&sensor_array[sensor_nr]);
         enable_sensor_SI(&sensor_array[sensor_nr]);
         enable_CLK();
@@ -108,7 +135,7 @@ void loop()
             disable_CLK();
             delayMicroseconds(1);
         }
-    }
+    }*/
     /*Process...*/
     /*???*/
     /*Output...*/
