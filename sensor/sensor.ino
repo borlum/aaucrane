@@ -1,4 +1,10 @@
 /**
+ * DEBUG DEFINES
+ */
+#define DEBUG
+#define DEBUG_NORM
+
+/**
  * ============================================================================
  * AAU CRANE SENSOR
  * ----------------
@@ -8,7 +14,6 @@
  * pins and ports on SAM3X.
  * ============================================================================
  */
-
 #define NR_SENSORS 3
 #define NR_PIXELS  128
 
@@ -107,7 +112,7 @@ void setup()
  */
 void loop()
 {   
-    uint16_t data[NR_SENSORS * NR_PIXELS];
+    uint16_t data[NR_SENSORS][NR_PIXELS];
     /*Collect data...*/
     for (uint8_t sensor_nr = 0; sensor_nr < NR_SENSORS; sensor_nr++) {
         /*Lets read a sensor!*/
@@ -125,14 +130,16 @@ void loop()
             enable_CLK();
             delayMicroseconds(1);
             disable_CLK();
-            dio(&(*TEST.port), TEST.mask, 1);
-            if (sensor_nr != 1)
-                data[(sensor_nr * NR_PIXELS) + (NR_PIXELS - pixel_nr - 1)] =
-                    read_sensor(sensor_array[sensor_nr]);
-            else
-                data[(sensor_nr * NR_PIXELS) + pixel_nr] = 
-                    read_sensor(sensor_array[sensor_nr]);
-            dio(&(*TEST.port), TEST.mask, 0);
+            // dio(&(*TEST.port), TEST.mask, 1);
+            if (sensor_nr != 1){
+                data[sensor_nr][pixel_nr] =
+		  read_sensor(sensor_array[sensor_nr]);
+	    }
+            else{
+                data[sensor_nr][pixel_nr] =
+		  read_sensor(sensor_array[sensor_nr]);
+	    }
+            // dio(&(*TEST.port), TEST.mask, 0);
             delayMicroseconds(1);
         }
         /*Shift out two dummy pixels + one final shift to reset*/
@@ -141,24 +148,29 @@ void loop()
         disable_sensor_LED(&sensor_array[sensor_nr]);
     }
 
-    /*Process: find smallest value.*/
-    uint16_t least_value_idx = 0;
-    uint16_t max_value_idx   = 0;
-    uint32_t least_value     = -1;
-    uint32_t max_value       = 0;
-    for (uint16_t n = 0; n < (NR_SENSORS * NR_PIXELS); n++) {
-        if (data[n] < least_value) {
-            least_value_idx = n;
-            least_value     = data[n];
-        }
-        if(data[n] > max_value) {
-            max_value_idx = n;
-            max_value     = data[n];
-        }
+    uint8_t sensor_index = 0;
+    uint8_t pixel_index = 0;
+    uint8_t min_val = 0;
+    
+    for(uint8_t i = 0; i < NR_SENSORS; i++){
+      normalize_array(data[i], NR_PIXELS);
     }
-    Serial.print(least_value_idx);
-    Serial.print(",");
-    Serial.println(max_value_idx);
+
+    for(uint8_t i = 0; i < NR_SENSORS; i++){
+      for(uint8_t j = 0; j < NR_PIXELS; j++){
+	if(data[i][j] < min_val){
+	  sensor_index = i;
+	  pixel_index = j;
+	}
+      }
+    }    
+#ifdef DEBUG
+    Serial.print("Wire determined to be at: \n");
+    Serial.print("Sensor index: "); Serial.print(sensor_index); Serial.print("\n");
+    Serial.print("Pixel index: "); Serial.print(pixel_index); Serial.print("\n");
+#endif
+    analogWrite(DAC0, data[sensor_index][pixel_index])
+    
 }
 
 /**
@@ -166,6 +178,28 @@ void loop()
  * FUNCTIONS
  * ----------------------------------------------------------------------------
  */
+
+void normalize_array(uint16_t *arr, uint8_t size){
+  uint16_t max = -1;
+
+#ifdef DEBUG_NORM
+  Serial.print("Normalizeing array of size: "); Serial.print(size); Serial.print("\n");
+#endif
+
+  for(uint8_t i = 0; i < size; i++){
+    if(arr[i] > max)
+      max = arr[i];
+  }
+
+#ifdef DEBUG_NORM
+  Serial.print("Normalizeing array, max size: "); Serial.print(max); Serial.print("\n");
+#endif
+
+  for(uint8_t i = 0; i < size; i++){
+    arr[i] = arr[i] / max;
+  }
+
+}
 
 void enable_CLK()
 {
