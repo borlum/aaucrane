@@ -137,8 +137,10 @@ void loop()
             enable_CLK();
             delayMicroseconds(1);
             disable_CLK();
+            dio(&(*TEST.port), TEST.mask, 1);
             data[(sensor_nr * NR_PIXELS) + pixel_nr] = 
                 read_sensor(sensor_array[sensor_nr]);
+            dio(&(*TEST.port), TEST.mask, 0);
             delayMicroseconds(1);
         }
         /*Shift out two dummy pixels + one final shift to reset*/
