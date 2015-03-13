@@ -148,29 +148,54 @@ void loop()
         disable_sensor_LED(&sensor_array[sensor_nr]);
     }
 
-    uint8_t sensor_index = 0;
-    uint8_t pixel_index = 0;
-    uint8_t min_val = 0;
-    
-    for(uint8_t i = 0; i < NR_SENSORS; i++){
-      normalize_array(data[i], NR_PIXELS);
-    }
-
+    /** 
+     * Find each sensors min and max value, with pixel index
+     * Structure:
+     * struct sensor_min_max{
+     *   int value;
+     *   int pixel;
+     * };
+     */
+    uint16_t sensor_max[NR_SENSORS][2] = { -1, -1 };
+    uint16_t sensor_min[NR_SENSORS][2] = { 0, 0 };
     for(uint8_t i = 0; i < NR_SENSORS; i++){
       for(uint8_t j = 0; j < NR_PIXELS; j++){
-	if(data[i][j] < min_val){
-	  sensor_index = i;
-	  pixel_index = j;
+	if(data[i][j] < sensor_min[i][0]){
+	  sensor_min[i][0] = data[i][j];
+	  sensor_min[i][1] = j;
+	}
+	if(data[i][j] > sensor_max[i][0]){
+	  sensor_max[i][0] = data[i][j];
+	  sensor_max[i][1] = j;	
 	}
       }
-    }    
+    }
+
+
+    /**
+     * Normalize each minimum value for the sensors, and compare these
+     * to determind the position.
+     */
+    uint8_t sensor_index = 0;
+    uint8_t pixel_index = 0;
+    uint16_t min = -1;
+    for(uint8_t i = 0; i < NR_SENSORS; i++){
+      sensor_min[i][0] = map(sensor_min[i][0],
+			      sensor_min[i][0], sensor_max[i][0],
+			      0, 1024);
+      if(sensor_min[i][0] < min){
+	min = sensor_min[i][0];
+	pixel_index = sensor_min[i][1];
+	sensor_index = i;
+      }
+    }
+    
 #ifdef DEBUG
     Serial.print("Wire determined to be at: \n");
     Serial.print("Sensor index: "); Serial.print(sensor_index); Serial.print("\n");
     Serial.print("Pixel index: "); Serial.print(pixel_index); Serial.print("\n");
-#endif
-    analogWrite(DAC0, data[sensor_index][pixel_index])
-    
+    Serial.print("With value: "); Serial.print(min); Serial.print("\n");
+#endif    
 }
 
 /**
@@ -178,28 +203,6 @@ void loop()
  * FUNCTIONS
  * ----------------------------------------------------------------------------
  */
-
-void normalize_array(uint16_t *arr, uint8_t size){
-  uint16_t max = -1;
-
-#ifdef DEBUG_NORM
-  Serial.print("Normalizeing array of size: "); Serial.print(size); Serial.print("\n");
-#endif
-
-  for(uint8_t i = 0; i < size; i++){
-    if(arr[i] > max)
-      max = arr[i];
-  }
-
-#ifdef DEBUG_NORM
-  Serial.print("Normalizeing array, max size: "); Serial.print(max); Serial.print("\n");
-#endif
-
-  for(uint8_t i = 0; i < size; i++){
-    arr[i] = arr[i] / max;
-  }
-
-}
 
 void enable_CLK()
 {
