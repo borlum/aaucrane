@@ -10,7 +10,7 @@
  */
 
 #define NR_SENSORS 3
-#define NR_PIXELS  8
+#define NR_PIXELS  128
 
 /**
  * ----------------------------------------------------------------------------
@@ -41,6 +41,7 @@ typedef struct sensor_t sensor_t;
 
 void enable_CLK();
 void disable_CLK();
+void run_CLK_n_times(uint8_t n);
 void init_sensor(sensor_t *sensor, gpio_t si, gpio_t led, uint8_t ao);
 void enable_sensor_LED(sensor_t *sensor);
 void disable_sensor_LED(sensor_t *sensor);
@@ -56,7 +57,7 @@ void dio(Pio *port, uint32_t mask, uint8_t state);
  */
 sensor_t sensor_array[NR_SENSORS];
 
-gpio_t CLK  = {PIOB, (1 << 12), 20}; //20
+gpio_t CLK  = {PIOB, (1 << 12), 20};
 
 /**
  * ----------------------------------------------------------------------------
@@ -71,13 +72,13 @@ void setup()
     
     /* Initialize pins! */
     gpio_t SI2  = {PIOA, (1 << 12), 17};
-    gpio_t LED1 = {PIOD, (1 <<  5), 15};
+    gpio_t LED1 = {PIOA, (1 << 13), 16};
 
     gpio_t SI1  = {PIOA, (1 << 11), 18};
-    gpio_t LED2 = {PIOD, (1 << 27), 13};
+    gpio_t LED2 = {PIOD, (1 <<  4), 14};
 
     gpio_t SI3  = {PIOA, (1 << 10), 19};
-    gpio_t LED3 = {PIOD, (1 <<  4), 14};
+    gpio_t LED3 = {PIOD, (1 <<  5), 15};
 
     init_sensor(&sensor1, SI1, LED1,  0);
     init_sensor(&sensor2, SI2, LED2,  1);
@@ -88,7 +89,6 @@ void setup()
     sensor_array[2] = sensor3;
 
     pinMode(CLK.arduino_pin, OUTPUT);
-    enable_sensor_SI(&sensor_array[0]);
 }
 
 /**
@@ -98,44 +98,41 @@ void setup()
  */
 void loop()
 {   
-    enable_CLK();
-    delayMicroseconds(5);
-    disable_CLK();
-
-
-    /*enable_sensor_SI(&sensor_array[1]);
-    enable_sensor_SI(&sensor_array[2]);
-    enable_sensor_LED(&sensor_array[0]);
-    enable_sensor_LED(&sensor_array[1]);
-    enable_sensor_LED(&sensor_array[2]);
-    delayMicroseconds(5);
-    disable_CLK();
-    disable_sensor_SI(&sensor_array[0]);
-    disable_sensor_SI(&sensor_array[1]);
-    disable_sensor_SI(&sensor_array[2]);
-    disable_sensor_LED(&sensor_array[0]);
-    disable_sensor_LED(&sensor_array[1]);
-    disable_sensor_LED(&sensor_array[2]);
-    delayMicroseconds(5);*/
-
-    //uint32_t data[NR_SENSORS][NR_PIXELS];
+    uint32_t data[NR_SENSORS][NR_PIXELS];
     /*Collect data...*/
-    /*for (uint8_t sensor_nr = 0; sensor_nr < NR_SENSORS; sensor_nr++) {
+    for (uint8_t sensor_nr = 0; sensor_nr < NR_SENSORS; sensor_nr++) {
+        /*Lets read a sensor!*/
         enable_sensor_LED(&sensor_array[sensor_nr]);
         enable_sensor_SI(&sensor_array[sensor_nr]);
-        enable_CLK();
-        delayMicroseconds(1);
-        disable_sensor_SI(&sensor_array[sensor_nr]);
-        disable_CLK();
-        delayMicroseconds(1);
+        run_CLK_n_times(1);
+        
+        /*Shift out two dummy pixels - run clock twice*/
+        run_CLK_n_times(2);
+        /*First, run the sensor without reading...*/
         for (uint8_t pixel_nr = 0; pixel_nr < NR_PIXELS; pixel_nr++) {
-            data[sensor_nr][pixel_nr] = read_sensor(sensor_array[sensor_nr]);
-            enable_CLK();
-            delayMicroseconds(1);
-            disable_CLK();
-            delayMicroseconds(1);
+            if (pixel_nr == 17) {
+                disable_sensor_SI(&sensor_array[sensor_nr]);
+            }
+            run_CLK_n_times(1);
         }
-    }*/
+        /*Shift out two dummy pixels + one final shift to reset*/
+        run_CLK_n_times(3);
+
+        /*Shift out two dummy pixels - run clock twice*/
+        run_CLK_n_times(2);
+        /*Now sample the entire sensor (128 pixels)*/
+        for (uint8_t pixel_nr = 0; pixel_nr < NR_PIXELS; pixel_nr++) {
+            if (pixel_nr == 17) {
+                disable_sensor_SI(&sensor_array[sensor_nr]);
+            }
+            data[sensor_nr][pixel_nr] = read_sensor(sensor_array[sensor_nr]);
+            run_CLK_n_times(1);
+        }
+        /*Shift out two dummy pixels + one final shift to reset*/
+        run_CLK_n_times(3);
+
+        disable_sensor_LED(&sensor_array[sensor_nr]);
+    }
     /*Process...*/
     /*???*/
     /*Output...*/
@@ -155,6 +152,16 @@ void enable_CLK()
 void disable_CLK()
 {
     dio(&(*CLK.port), CLK.mask, 0);
+}
+
+void run_CLK_n_times(uint8_t n)
+{
+    for (uint8_t i = 0; i < n; i++) {
+        enable_CLK();
+        delayMicroseconds(1);
+        disable_CLK();
+        delayMicroseconds(1);
+    }
 }
 
 void enable_sensor_LED(sensor_t *sensor)
