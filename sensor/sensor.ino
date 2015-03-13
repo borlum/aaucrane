@@ -98,7 +98,7 @@ void setup()
  */
 void loop()
 {   
-    uint32_t data[NR_SENSORS][NR_PIXELS];
+    uint32_t data[NR_SENSORS * NR_PIXELS];
     /*Collect data...*/
     for (uint8_t sensor_nr = 0; sensor_nr < NR_SENSORS; sensor_nr++) {
         /*Lets read a sensor!*/
@@ -125,7 +125,8 @@ void loop()
             if (pixel_nr == 17) {
                 disable_sensor_SI(&sensor_array[sensor_nr]);
             }
-            data[sensor_nr][pixel_nr] = read_sensor(sensor_array[sensor_nr]);
+            data[(sensor_nr * NR_PIXELS) + pixel_nr] = 
+                read_sensor(sensor_array[sensor_nr]);
             run_CLK_n_times(1);
         }
         /*Shift out two dummy pixels + one final shift to reset*/
@@ -133,9 +134,44 @@ void loop()
 
         disable_sensor_LED(&sensor_array[sensor_nr]);
     }
-    /*Process...*/
-    /*???*/
-    /*Output...*/
+    
+    /*Process: find smallest value.*/
+    uint16_t least_value_idx = 0;
+    uint32_t least_value     = -1;
+    uint16_t max_value_idx   = 0;
+    uint32_t max_value       = 0;
+    for (uint16_t n = 0; n < (NR_SENSORS * NR_PIXELS); n++) {
+        if (data[n] < least_value) {
+            least_value_idx = n;
+            least_value     = data[n];
+        }
+        if (data[n] > max_value) {
+            max_value_idx = n;
+            max_value     = data[n];
+        }
+    }
+
+    Serial.println("===========");
+    Serial.println("LEAST VALUE");
+    Serial.println("===========");
+    Serial.print("VAL: ");
+    Serial.print(least_value);
+    Serial.println();
+    Serial.print("INDEX: ");
+    Serial.print(least_value_idx);
+    Serial.println();
+    Serial.println("=========");
+    Serial.println("MAX VALUE");
+    Serial.println("=========");
+    Serial.print("VAL: ");
+    Serial.print(max_value);
+    Serial.println();
+    Serial.print("INDEX: ");
+    Serial.print(max_value_idx);
+    Serial.println();
+
+    delay(500);
+    
 }
 
 /**
