@@ -33,6 +33,8 @@ struct sensor_t {
 
 typedef struct sensor_t sensor_t;
 
+uint32_t t1, t2;
+
 /**
  * ----------------------------------------------------------------------------
  * PROTOTYPES
@@ -47,7 +49,7 @@ void enable_sensor_LED(sensor_t *sensor);
 void disable_sensor_LED(sensor_t *sensor);
 void enable_sensor_SI(sensor_t *sensor);
 void disable_sensor_SI(sensor_t *sensor);
-uint32_t read_sensor(sensor_t sensor);
+uint16_t read_sensor(sensor_t sensor);
 void dio(Pio *port, uint32_t mask, uint8_t state);
 
 /**
@@ -57,7 +59,9 @@ void dio(Pio *port, uint32_t mask, uint8_t state);
  */
 sensor_t sensor_array[NR_SENSORS];
 
-gpio_t CLK  = {PIOB, (1 << 12), 20};
+gpio_t CLK   = {PIOB, (1 << 12), 20};
+
+gpio_t TEST  = {PIOB, (1 << 13), 21};
 
 /**
  * ----------------------------------------------------------------------------
@@ -80,15 +84,20 @@ void setup()
     gpio_t SI3  = {PIOA, (1 << 10), 19};
     gpio_t LED3 = {PIOD, (1 <<  5), 15};
 
-    init_sensor(&sensor1, SI1, LED1,  0);
-    init_sensor(&sensor2, SI2, LED2,  1);
-    init_sensor(&sensor3, SI3, LED3,  2);
+    init_sensor(&sensor1, SI1, LED1,  A0);
+    init_sensor(&sensor2, SI2, LED2,  A1);
+    init_sensor(&sensor3, SI3, LED3,  A2);
     
     sensor_array[0] = sensor1;
     sensor_array[1] = sensor2;
     sensor_array[2] = sensor3;
 
     pinMode(CLK.arduino_pin, OUTPUT);
+    pinMode(TEST.arduino_pin, OUTPUT);
+
+    disable_sensor_LED(&sensor_array[0]);
+    disable_sensor_LED(&sensor_array[1]);
+    disable_sensor_LED(&sensor_array[2]);
 }
 
 /**
@@ -98,7 +107,7 @@ void setup()
  */
 void loop()
 {   
-    uint32_t data[NR_SENSORS * NR_PIXELS];
+    uint16_t data[NR_SENSORS * NR_PIXELS];
     /*Collect data...*/
     for (uint8_t sensor_nr = 0; sensor_nr < NR_SENSORS; sensor_nr++) {
         /*Lets read a sensor!*/
@@ -125,53 +134,37 @@ void loop()
             if (pixel_nr == 17) {
                 disable_sensor_SI(&sensor_array[sensor_nr]);
             }
+            enable_CLK();
+            delayMicroseconds(1);
+            disable_CLK();
             data[(sensor_nr * NR_PIXELS) + pixel_nr] = 
                 read_sensor(sensor_array[sensor_nr]);
-            run_CLK_n_times(1);
+            delayMicroseconds(1);
         }
         /*Shift out two dummy pixels + one final shift to reset*/
         run_CLK_n_times(3);
 
         disable_sensor_LED(&sensor_array[sensor_nr]);
     }
-    
+
     /*Process: find smallest value.*/
     uint16_t least_value_idx = 0;
-    uint32_t least_value     = -1;
     uint16_t max_value_idx   = 0;
+    uint32_t least_value     = -1;
     uint32_t max_value       = 0;
     for (uint16_t n = 0; n < (NR_SENSORS * NR_PIXELS); n++) {
         if (data[n] < least_value) {
             least_value_idx = n;
             least_value     = data[n];
         }
-        if (data[n] > max_value) {
+        if(data[n] > max_value) {
             max_value_idx = n;
             max_value     = data[n];
         }
     }
-
-    Serial.println("===========");
-    Serial.println("LEAST VALUE");
-    Serial.println("===========");
-    Serial.print("VAL: ");
     Serial.print(least_value);
-    Serial.println();
-    Serial.print("INDEX: ");
-    Serial.print(least_value_idx);
-    Serial.println();
-    Serial.println("=========");
-    Serial.println("MAX VALUE");
-    Serial.println("=========");
-    Serial.print("VAL: ");
-    Serial.print(max_value);
-    Serial.println();
-    Serial.print("INDEX: ");
-    Serial.print(max_value_idx);
-    Serial.println();
-
-    delay(500);
-    
+    Serial.print(",");
+    Serial.println(max_value);
 }
 
 /**
@@ -220,7 +213,7 @@ void disable_sensor_SI(sensor_t *sensor)
     dio(&(*(sensor->pin_SI).port), (sensor->pin_SI).mask, 0);
 }
 
-uint32_t read_sensor(sensor_t sensor)
+uint16_t read_sensor(sensor_t sensor)
 {
     return analogRead(sensor.pin_AO);
 }
