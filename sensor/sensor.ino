@@ -114,20 +114,6 @@ void loop()
         enable_sensor_LED(&sensor_array[sensor_nr]);
         enable_sensor_SI(&sensor_array[sensor_nr]);
         run_CLK_n_times(1);
-        
-        #if 0
-        /*Shift out two dummy pixels - run clock twice*/
-        run_CLK_n_times(2);
-        /*First, run the sensor without reading...*/
-        for (uint8_t pixel_nr = 0; pixel_nr < NR_PIXELS; pixel_nr++) {
-            if (pixel_nr == 17) {
-                disable_sensor_SI(&sensor_array[sensor_nr]);
-            }
-            run_CLK_n_times(1);
-        }
-        /*Shift out two dummy pixels + one final shift to reset*/
-        run_CLK_n_times(3);
-        #endif
 
         /*Shift out two dummy pixels - run clock twice*/
         run_CLK_n_times(2);
@@ -140,8 +126,12 @@ void loop()
             delayMicroseconds(1);
             disable_CLK();
             dio(&(*TEST.port), TEST.mask, 1);
-            data[(sensor_nr * NR_PIXELS) + pixel_nr] = 
-                read_sensor(sensor_array[sensor_nr]);
+            if (sensor_nr != 1)
+                data[(sensor_nr * NR_PIXELS) + (NR_PIXELS - pixel_nr - 1)] =
+                    read_sensor(sensor_array[sensor_nr]);
+            else
+                data[(sensor_nr * NR_PIXELS) + pixel_nr] = 
+                    read_sensor(sensor_array[sensor_nr]);
             dio(&(*TEST.port), TEST.mask, 0);
             delayMicroseconds(1);
         }
@@ -166,9 +156,9 @@ void loop()
             max_value     = data[n];
         }
     }
-    Serial.print(least_value);
+    Serial.print(least_value_idx);
     Serial.print(",");
-    Serial.println(max_value);
+    Serial.println(max_value_idx);
 }
 
 /**
