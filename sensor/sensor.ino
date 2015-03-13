@@ -115,6 +115,7 @@ void loop()
         enable_sensor_SI(&sensor_array[sensor_nr]);
         run_CLK_n_times(1);
         
+        #if 0
         /*Shift out two dummy pixels - run clock twice*/
         run_CLK_n_times(2);
         /*First, run the sensor without reading...*/
@@ -126,6 +127,7 @@ void loop()
         }
         /*Shift out two dummy pixels + one final shift to reset*/
         run_CLK_n_times(3);
+        #endif
 
         /*Shift out two dummy pixels - run clock twice*/
         run_CLK_n_times(2);
