@@ -1,8 +1,7 @@
 /**
  * DEBUG DEFINES
  */
-#define DEBUG
-#define DEBUG_NORM
+//#define DEBUG
 
 /**
  * ============================================================================
@@ -156,8 +155,8 @@ void loop()
      *   int pixel;
      * };
      */
-    uint16_t sensor_max[NR_SENSORS][2] = { -1, -1 };
-    uint16_t sensor_min[NR_SENSORS][2] = { 0, 0 };
+    uint16_t sensor_max[NR_SENSORS][2] = { 0, 0 };
+    uint16_t sensor_min[NR_SENSORS][2] = { -1, -1 };
     for(uint8_t i = 0; i < NR_SENSORS; i++){
       for(uint8_t j = 0; j < NR_PIXELS; j++){
 	if(data[i][j] < sensor_min[i][0]){
@@ -171,13 +170,17 @@ void loop()
       }
     }
 
+    Serial.println(sensor_min[0][0]);
+    Serial.println(sensor_min[1][0]);
+    Serial.println(sensor_min[2][0]);
+    while(1);
 
     /**
      * Normalize each minimum value for the sensors, and compare these
      * to determind the position.
      */
-    uint8_t sensor_index = 0;
-    uint8_t pixel_index = 0;
+    uint8_t sensor_index = -1;
+    uint8_t pixel_index = -1;
     uint16_t min = -1;
     for(uint8_t i = 0; i < NR_SENSORS; i++){
       sensor_min[i][0] = map(sensor_min[i][0],
@@ -190,12 +193,12 @@ void loop()
       }
     }
     
-#ifdef DEBUG
-    Serial.print("Wire determined to be at: \n");
-    Serial.print("Sensor index: "); Serial.print(sensor_index); Serial.print("\n");
-    Serial.print("Pixel index: "); Serial.print(pixel_index); Serial.print("\n");
-    Serial.print("With value: "); Serial.print(min); Serial.print("\n");
-#endif    
+/* #ifdef DEBUG */
+/*     Serial.print("Wire determined to be at: \n"); */
+/*     Serial.print("Sensor index: "); Serial.print(sensor_index); Serial.print("\n"); */
+/*     Serial.print("Pixel index: "); Serial.print(pixel_index); Serial.print("\n"); */
+/*     Serial.print("With value: "); Serial.print(min); Serial.print("\n"); */
+/* #endif     */
 }
 
 /**
