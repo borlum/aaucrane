@@ -1,9 +1,4 @@
 /**
- * DEBUG DEFINES
- */
-//#define DEBUG
-
-/**
  * ============================================================================
  * AAU CRANE SENSOR
  * ----------------
@@ -30,16 +25,38 @@ struct gpio_t {
 typedef struct gpio_t gpio_t;
 
 struct sensor_t {
+  /* I/O info */
   gpio_t pin_SI;
   gpio_t pin_LED;
   uint8_t pin_AO;
-  uint16_t pixels[NR_PIXELS] = { -1 }; /* Initialize to 0xFFFF */
-  uint16_t min_value = -1;             /* Initialize to 0xFFFF */ 
-  uint8_t min_index = -1;              /* Initialize to 0xFFFF */
-  uint16_t max_value = 0;              /* Initialize to 0x0000 - since we are measureing max values */
-  uint8_t max_index = -1;              /* Initialize to 0xFFFF */
-  uint16_t normalized_min_value = -1;  /* Initialize to 0xFFFF */ 
-  
+  uint16_t pixels[NR_PIXELS] = { -1 }; /* Raw sensor data */
+
+  /* Meta information */
+  uint16_t min_value = -1;              
+  uint8_t min_index = -1;              
+  uint16_t max_value = 0;              
+  uint8_t max_index = -1;              
+
+  /* Get the normalized minimun sensor value from the senseors */
+  uint16_t get_normalized_min_value(){
+    uint16_t normalized_min_value;
+    int32_t old_range;
+    int32_t new_range;
+    for(uint8_t i = 0; i < NR_PIXELS; i++){
+      if(pixels[i] < min_value){
+        min_value = pixels[i];
+	min_index = i;
+      }
+      if(pixels[i] > max_value){
+	max_value = pixels[i];
+	max_index = i;
+      }
+    }
+    old_range = ( ((int32_t) max_value) - ((int32_t) min_value) );
+    new_range = ( (1024 - 0) );
+    normalized_min_value = (uint16_t) (( ((min_value - min_value) * new_range) / old_range ) + 0);
+    return normalized_min_value;
+  }
 };
 
 typedef struct sensor_t sensor_t;
@@ -154,49 +171,22 @@ void loop()
     disable_sensor_LED(&sensor_array[sensor_nr]);
   }
 
-  for(uint8_t i = 0; i < NR_SENSORS; i++){
-    for(uint8_t j = 0; j < NR_PIXELS; j++){
-      if(sensor_array[i].pixels[j] < sensor_array[i].min_value){
-	sensor_array[i].min_value = sensor_array[i].pixels[j];
-	sensor_array[i].min_index = j;
-      }
-      if(sensor_array[i].pixels[j] > sensor_array[i].max_value){
-	sensor_array[i].max_value = sensor_array[i].pixels[j];
-	sensor_array[i].max_index = j;
-      }
-    }
-  }
-  
-  Serial.println(sensor_array[0].min_value);
-  Serial.println(sensor_array[1].min_value);
-  Serial.println(sensor_array[2].min_value);
-  while(1);
-
-  /**
-   * Normalize each minimum value for the sensors, and compare these
-   * to determind the position.
-   */
   uint8_t sensor_index = -1;
   uint8_t pixel_index = -1;
   uint16_t global_min = -1;
+
   for(uint8_t i = 0; i < NR_SENSORS; i++){
-    sensor_array[i].normalized_min_value =
-      map(sensor_array[i].min_value,
-	  sensor_array[i].min_value, sensor_array[i].max_value,
-	  0, 1024);
-    if(sensor_array[i].normalized_min_value < global_min){
-      global_min = sensor_array[i].normalized_min_value;
-      pixel_index = sensor_array[i].min_index;
+    if(sensor_array[i].get_normalized_min_value() < global_min){
+      global_min = sensor_array[i].get_normalized_min_value();
       sensor_index = i;
+      pixel_index = sensor_array[i].min_index;
     }
   }
-    
-  /* #ifdef DEBUG */
-  /*     Serial.print("Wire determined to be at: \n"); */
-  /*     Serial.print("Sensor index: "); Serial.print(sensor_index); Serial.print("\n"); */
-  /*     Serial.print("Pixel index: "); Serial.print(pixel_index); Serial.print("\n"); */
-  /*     Serial.print("With value: "); Serial.print(min); Serial.print("\n"); */
-  /* #endif     */
+   
+  Serial.println(sensor_array[0].get_normalized_min_value());
+  Serial.println(sensor_array[1].get_normalized_min_value());
+  Serial.println(sensor_array[2].get_normalized_min_value());
+  while(1);
 }
 
 /**
