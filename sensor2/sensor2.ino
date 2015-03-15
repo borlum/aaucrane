@@ -35,14 +35,20 @@ struct sensor_t {
   uint16_t min_value = -1;              
   uint8_t min_index = -1;              
   uint16_t max_value = 0;              
-  uint8_t max_index = -1;              
+  uint8_t max_index = -1;
+
+  uint32_t sum = 0;
 
   /* Get the normalized minimun sensor value from the senseors */
   uint16_t get_normalized_min_value(){
     uint16_t normalized_min_value;
-    int32_t old_range;
-    int32_t new_range;
+
+    /* Bases */ 
+    int32_t old_range = (max_value - min_value);
+    int32_t new_range = (1024 - 0);
+
     for(uint8_t i = 0; i < NR_PIXELS; i++){
+      sum += pixels[i];
       if(pixels[i] < min_value){
         min_value = pixels[i];
 	min_index = i;
@@ -52,9 +58,9 @@ struct sensor_t {
 	max_index = i;
       }
     }
-    old_range = ( ((int32_t) max_value) - ((int32_t) min_value) );
-    new_range = ( (1024 - 0) );
-    normalized_min_value = (uint16_t) (( ((min_value - min_value) * new_range) / old_range ) + 0);
+    
+    /* Basis change */
+    normalized_min_value = min_value /* / (sum / NR_PIXELS) */;
     return normalized_min_value;
   }
 };
