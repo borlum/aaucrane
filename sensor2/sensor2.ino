@@ -59,7 +59,7 @@ void enable_sensor_SI(sensor_t *sensor);
 void disable_sensor_SI(sensor_t *sensor);
 uint16_t read_sensor(sensor_t sensor);
 void dio(Pio *port, uint32_t mask, uint8_t state);
-wire_location_t* get_wire_location(sensor_t* sensors);
+wire_location_t get_wire_location(sensor_t* sensors);
 
 /**
  * ----------------------------------------------------------------------------
