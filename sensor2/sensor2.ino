@@ -10,6 +10,7 @@
  */
 #define NR_SENSORS 3
 #define NR_PIXELS  128
+#define MAGIC_VALUE 200
 
 /**
  * ----------------------------------------------------------------------------
@@ -30,44 +31,17 @@ struct sensor_t {
   gpio_t pin_LED;
   uint8_t pin_AO;
   uint16_t pixels[NR_PIXELS] = { -1 }; /* Raw sensor data */
-
-  /* Meta information */
-  uint16_t min_value = -1;              
-  uint8_t min_index = -1;              
-  uint16_t max_value = 0;              
-  uint8_t max_index = -1;
-
-  uint32_t sum = 0;
-
-  /* Get the normalized minimun sensor value from the senseors */
-  uint16_t get_normalized_min_value(){
-    uint16_t normalized_min_value;
-
-    /* Bases */ 
-    int32_t old_range = (max_value - min_value);
-    int32_t new_range = (1024 - 0);
-
-    for(uint8_t i = 0; i < NR_PIXELS; i++){
-      sum += pixels[i];
-      if(pixels[i] < min_value){
-        min_value = pixels[i];
-	min_index = i;
-      }
-      if(pixels[i] > max_value){
-	max_value = pixels[i];
-	max_index = i;
-      }
-    }
-    
-    /* Basis change */
-    normalized_min_value = min_value /* / (sum / NR_PIXELS) */;
-    return normalized_min_value;
-  }
 };
 
 typedef struct sensor_t sensor_t;
 
-uint32_t t1, t2;
+struct wire_location_t{
+  uint16_t pixel_value;
+  uint8_t sensor_id;
+  uint8_t pixel_id;
+};
+
+typedef struct wire_location_t wire_location_t;
 
 /**
  * ----------------------------------------------------------------------------
@@ -85,6 +59,7 @@ void enable_sensor_SI(sensor_t *sensor);
 void disable_sensor_SI(sensor_t *sensor);
 uint16_t read_sensor(sensor_t sensor);
 void dio(Pio *port, uint32_t mask, uint8_t state);
+wire_location_t* get_wire_location(sensor_t* sensors);
 
 /**
  * ----------------------------------------------------------------------------
@@ -139,9 +114,10 @@ void setup()
  * LOOP...
  * ----------------------------------------------------------------------------
  */
+int lort = 0;
 void loop()
-{   
-  uint16_t data[NR_SENSORS][NR_PIXELS];
+{
+  wire_location_t wire_loc;
   /*Collect data...*/
   for (uint8_t sensor_nr = 0; sensor_nr < NR_SENSORS; sensor_nr++) {
     /*Lets read a sensor!*/
@@ -176,23 +152,27 @@ void loop()
 
     disable_sensor_LED(&sensor_array[sensor_nr]);
   }
+  wire_loc = get_wire_location(sensor_array);
+  if(lort++ == 10){
+    Serial.println("#################");
+    Serial.println(wire_loc.sensor_id);
+    Serial.println(wire_loc.pixel_id);
+    Serial.println(wire_loc.pixel_value);
 
-  uint8_t sensor_index = -1;
-  uint8_t pixel_index = -1;
-  uint16_t global_min = -1;
-
-  for(uint8_t i = 0; i < NR_SENSORS; i++){
-    if(sensor_array[i].get_normalized_min_value() < global_min){
-      global_min = sensor_array[i].get_normalized_min_value();
-      sensor_index = i;
-      pixel_index = sensor_array[i].min_index;
+    for(int i = 0; i < NR_SENSORS; i++){
+      for(int j = 0; j < NR_PIXELS; j++){
+	char str[25];
+	sprintf(str, "%d,%d,%d", i, j, sensor_array[i].pixels[j]);
+	Serial.println(str);
+      }
     }
+    while(1);
   }
-   
-  Serial.println(sensor_array[0].get_normalized_min_value());
-  Serial.println(sensor_array[1].get_normalized_min_value());
-  Serial.println(sensor_array[2].get_normalized_min_value());
-  while(1);
+
+  // Serial.println(wire_loc->sensor_id);
+  // Serial.println(wire_loc->pixel_id);
+  // Serial.println(wire_loc->pixel_value);
+  // while(1);
 }
 
 /**
@@ -263,4 +243,19 @@ void dio(Pio *port, uint32_t mask, uint8_t state)
   else {
     port->PIO_CODR |= mask;
   }
+}
+
+
+wire_location_t get_wire_location(sensor_t* sensors){  
+  wire_location_t wire_loc;
+  for(int i = 0; i < NR_SENSORS; i++){
+    for(int j = 0; j < NR_PIXELS; j++){
+      if(sensors[i].pixels[j] < MAGIC_VALUE){
+	wire_loc.sensor_id = i;
+	wire_loc.pixel_id = j;
+	wire_loc.pixel_value = sensors[i].pixels[j];
+      }
+    }
+  }
+  return wire_loc;
 }
