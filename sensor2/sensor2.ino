@@ -7,10 +7,14 @@
  * Use http://arduino.cc/en/Hacking/PinMappingSAM3X to see corresponding
  * pins and ports on SAM3X.
  * ============================================================================
+ * STUFF THAT NEEEDS TO BE DONE:
+ * - Blind angles - How should we react?
+ * - How do we find the wire when only some of the "dip" is visible?
+ * - Translate the found falling edge into an actual position of the wire. Maybe using the width?
  */
 #define NR_SENSORS 3
 #define NR_PIXELS  128
-#define MAGIC_VALUE 200
+#define MAGIC_VALUE 50
 
 /**
  * ----------------------------------------------------------------------------
@@ -30,15 +34,15 @@ struct sensor_t {
   gpio_t pin_SI;
   gpio_t pin_LED;
   uint8_t pin_AO;
-  uint16_t pixels[NR_PIXELS] = { -1 }; /* Raw sensor data */
+  int pixels[NR_PIXELS] = { -1 }; /* Raw sensor data */
 };
 
 typedef struct sensor_t sensor_t;
 
-struct wire_location_t{
-  uint16_t pixel_value;
-  uint8_t sensor_id;
-  uint8_t pixel_id;
+struct wire_location_t {
+  int pixel_value;
+  int sensor_id;
+  int pixel_id;
 };
 
 typedef struct wire_location_t wire_location_t;
@@ -68,6 +72,8 @@ wire_location_t get_wire_location(sensor_t* sensors);
  */
 sensor_t sensor_array[NR_SENSORS];
 
+int normal[3] = {160, 155, 180};
+
 gpio_t CLK   = {PIOB, (1 << 12), 20};
 
 gpio_t TEST  = {PIOB, (1 << 13), 21};
@@ -82,7 +88,7 @@ void setup()
   Serial.begin(9600);
 
   sensor_t sensor1, sensor2, sensor3;
-    
+
   /* Initialize pins! */
   gpio_t SI2  = {PIOA, (1 << 12), 17};
   gpio_t LED1 = {PIOA, (1 << 13), 16};
@@ -96,7 +102,7 @@ void setup()
   init_sensor(&sensor1, SI1, LED1,  A0);
   init_sensor(&sensor2, SI2, LED2,  A1);
   init_sensor(&sensor3, SI3, LED3,  A2);
-    
+
   sensor_array[0] = sensor1;
   sensor_array[1] = sensor2;
   sensor_array[2] = sensor3;
@@ -114,37 +120,27 @@ void setup()
  * LOOP...
  * ----------------------------------------------------------------------------
  */
-int lort = 0;
 void loop()
 {
   wire_location_t wire_loc;
+  
   /*Collect data...*/
   for (uint8_t sensor_nr = 0; sensor_nr < NR_SENSORS; sensor_nr++) {
     /*Lets read a sensor!*/
     enable_sensor_LED(&sensor_array[sensor_nr]);
     enable_sensor_SI(&sensor_array[sensor_nr]);
     run_CLK_n_times(1);
-
+    
     /*Shift out two dummy pixels - run clock twice*/
     run_CLK_n_times(2);
     /*Now sample the entire sensor (128 pixels)*/
     for (uint8_t pixel_nr = 0; pixel_nr < NR_PIXELS; pixel_nr++) {
       if (pixel_nr == 17) {
-	disable_sensor_SI(&sensor_array[sensor_nr]);
+        disable_sensor_SI(&sensor_array[sensor_nr]);
       }
       enable_CLK();
       delayMicroseconds(1);
       disable_CLK();
- 
-      if (sensor_nr != 1){
-	sensor_array[sensor_nr].pixels[pixel_nr] =
-	  read_sensor(sensor_array[sensor_nr]);
-      }
-      else{
-	sensor_array[sensor_nr].pixels[pixel_nr] =
-	  read_sensor(sensor_array[sensor_nr]);
-      }
- 
       delayMicroseconds(1);
     }
     /*Shift out two dummy pixels + one final shift to reset*/
@@ -152,27 +148,82 @@ void loop()
 
     disable_sensor_LED(&sensor_array[sensor_nr]);
   }
-  wire_loc = get_wire_location(sensor_array);
-  if(lort++ == 10){
-    Serial.println("#################");
-    Serial.println(wire_loc.sensor_id);
-    Serial.println(wire_loc.pixel_id);
-    Serial.println(wire_loc.pixel_value);
+  
+  /*Collect data...*/
+  for (uint8_t sensor_nr = 0; sensor_nr < NR_SENSORS; sensor_nr++) {
+    /*Lets read a sensor!*/
+    enable_sensor_LED(&sensor_array[sensor_nr]);
+    enable_sensor_SI(&sensor_array[sensor_nr]);
+    run_CLK_n_times(1);
+    
+    /*Shift out two dummy pixels - run clock twice*/
+    run_CLK_n_times(2);
+    /*Now sample the entire sensor (128 pixels)*/
+    for (uint8_t pixel_nr = 0; pixel_nr < NR_PIXELS; pixel_nr++) {
+      if (pixel_nr == 17) {
+        disable_sensor_SI(&sensor_array[sensor_nr]);
+      }
+      enable_CLK();
+      delayMicroseconds(1);
+      disable_CLK();
 
-    for(int i = 0; i < NR_SENSORS; i++){
-      for(int j = 0; j < NR_PIXELS; j++){
-	char str[25];
-	sprintf(str, "%d,%d,%d", i, j, sensor_array[i].pixels[j]);
-	Serial.println(str);
+      if (sensor_nr != 1) {
+        sensor_array[sensor_nr].pixels[(NR_PIXELS-1)-pixel_nr] =
+          read_sensor(sensor_array[sensor_nr]);
+      }
+      else {
+        sensor_array[sensor_nr].pixels[pixel_nr] =
+          read_sensor(sensor_array[sensor_nr]);
+      }
+
+      delayMicroseconds(1);
+    }
+    /*Shift out two dummy pixels + one final shift to reset*/
+    run_CLK_n_times(4); // Was 3
+
+    disable_sensor_LED(&sensor_array[sensor_nr]);
+  }
+  //wire_loc = get_wire_location(sensor_array);
+  
+    
+    for (int i = 0; i < NR_SENSORS; i++) {
+      for (int j = 0; j < NR_PIXELS; j++) {
+        if ((normal[i] - sensor_array[i].pixels[j]) > MAGIC_VALUE) {
+          wire_loc.sensor_id = i;
+          wire_loc.pixel_id = j;
+          wire_loc.pixel_value = sensor_array[i].pixels[j];
+          i = NR_SENSORS;
+          j = NR_PIXELS;
+        }
       }
     }
-    while(1);
-  }
-
-  // Serial.println(wire_loc->sensor_id);
-  // Serial.println(wire_loc->pixel_id);
-  // Serial.println(wire_loc->pixel_value);
-  // while(1);
+    
+    if (wire_loc.pixel_value != 0) {
+      if (wire_loc.sensor_id == 1) {
+        wire_loc.pixel_id = wire_loc.pixel_id + NR_PIXELS;
+      } else if (wire_loc.sensor_id == 2) {
+        wire_loc.pixel_id = wire_loc.pixel_id + NR_PIXELS + NR_PIXELS;
+      }
+    }
+    
+/*    for (int i = 0; i < NR_SENSORS; i++) {
+      for (int j = 0; j < NR_PIXELS; j++) {
+        Serial.print(i);
+        Serial.print(",");
+        Serial.print(j);
+        Serial.print(",");
+        Serial.println(sensor_array[i].pixels[j]);
+      }
+    }*/
+    
+    /*Serial.print(wire_loc.sensor_id);
+    Serial.print(",");
+    Serial.print(wire_loc.pixel_id);
+    Serial.print(",");
+    Serial.println(wire_loc.pixel_value);*/
+    
+    analogWrite(DAC0, map(wire_loc.pixel_id, 0, 3*NR_PIXELS, 0, 255));
+    
 }
 
 /**
@@ -246,14 +297,16 @@ void dio(Pio *port, uint32_t mask, uint8_t state)
 }
 
 
-wire_location_t get_wire_location(sensor_t* sensors){  
+wire_location_t get_wire_location(sensor_t* sensors) {
   wire_location_t wire_loc;
-  for(int i = 0; i < NR_SENSORS; i++){
-    for(int j = 0; j < NR_PIXELS; j++){
-      if(sensors[i].pixels[j] < MAGIC_VALUE){
-	wire_loc.sensor_id = i;
-	wire_loc.pixel_id = j;
-	wire_loc.pixel_value = sensors[i].pixels[j];
+  for (int i = 0; i < NR_SENSORS; i++) {
+    for (int j = 0; j < NR_PIXELS; j++) {
+      if (sensors[i].pixels[j] < MAGIC_VALUE) {
+        wire_loc.sensor_id = i;
+        wire_loc.pixel_id = j;
+        wire_loc.pixel_value = sensors[i].pixels[j];
+        i = NR_SENSORS;
+        j = NR_PIXELS;
       }
     }
   }
