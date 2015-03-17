@@ -16,6 +16,9 @@
 #define NR_PIXELS  128
 #define MAGIC_VALUE 50
 
+const int MAGIC_THRESHOLD[] = {50, 50, 20};
+
+int DEAD_PIXELS[NR_SENSORS][NR_PIXELS] = { {0} };
 /**
  * ----------------------------------------------------------------------------
  * TYPES
@@ -63,7 +66,7 @@ void enable_sensor_SI(sensor_t *sensor);
 void disable_sensor_SI(sensor_t *sensor);
 uint16_t read_sensor(sensor_t sensor);
 void dio(Pio *port, uint32_t mask, uint8_t state);
-wire_location_t get_wire_location(sensor_t* sensors);
+int get_wire_location(wire_location_t* wire_loc);
 
 /**
  * ----------------------------------------------------------------------------
@@ -85,6 +88,10 @@ gpio_t TEST  = {PIOB, (1 << 13), 21};
  */
 void setup()
 {
+  DEAD_PIXELS[2][6] = 1;
+  DEAD_PIXELS[2][7] = 1;
+  DEAD_PIXELS[2][8] = 1;
+  
   Serial.begin(9600);
 
   sensor_t sensor1, sensor2, sensor3;
@@ -113,6 +120,9 @@ void setup()
   disable_sensor_LED(&sensor_array[0]);
   disable_sensor_LED(&sensor_array[1]);
   disable_sensor_LED(&sensor_array[2]);
+
+  analogWriteResolution(10);
+  
 }
 
 /**
@@ -120,13 +130,9 @@ void setup()
  * LOOP...
  * ----------------------------------------------------------------------------
  */
+wire_location_t wire_loc;
 void loop()
 {
-  wire_location_t wire_loc;
-  int wire_shadow_start[3] = {0}, wire_shadow_end[3] = {0};
-  int recent_pixel, previous_pixel = 0;
-  int start_found = 0, end_found = 0;
-
   /*Collect data...*/
   for (uint8_t sensor_nr = 0; sensor_nr < NR_SENSORS; sensor_nr++) {
     /*Lets read a sensor!*/
@@ -186,88 +192,9 @@ void loop()
 
     disable_sensor_LED(&sensor_array[sensor_nr]);
   }
-  //wire_loc = get_wire_location(sensor_array);
-
-
-  for (int i = 0; i < NR_SENSORS; i++) {
-    for (int j = 3; j < NR_PIXELS; j++) {
-      if(i == 2 && (j == 6 || j==7 || j == 8)){ //Dead pixels
-        break;
-      }
-      recent_pixel = sensor_array[i].pixels[j];
-      if (!start_found && !end_found && recent_pixel - sensor_array[i].pixels[j-3] < -40) {
-        wire_shadow_start[0] = i; // Sensor id
-        wire_shadow_start[1] = j; // Pixel ID
-        wire_shadow_start[2] = recent_pixel; // Value
-        start_found = 1;
-      } else if (!end_found && recent_pixel - sensor_array[i].pixels[j-3] > 40) {
-        wire_shadow_end[0] = i;
-        wire_shadow_end[1] = j;
-        wire_shadow_end[2] = recent_pixel;
-        end_found = 1;
-        }
-      /*if ((normal[i] - sensor_array[i].pixels[j]) > MAGIC_VALUE) {
-        wire_loc.sensor_id = i;
-        wire_loc.pixel_id = j;
-        wire_loc.pixel_value = sensor_array[i].pixels[j];
-        i = NR_SENSORS;
-        j = NR_PIXELS;
-      }*/
-      previous_pixel = recent_pixel;
-    }
-  }
-
-//Serial.print(start_found);
-//Serial.println(end_found);
-
-  if (start_found && !end_found) { // Hvis vi er i højre kant af sensoren
-    wire_loc.sensor_id = wire_shadow_start[0];
-    wire_loc.pixel_id = wire_shadow_start[1] + 15; // Hvis vi siger at snoren er 30 pixels bred - Det må vi lige kigge på    
-  } else if (end_found && !start_found) { // Hvis vi er i venstre kant af sensoren
-    wire_loc.sensor_id = wire_shadow_end[0];
-    wire_loc.pixel_id = wire_shadow_end[1] - 15;
-  } else if (start_found && end_found) { //Hvis vi er inden for sensorens synsvidde.
-    wire_loc.pixel_id = (wire_shadow_end[1] + wire_shadow_start[1]) / 2;
-    wire_loc.sensor_id = wire_shadow_start[0];
-  /*  Serial.print("Start: ");
-    Serial.println(wire_shadow_start[1]);
-    Serial.print("End: ");
-    Serial.println(wire_shadow_end[1]); 
-    Serial.print("Sensor: ");
-    Serial.println(wire_loc.sensor_id);*/
-  }
-
-  wire_loc.pixel_id = wire_loc.pixel_id + (NR_PIXELS * wire_loc.sensor_id);
-
-  Serial.println(wire_loc.pixel_id);
   
-/*
-  if (wire_loc.pixel_value != 0) {
-    if (wire_loc.sensor_id == 1) {
-      wire_loc.pixel_id = wire_loc.pixel_id + NR_PIXELS;
-    } else if (wire_loc.sensor_id == 2) {
-      wire_loc.pixel_id = wire_loc.pixel_id + NR_PIXELS + NR_PIXELS;
-    }
-  }
-*/
- /*     for (int i = 0; i < NR_SENSORS; i++) {
-        for (int j = 0; j < NR_PIXELS; j++) {
-          Serial.print(i);
-          Serial.print(",");
-          Serial.print(j);
-          Serial.print(",");
-          Serial.println(sensor_array[i].pixels[j]);
-        }
-      }
-*/
-  /*Serial.print(wire_loc.sensor_id);
-  Serial.print(",");
-  Serial.print(wire_loc.pixel_id);
-  Serial.print(",");
-  Serial.println(wire_loc.pixel_value);*/
-
-  analogWrite(DAC0, map(wire_loc.pixel_id, 0, 3 * NR_PIXELS, 0, 255));
-
+  get_wire_location(&wire_loc);
+  analogWrite(DAC0, map(wire_loc.pixel_id, 0, 3 * NR_PIXELS, 0, 1024));
 }
 
 /**
@@ -341,18 +268,32 @@ void dio(Pio *port, uint32_t mask, uint8_t state)
 }
 
 
-wire_location_t get_wire_location(sensor_t* sensors) {
-  wire_location_t wire_loc;
-  for (int i = 0; i < NR_SENSORS; i++) {
-    for (int j = 0; j < NR_PIXELS; j++) {
-      if (sensors[i].pixels[j] < MAGIC_VALUE) {
-        wire_loc.sensor_id = i;
-        wire_loc.pixel_id = j;
-        wire_loc.pixel_value = sensors[i].pixels[j];
-        i = NR_SENSORS;
-        j = NR_PIXELS;
+int get_wire_location(wire_location_t* wire_loc) {
+  int start = -1, end = -1, diff;
+  
+  for(int i = 0; i < NR_SENSORS; i++){
+    for(int j = 5; j < NR_PIXELS; j++){
+
+      if(is_dead_pixel(i,j))
+	continue;
+
+      diff  = sensor_array[i].pixels[j] - sensor_array[i].pixels[j - 5];
+
+      if( (start == -1) && (diff < -MAGIC_THRESHOLD[i]) ){
+	start = j;
+      }
+      else if( (start != -1) && (diff > MAGIC_THRESHOLD[i]) ){
+	end = j;
+	wire_loc->sensor_id = i;
+	wire_loc->pixel_id = ( (start + end) / 2 ) +  (i * NR_PIXELS);
+	wire_loc->pixel_value = sensor_array[i].pixels[wire_loc->pixel_id];
+	return wire_loc->pixel_id;
       }
     }
   }
-  return wire_loc;
+  return -1;
+}
+
+bool is_dead_pixel(uint8_t sensor, uint8_t pixel){
+  return DEAD_PIXELS[sensor][pixel] == 1;
 }
