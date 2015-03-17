@@ -40,13 +40,13 @@ int read_and_write(int in_channel, int out_channel) {
 }
 
 void control_magnet() {
-  lsampl_t ENABLE, DISABLE;
+  lsampl_t IN;
   /*52, 17, 49, 47, 19*/
   /*TRYK: 17, 52*/
   /*FLIP: 47, 49*/
 
   //IO SUBDEV: 10, 7, 2
-  comedi_dio_read(device, DIGITAL_IO_SUBDEV, MAGNET_FLIP, &ENABLE);
+  comedi_dio_read(device, DIGITAL_IO_SUBDEV, MAGNET_FLIP, &IN);
   comedi_dio_write(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, IN);
   //48 = 07
 }
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-  comedi_dio_config(device, DIGITAL_IO_SUBDEV, MAGNET_BUTTON, COMEDI_INPUT);
+  comedi_dio_config(device, DIGITAL_IO_SUBDEV, MAGNET_FLIP, COMEDI_INPUT);
   while(1)
   {
 
