@@ -123,8 +123,8 @@ void setup()
 void loop()
 {
   wire_location_t wire_loc;
-  int wire_shadow_start[3], wire_shadow_end[3];
-  int recent_pixel, previous_pixel;
+  int wire_shadow_start[3] = {0}, wire_shadow_end[3] = {0};
+  int recent_pixel, previous_pixel = 0;
   int start_found = 0, end_found = 0;
 
   /*Collect data...*/
@@ -190,19 +190,22 @@ void loop()
 
 
   for (int i = 0; i < NR_SENSORS; i++) {
-    for (int j = 0; j < NR_PIXELS; j++) {
+    for (int j = 3; j < NR_PIXELS; j++) {
+      if(i == 2 && (j == 6 || j==7 || j == 8)){ //Dead pixels
+        break;
+      }
       recent_pixel = sensor_array[i].pixels[j];
-      if (!start_found && recent_pixel - previous_pixel < -30) {
+      if (!start_found && !end_found && recent_pixel - sensor_array[i].pixels[j-3] < -40) {
         wire_shadow_start[0] = i; // Sensor id
         wire_shadow_start[1] = j; // Pixel ID
         wire_shadow_start[2] = recent_pixel; // Value
         start_found = 1;
-      } else if (!end_found && recent_pixel - previous_pixel > 30) {
+      } else if (!end_found && recent_pixel - sensor_array[i].pixels[j-3] > 40) {
         wire_shadow_end[0] = i;
         wire_shadow_end[1] = j;
         wire_shadow_end[2] = recent_pixel;
         end_found = 1;
-      }
+        }
       /*if ((normal[i] - sensor_array[i].pixels[j]) > MAGIC_VALUE) {
         wire_loc.sensor_id = i;
         wire_loc.pixel_id = j;
@@ -214,19 +217,30 @@ void loop()
     }
   }
 
+//Serial.print(start_found);
+//Serial.println(end_found);
+
   if (start_found && !end_found) { // Hvis vi er i højre kant af sensoren
     wire_loc.sensor_id = wire_shadow_start[0];
-    wire_loc.pixel_id = wire_shadow_start[1] + 15; // Hvis vi siger at snoren er 30 pixels bred - Det må vi lige kigge på
+    wire_loc.pixel_id = wire_shadow_start[1] + 15; // Hvis vi siger at snoren er 30 pixels bred - Det må vi lige kigge på    
   } else if (end_found && !start_found) { // Hvis vi er i venstre kant af sensoren
     wire_loc.sensor_id = wire_shadow_end[0];
     wire_loc.pixel_id = wire_shadow_end[1] - 15;
   } else if (start_found && end_found) { //Hvis vi er inden for sensorens synsvidde.
     wire_loc.pixel_id = (wire_shadow_end[1] + wire_shadow_start[1]) / 2;
     wire_loc.sensor_id = wire_shadow_start[0];
+  /*  Serial.print("Start: ");
+    Serial.println(wire_shadow_start[1]);
+    Serial.print("End: ");
+    Serial.println(wire_shadow_end[1]); 
+    Serial.print("Sensor: ");
+    Serial.println(wire_loc.sensor_id);*/
   }
 
   wire_loc.pixel_id = wire_loc.pixel_id + (NR_PIXELS * wire_loc.sensor_id);
 
+  Serial.println(wire_loc.pixel_id);
+  
 /*
   if (wire_loc.pixel_value != 0) {
     if (wire_loc.sensor_id == 1) {
@@ -236,7 +250,7 @@ void loop()
     }
   }
 */
-  /*    for (int i = 0; i < NR_SENSORS; i++) {
+ /*     for (int i = 0; i < NR_SENSORS; i++) {
         for (int j = 0; j < NR_PIXELS; j++) {
           Serial.print(i);
           Serial.print(",");
@@ -244,8 +258,8 @@ void loop()
           Serial.print(",");
           Serial.println(sensor_array[i].pixels[j]);
         }
-      }*/
-
+      }
+*/
   /*Serial.print(wire_loc.sensor_id);
   Serial.print(",");
   Serial.print(wire_loc.pixel_id);
