@@ -10,7 +10,7 @@ int aref = AREF_GROUND;
 comedi_t *device;
 
 #define DIGITAL_IO_SUBDEV 2
-#define MAGNET_BUTTON 1
+#define MAGNET_FLIP 3
 //48 = 7
 #define MAGNET_ENABLE 7
 
@@ -40,18 +40,14 @@ int read_and_write(int in_channel, int out_channel) {
 }
 
 void control_magnet() {
-  lsampl_t IN;
+  lsampl_t ENABLE, DISABLE;
   /*52, 17, 49, 47, 19*/
   /*TRYK: 17, 52*/
   /*FLIP: 47, 49*/
 
   //IO SUBDEV: 10, 7, 2
-  comedi_dio_read(device, DIGITAL_IO_SUBDEV, MAGNET_BUTTON, &IN);
-  if (IN != 1)
-  {
-    printf("MAGNET, ENABLE!\n");
-    comedi_dio_write(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, IN);
-  }
+  comedi_dio_read(device, DIGITAL_IO_SUBDEV, MAGNET_FLIP, &ENABLE);
+  comedi_dio_write(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, IN);
   //48 = 07
 }
 
@@ -68,9 +64,10 @@ int main(int argc, char *argv[])
   while(1)
   {
 
-    //read_and_write(14, 0);
+    read_and_write(14, 0);
+    read_and_write(15, 1);
     control_magnet();
-    usleep(250 * 1000); /*ms -> us*/
+    usleep(100 * 1000); /*ms -> us*/
   }
   return -1;
 }
