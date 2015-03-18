@@ -282,15 +282,26 @@ int get_wire_location(wire_location_t* wire_loc) {
       if( (start == -1) && (diff < -MAGIC_THRESHOLD[i]) ){
 	start = j;
       }
-      else if( (start != -1) && (diff > MAGIC_THRESHOLD[i]) ){
+      else if( (end == -1) && (diff > MAGIC_THRESHOLD[i]) ){
 	end = j;
-	wire_loc->sensor_id = i;
-	wire_loc->pixel_id = ( (start + end) / 2 ) +  (i * NR_PIXELS);
-	wire_loc->pixel_value = sensor_array[i].pixels[wire_loc->pixel_id];
-	return wire_loc->pixel_id;
       }
+      
+      if( (start != -1) && (end != -1) ){
+	wire_loc->sensor_id = i;
+	wire_loc->pixel_id = ( (start + end) / 2 ) + (NR_SENSORS * i);
+	wire_loc->pixel_value = sensor_array[i].pixels[wire_loc->pixel_id];
+	return wire_loc->pixel_value;
+      }	
+    }
+    
+    if( (start != -1) || (end != -1) ){
+      wire_loc->sensor_id = i;
+      wire_loc->pixel_id = ( (start != -1 ? (start + 15) : 0) + (end != -1 ? (end - 15) : 0) ) + (NR_SENSORS * i);
+      wire_loc->pixel_value = sensor_array[i].pixels[wire_loc->pixel_id];
+      return wire_loc->pixel_value;
     }
   }
+  
   return -1;
 }
 
