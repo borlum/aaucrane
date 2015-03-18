@@ -194,6 +194,7 @@ void loop()
   }
   
   get_wire_location(&wire_loc);
+  Serial.print(wire_loc->sensor_id); Serial.print(','); Serial.println(wire_loc->pixel_id);
   analogWrite(DAC0, map(wire_loc.pixel_id, 0, 3 * NR_PIXELS, 0, 1024));
 }
 
@@ -273,7 +274,6 @@ int get_wire_location(wire_location_t* wire_loc) {
   
   for(int i = 0; i < NR_SENSORS; i++){
     for(int j = 5; j < NR_PIXELS; j++){
-
       if(is_dead_pixel(i,j))
 	continue;
 
@@ -286,7 +286,7 @@ int get_wire_location(wire_location_t* wire_loc) {
 	end = j;
       }
       
-      if( (start != -1) && (end != -1) ){
+      if( (start != -1) && (end != -1) ){ // Hvis vi har fundet begge flanker
 	wire_loc->sensor_id = i;
 	wire_loc->pixel_id = ( (start + end) / 2 ) + (NR_SENSORS * i);
 	wire_loc->pixel_value = sensor_array[i].pixels[wire_loc->pixel_id];
@@ -296,8 +296,13 @@ int get_wire_location(wire_location_t* wire_loc) {
     
     if( (start != -1) || (end != -1) ){
       wire_loc->sensor_id = i;
-      wire_loc->pixel_id = ( (start != -1 ? (start + 15) : 0) + (end != -1 ? (end - 15) : 0) ) + (NR_PIXELS * i);
+      if(start != -1){
+	wire_loc->pixel_id = start + (NR_PIXELS * i)+15;
+      }else if (end != -1){
+	wire_loc->pixel_id = end + (NR_PIXELS * i)-15;
+      }
       wire_loc->pixel_value = sensor_array[i].pixels[wire_loc->pixel_id];
+      //      Serial.print(wire_loc->sensor_id); Serial.print(','); Serial.println(wire_loc->pixel_id);
       return wire_loc->pixel_value;
     }
   }
