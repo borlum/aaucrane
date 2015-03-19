@@ -20,7 +20,7 @@ FILE *fp;
 RT_TASK *rt_sampler;
 pthread_t thread_sampler;
 
-int sensors[] = {0, 1, 2, 3, 4, 9, 10};
+int sensors[] = {0, 1, 5, 2, 3, 4, 9, 10};
 int len = sizeof(sensors) / sizeof(int);
 
 void sig_handler(int sig) {
@@ -74,7 +74,7 @@ void *sampler(void *args) {
   printf("Started step response using RTAI for channel: %d\n", *channel);
 
   fp = fopen("data.csv", "w");
-  fprintf(fp, "TIMESTAMP,ANGLE,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
+  fprintf(fp, "TIMESTAMP,ANGLE1, ANGLE2, XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
   RTIME t_init = rt_get_time_ns();
   while (1) {
     if (sampl_nr == 100) {
