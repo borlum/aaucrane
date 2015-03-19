@@ -20,7 +20,7 @@ FILE *fp;
 RT_TASK *rt_sampler;
 pthread_t thread_sampler;
 
-int sensors[] = {0, 1, 5, 2, 3, 4, 9, 10};
+int sensors[] = {0, 1, 10, 2, 3, 4, 9, 10};
 int len = sizeof(sensors) / sizeof(int);
 
 void sig_handler(int sig) {
@@ -33,7 +33,7 @@ void sig_handler(int sig) {
     if(pthread_kill(thread_sampler, SIG_CLOSE_FP) == 0 && pthread_join(thread_sampler, ret_val) == 0){
       /* Gracefully success */
       exit(0);
-    } 
+    }
     else{
       /* Gracefully failure */
       clock_gettime(CLOCK_REALTIME, &ts);
@@ -52,7 +52,7 @@ void sig_handler(int sig) {
 void *sampler(void *args) {
   int *channel = args;
 
-  RTIME t_sample = nano2count(10 * TICK_TIME);
+  RTIME t_sample = nano2count(100 * TICK_TIME);
   RTIME t_expected = rt_get_time() + t_sample;
 
   lsampl_t data, maxdata;
@@ -65,21 +65,22 @@ void *sampler(void *args) {
   int ID = nam2num("sampler");
   if (!(rt_sampler = rt_task_init_schmod(ID,1,0,0,SCHED_FIFO,0))) {
     printf("ERROR: Could not init. task [sampler]\n");
-    exit(1); 
+    exit(1);
   }
 
   rt_task_make_periodic(rt_sampler, t_expected, t_sample);
   rt_make_hard_real_time();
 
   printf("Started step response using RTAI for channel: %d\n", *channel);
-
-  fp = fopen("data.csv", "w");
+  char tmp[80];
+  sprintf(tmp, "/var/www/html/data/crane/xsteps/10.csv");
+  fp = fopen(tmp, "w");
   fprintf(fp, "TIMESTAMP,ANGLE1, ANGLE2, XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
   RTIME t_init = rt_get_time_ns();
   while (1) {
     if (sampl_nr == 100) {
       comedi_data_write(device, 1, 0, range, aref, *channel); /* STEP */
-    }	  
+    }
 
     fprintf(fp, "%lld,", rt_get_time_ns() - t_init);
 
@@ -94,7 +95,6 @@ void *sampler(void *args) {
     }
     fprintf(fp, "\n");
     sampl_nr++;
-	
     rt_task_wait_period();
   }
 
@@ -106,7 +106,7 @@ int main(int argc, char* argv[]) {
   if(argc == 2){
     channel = atoi(argv[1]);
   }
-    
+
   printf("Using channel %d\n", channel);
 
   signal(SIGINT, sig_handler);
@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
   }
 
   /* RESET */
-  comedi_data_write(device, 1, 0, range, aref, 4000);
+  comedi_data_write(device, 1, 0, range, aref, 2047);
   usleep(5000 * 1000);
 
   pthread_create(&thread_sampler, NULL, &sampler, &channel);
