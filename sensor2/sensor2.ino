@@ -14,9 +14,8 @@
  */
 #define NR_SENSORS 3
 #define NR_PIXELS  128
-#define MAGIC_VALUE 50
 
-const int MAGIC_THRESHOLD[] = {50, 50, 20};
+const int MAGIC_THRESHOLD[] = {50, 50, 50};
 
 int DEAD_PIXELS[NR_SENSORS][NR_PIXELS] = { {0} };
 /**
@@ -193,10 +192,23 @@ void loop()
     disable_sensor_LED(&sensor_array[sensor_nr]);
   }
   
- /* Serial.print(wire_loc.sensor_id);
+  /*for(int i = 0; i < NR_SENSORS; i++){
+    for(int j = 5; j < NR_PIXELS; j++){
+      Serial.print(i);
+      Serial.print(',');
+      Serial.println(sensor_array[i].pixels[j]);
+    }
+  }*/
+  
+  /*
+  Serial.print(wire_loc.sensor_id);
   Serial.print(',');
   Serial.println(wire_loc.pixel_id);*/
+  
+  get_wire_location(&wire_loc);
+
   analogWrite(DAC0, map(wire_loc.pixel_id, 0, 3 * NR_PIXELS, 0, 1024));
+  
 }
 
 /**
@@ -271,7 +283,7 @@ void dio(Pio *port, uint32_t mask, uint8_t state)
 
 
 int get_wire_location(wire_location_t* wire_loc) {
-  int start = -1, end = -1, diff;
+  int start = -1, wire_end = -1, diff;
   
   for(int i = 0; i < NR_SENSORS; i++){
     for(int j = 5; j < NR_PIXELS; j++){
@@ -283,32 +295,30 @@ int get_wire_location(wire_location_t* wire_loc) {
       if( (start == -1) && (diff < -MAGIC_THRESHOLD[i]) ){
         start = j;
       }
-      else if( (end == -1) && (diff > MAGIC_THRESHOLD[i]) ){
-        end = j;
+      else if( (wire_end == -1) && (diff > MAGIC_THRESHOLD[i]) ){
+        wire_end = j;
       }
       
-      if( (start != -1) && (end != -1) ){ // Hvis vi har fundet begge flanker
+      if( (start != -1) && (wire_end != -1) ){ // Hvis vi har fundet begge flanker
         wire_loc->sensor_id = i;
-        wire_loc->pixel_id = ( (start + end) / 2 ) + (NR_PIXELS * i);
+        wire_loc->pixel_id = ( (start + wire_end) / 2 ) + (NR_PIXELS * i);
         wire_loc->pixel_value = sensor_array[i].pixels[wire_loc->pixel_id];
         return wire_loc->pixel_value;
       } 
     }
     
-    if( (start != -1) || (end != -1) ){
+    if( (start != -1) || (wire_end != -1) ){
       wire_loc->sensor_id = i;
       
       if(start != -1){
-        wire_loc->pixel_id = start + (NR_PIXELS * i)+15;
-      }else if (end != -1){
-        wire_loc->pixel_id = end + (NR_PIXELS * i)-15;
+        wire_loc->pixel_id = start + (NR_PIXELS * i);
+      }else if (wire_end != -1){
+        wire_loc->pixel_id = wire_end + (NR_PIXELS * i);
       }
-      
       wire_loc->pixel_value = sensor_array[i].pixels[wire_loc->pixel_id];
       return wire_loc->pixel_value;
     }
   }
-  Serial.println("Deadband!");
   return -1;
 }
 
