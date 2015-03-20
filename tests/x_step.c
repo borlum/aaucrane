@@ -4,11 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <comedilib.h>
-#include <rtai_lxrt.h>
-#include <rtai_msg.h>
-#include <pthread.h>
-
-#define TICK_TIME 1E6
+#include <time.h>
 
 const int range = 0;
 const int aref = AREF_GROUND;
@@ -17,7 +13,6 @@ comedi_t *device;
 
 FILE *fp;
 
-RT_TASK *rt_sampler;
 pthread_t thread_sampler;
 
 int sensors[] = {0, 1, 10, 2, 3, 4, 9, 10};
@@ -52,37 +47,29 @@ void sig_handler(int sig) {
 void *sampler(void *args) {
   int *channel = args;
 
-  RTIME t_sample = nano2count(100 * TICK_TIME);
-  RTIME t_expected = rt_get_time() + t_sample;
-
   lsampl_t data, maxdata;
   comedi_range *range_info;
   double physical_value;
   int sampl_nr = 0;
 
-  unsigned int *msg;
+  clock_t t_0, t_sample;
 
-  int ID = nam2num("sampler");
-  if (!(rt_sampler = rt_task_init_schmod(ID,1,0,0,SCHED_FIFO,0))) {
-    printf("ERROR: Could not init. task [sampler]\n");
-    exit(1);
-  }
+  t_0 = clock();
 
-  rt_task_make_periodic(rt_sampler, t_expected, t_sample);
-  rt_make_hard_real_time();
-
-  printf("Started step response using RTAI for channel: %d\n", *channel);
   char tmp[80];
-  sprintf(tmp, "/var/www/html/data/crane/xsteps/10.csv");
+  sprintf(tmp, "/var/www/html/data/crane/xsteps/%d.csv", (int)time(NULL));
   fp = fopen(tmp, "w");
-  fprintf(fp, "TIMESTAMP,ANGLE1, ANGLE2, XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
-  RTIME t_init = rt_get_time_ns();
+  fprintf(fp, "TIMESTAMP,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
+
+
   while (1) {
     if (sampl_nr == 100) {
       comedi_data_write(device, 1, 0, range, aref, *channel); /* STEP */
     }
 
-    fprintf(fp, "%lld,", rt_get_time_ns() - t_init);
+    float diff = (((float)t2 - (float)t1) / 1000000.0F ) * 1000; 
+
+    fprintf(fp, "%ld,",  (long)diff);
 
     for (int i = 0; i < len; i++) {
       /* Log data */
@@ -95,10 +82,7 @@ void *sampler(void *args) {
     }
     fprintf(fp, "\n");
     sampl_nr++;
-    rt_task_wait_period();
   }
-
-  rt_task_delete(rt_sampler);
 }
 
 int main(int argc, char* argv[]) {
