@@ -12,7 +12,7 @@ comedi_t *device;
 #define DIGITAL_IO_SUBDEV 2
 #define MAGNET_FLIP 3
 //48 = 7
-#define MAGNET_ENABLE 6
+#define MAGNET_ENABLE 7
 
 const char filename[] = "/dev/comedi0";
 
