@@ -60,6 +60,7 @@ void *sampler(void *args) {
     }
     fprintf(fp, "\n");
     sampl_nr++;
+    usleep(500);
   }
 }
 
