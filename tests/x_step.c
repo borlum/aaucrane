@@ -1,6 +1,3 @@
-#define _GNU_SOURCE
-#define SIG_CLOSE_FP 30 /* User-defined signal 1 - see man signal(7) */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <comedilib.h>
@@ -17,32 +14,6 @@ pthread_t thread_sampler;
 
 int sensors[] = {0, 1, 10, 2, 3, 4, 9, 10};
 int len = sizeof(sensors) / sizeof(int);
-
-void sig_handler(int sig) {
-  printf("sig_handler: signal: %d\n", sig);
-  if(sig == SIGINT){
-    /* Trying to terminate gracefully */
-    struct timespec ts;
-    void** ret_val;
-
-    if(pthread_kill(thread_sampler, SIG_CLOSE_FP) == 0 && pthread_join(thread_sampler, ret_val) == 0){
-      /* Gracefully success */
-      exit(0);
-    }
-    else{
-      /* Gracefully failure */
-      clock_gettime(CLOCK_REALTIME, &ts);
-      ts.tv_sec = ts.tv_sec + 1; /* give the thread 1 sec to return, otherwise, crash! */
-      pthread_cancel(thread_sampler);
-      pthread_timedjoin_np(thread_sampler, ret_val, &ts);
-      usleep(100 * 1000);
-      exit(1);
-    }
-  }
-  else if(sig == SIG_CLOSE_FP){
-    fclose(fp);
-  }
-}
 
 void *sampler(void *args) {
   int *channel = args;
@@ -93,7 +64,6 @@ int main(int argc, char* argv[]) {
 
   printf("Using channel %d\n", channel);
 
-  signal(SIGINT, sig_handler);
   device = comedi_open(device_name);
   if (device == NULL) {
     printf("Error opening file, %s\n", device_name);
