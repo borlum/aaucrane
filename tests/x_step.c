@@ -75,10 +75,9 @@ int main(int argc, char* argv[]) {
     exit(1);
   }
 
-  printf("TEST PARAMETERS:\n");
-  scanf("WEIGHT: %d", &payload_weight);
-  scanf("LENGTH: %d", &payload_length);
-  printf("THANK YOU!\n");
+  printf("TEST PARAMETERS => weight, length\n");
+  scanf("%i, %i", &payload_weight, &payload_length);
+  printf("THANK YOU! => RUNNING TEST!\n");
   
 
   comedi_dio_config(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, COMEDI_OUTPUT);
