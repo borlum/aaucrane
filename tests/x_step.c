@@ -5,6 +5,9 @@
 #include <comedilib.h>
 #include <pthread.h>
 
+#define DIGITAL_IO_SUBDEV 2
+#define MAGNET_ENABLE 7
+
 const int range = 0;
 const int aref = AREF_GROUND;
 const char device_name[] = "/dev/comedi0";
@@ -67,6 +70,8 @@ int main(int argc, char* argv[]) {
     exit(1);
   }
 
+  comedi_dio_config(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, COMEDI_OUTPUT);
+  comedi_dio_write(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, 1);
   /* RESET */
   comedi_data_write(device, 1, 0, range, aref, 2047);
   usleep(5000 * 1000);
