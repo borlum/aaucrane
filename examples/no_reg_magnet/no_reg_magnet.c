@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
   }
 
   comedi_dio_config(device, DIGITAL_IO_SUBDEV, MAGNET_FLIP, COMEDI_INPUT);
+  comedi_dio_config(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, COMEDI_OUTPUT);
   while(1)
   {
 
