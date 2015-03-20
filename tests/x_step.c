@@ -38,7 +38,7 @@ void *sampler(void *args) {
       comedi_data_write(device, 1, 0, range, aref, *channel); /* STEP */
     }
 
-    float diff = (((float)t2 - (float)t1) / 1000000.0F ) * 1000; 
+    float diff = (((float)t_sample - (float)t_0) / 1000000.0F ) * 1000; 
 
     fprintf(fp, "%ld,",  (long)diff);
 
