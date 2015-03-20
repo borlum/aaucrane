@@ -21,7 +21,8 @@ pthread_t thread_sampler;
 int sensors[] = {0, 1, 10, 2, 3, 4, 9, 10};
 int len = sizeof(sensors) / sizeof(int);
 
-char test_desc[180];
+int payload_length;
+int payload_weight;
 
 void *sampler(void *args) {
   lsampl_t data, maxdata;
@@ -39,7 +40,7 @@ void *sampler(void *args) {
   char tmp[80];
   sprintf(tmp, "/var/www/html/data/crane/xsteps/%d.csv", (int)time(NULL));
   fp = fopen(tmp, "w");
-  fprintf(fp, "DESC.: %s\n", test_desc);
+  fprintf(fp, "WEIGHT: %d, LENGTH: %d\n", payload_weight, payload_length);
   fprintf(fp, "TIMESTAMP,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
 
   while (1) {
@@ -74,9 +75,11 @@ int main(int argc, char* argv[]) {
     exit(1);
   }
 
-  printf("TEST DESCRIPTION:\n");
-  scanf("%s\n", test_desc);
-  printf(" => Thank you! Running step...");
+  printf("TEST PARAMETERS:\n");
+  scanf("WEIGHT: %d", &payload_weight);
+  scanf("LENGTH: %d", &payload_length);
+  printf("THANK YOU!\n");
+  
 
   comedi_dio_config(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, COMEDI_OUTPUT);
   comedi_dio_write(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, 1);
