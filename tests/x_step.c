@@ -46,7 +46,7 @@ void *sampler(void *args) {
     clock_gettime(CLOCK_REALTIME, &tm);
     t_sample = tm.tv_nsec + tm.tv_sec * nano; 
 
-    fprintf(fp, "%ld,",  (t_sample - t_0) / 1000);
+    fprintf(fp, "%ld,",  (t_sample - t_0));
 
     for (int i = 0; i < len; i++) {
       /* Log data */
