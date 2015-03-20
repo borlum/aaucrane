@@ -14,6 +14,7 @@
  */
 #define NR_SENSORS 3
 #define NR_PIXELS  128
+#define WIRE_WIDTH_PX 30
 
 const int MAGIC_THRESHOLD[] = {50, 50, 50};
 
@@ -204,10 +205,9 @@ void loop()
   Serial.print(wire_loc.sensor_id);
   Serial.print(',');
   Serial.println(wire_loc.pixel_id);*/
-  
   get_wire_location(&wire_loc);
-
-  analogWrite(DAC0, map(wire_loc.pixel_id, 0, 3 * NR_PIXELS, 0, 1024));
+//  Serial.println(map(wire_loc.pixel_id, 0, 3 * NR_PIXELS, 0, 1024));
+  analogWrite(DAC1, map(wire_loc.pixel_id, 0, 3 * NR_PIXELS, 0, 1024));
   
 }
 
@@ -311,10 +311,11 @@ int get_wire_location(wire_location_t* wire_loc) {
       wire_loc->sensor_id = i;
       
       if(start != -1){
-        wire_loc->pixel_id = start + (NR_PIXELS * i);
+        wire_loc->pixel_id = start + (NR_PIXELS * i) + WIRE_WIDTH_PX/2;
       }else if (wire_end != -1){
-        wire_loc->pixel_id = wire_end + (NR_PIXELS * i);
+        wire_loc->pixel_id = wire_end + (NR_PIXELS * i) - WIRE_WIDTH_PX/2;
       }
+      
       wire_loc->pixel_value = sensor_array[i].pixels[wire_loc->pixel_id];
       return wire_loc->pixel_value;
     }
