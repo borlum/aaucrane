@@ -42,7 +42,7 @@ void *sampler(void *args) {
 
     float diff = (((float)t_sample - (float)t_0) / 1000000.0F ) * 1000; 
 
-    fprintf(fp, "%ld,",  (long)diff);
+    fprintf(fp, "%f,",  diff);
 
     for (int i = 0; i < len; i++) {
       /* Log data */
