@@ -6,8 +6,8 @@ function [] = plotCraneStep(test)
         return;
     end
 
-    %plotAngleStep(grabData(test));
-    plotXVStep(grabData(test));
+    plotAngleStep(grabData(test));
+    %plotXVStep(grabData(test));
 
     function [] = plotXStep(stepData)
         plot(stepData.t, stepData.x);

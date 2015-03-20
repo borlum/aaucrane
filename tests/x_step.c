@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <time.h>
 #include <comedilib.h>
@@ -62,7 +63,7 @@ void *sampler(void *args) {
     }
     fprintf(fp, "\n");
     sampl_nr++;
-    usleep(500);
+    usleep(1000);
   }
 }
 
@@ -74,7 +75,7 @@ int main(int argc, char* argv[]) {
   }
 
   printf("TEST DESCRIPTION:\n");
-  scanf("%s", test_desc);
+  scanf("%s\n", test_desc);
   printf(" => Thank you! Running step...");
 
   comedi_dio_config(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, COMEDI_OUTPUT);
