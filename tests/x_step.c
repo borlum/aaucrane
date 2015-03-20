@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <comedilib.h>
+#include <unistd.h>
 #include <time.h>
+#include <comedilib.h>
+#include <pthread.h>
 
 const int range = 0;
 const int aref = AREF_GROUND;
