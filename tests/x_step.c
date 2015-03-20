@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
   }
 
   /* RESET */
-  comedi_data_write(device, 1, 0, range, aref, 4000);
+  comedi_data_write(device, 1, 0, range, aref, 0);
   usleep(5000 * 1000);
 
   pthread_create(&thread_sampler, NULL, &sampler, &channel);
