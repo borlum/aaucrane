@@ -25,9 +25,12 @@ void *sampler(void *args) {
   double physical_value;
   int sampl_nr = 0;
 
-  clock_t t_0, t_sample;
+  const unsigned long long nano = 1000000000;
+  unsigned long t_0, t_sample;
+  struct timespec tm;
 
-  t_0 = clock();
+  clock_gettime(CLOCK_REALTIME, &tm);
+  t_0 = tm.tv_nsec + tm.tv_sec * nano;
 
   char tmp[80];
   sprintf(tmp, "/var/www/html/data/crane/xsteps/%d.csv", (int)time(NULL));
@@ -40,9 +43,10 @@ void *sampler(void *args) {
       comedi_data_write(device, 1, 0, range, aref, *channel); /* STEP */
     }
 
-    float diff = (((float)t_sample - (float)t_0) / 1000000.0F ) * 1000; 
+    clock_gettime(CLOCK_REALTIME, &tm);
+    t_sample = tm.tv_nsec + tm.tv_sec * nano; 
 
-    fprintf(fp, "%f,",  diff);
+    fprintf(fp, "%ld,",  (t_sample - t_0) / 1000);
 
     for (int i = 0; i < len; i++) {
       /* Log data */
