@@ -48,7 +48,7 @@ void control_magnet() {
   //IO SUBDEV: 10, 7, 2
   comedi_dio_read(device, DIGITAL_IO_SUBDEV, MAGNET_FLIP, &IN);
   comedi_dio_write(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, IN);
-  //48 = 07
+  printf("OUT => %d\n", IN);
 }
 
 int main(int argc, char *argv[])
