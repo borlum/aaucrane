@@ -18,8 +18,6 @@ int sensors[] = {0, 1, 10, 2, 3, 4, 9, 10};
 int len = sizeof(sensors) / sizeof(int);
 
 void *sampler(void *args) {
-  int *channel = args;
-
   lsampl_t data, maxdata;
   comedi_range *range_info;
   double physical_value;
@@ -40,7 +38,7 @@ void *sampler(void *args) {
 
   while (1) {
     if (sampl_nr == 100) {
-      comedi_data_write(device, 1, 0, range, aref, *channel); /* STEP */
+      comedi_data_write(device, 1, 0, range, aref, 0); /* STEP */
     }
 
     clock_gettime(CLOCK_REALTIME, &tm);
@@ -63,13 +61,6 @@ void *sampler(void *args) {
 }
 
 int main(int argc, char* argv[]) {
-  int channel = 0;
-  if(argc == 2){
-    channel = atoi(argv[1]);
-  }
-
-  printf("Using channel %d\n", channel);
-
   device = comedi_open(device_name);
   if (device == NULL) {
     printf("Error opening file, %s\n", device_name);
@@ -80,7 +71,7 @@ int main(int argc, char* argv[]) {
   comedi_data_write(device, 1, 0, range, aref, 2047);
   usleep(5000 * 1000);
 
-  pthread_create(&thread_sampler, NULL, &sampler, &channel);
+  pthread_create(&thread_sampler, NULL, &sampler, NULL);
 
   while (1) {
     usleep(100 * 1000);
