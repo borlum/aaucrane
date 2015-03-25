@@ -64,14 +64,14 @@ void save_data(FILE *fp, int *sensors, int num_sensors, unsigned long t0){
   unsigned long t;
   struct timespec tm;
   
-  lsampl_t data, maxdata;a
+  lsampl_t data, maxdata;
   comedi_range *range_info;
   double physical_value;
 
   clock_gettime(CLOCK_REALTIME, &tm);
-  t_sample = (tm.tv_nsec + tm.tv_sec * nano) / 1000; 
+  t = (tm.tv_nsec + tm.tv_sec * nano) / 1000; 
 
-  fprintf(fp, "%ld,",  (t_sample - t0));
+  fprintf(fp, "%ld,",  (t - t0));
   
   for (int i = 0; i < num_sensors; i++) {
     comedi_data_read(device, 0, sensors[i], range, aref, &data);
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
 
     read_and_write(14, 0);
     read_and_write(15, 1);
-    control_magnet();
+    control_mganet();
     save_data(fp, sensors, num_sensors, t0);
     usleep(1000); /*ms -> us*/
   }
