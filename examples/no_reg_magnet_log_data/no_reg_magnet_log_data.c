@@ -58,10 +58,18 @@ void control_magnet() {
   comedi_dio_write(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, IN);
 }
 
-void save_data(FILE *fp, int *sensors, int num_sensors){
-  lsampl_t data, maxdata;
+void save_data(FILE *fp, int *sensors, int num_sensors, unsigned long t0){
+  unsigned long t;
+  struct timespec tm;
+  
+  lsampl_t data, maxdata;a
   comedi_range *range_info;
   double physical_value;
+
+  clock_gettime(CLOCK_REALTIME, &tm);
+  t_sample = (tm.tv_nsec + tm.tv_sec * nano) / 1000; 
+
+  fprintf(fp, "%ld,",  (t_sample - t_0));
   
   for (int i = 0; i < num_sensors; i++) {
     comedi_data_read(device, 0, sensors[i], range, aref, &data);
@@ -76,6 +84,8 @@ void save_data(FILE *fp, int *sensors, int num_sensors){
 
 int main(int argc, char *argv[])
 {
+  unsigned long t_0;
+  struct timespec tm;
   int sensors[] = {0, 12, 13, 2, 3, 4, 9, 10}; /* TIMESTAMP,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT */
   int num_sensors = sizeof(sensors) / sizeof(int);
   char data_filename[100];
@@ -95,13 +105,17 @@ int main(int argc, char *argv[])
 
   comedi_dio_config(device, DIGITAL_IO_SUBDEV, MAGNET_FLIP, COMEDI_INPUT);
   comedi_dio_config(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, COMEDI_OUTPUT);
+
+  clock_gettime(CLOCK_REALTIME, &tm);
+  t_0 = (tm.tv_nsec + tm.tv_sec * nano) / 1000;
+  
   while(run)
   {
 
     read_and_write(14, 0);
     read_and_write(15, 1);
     control_magnet();
-    save_data(fp, sensors, num_sensors);
+    save_data(fp, sensors, num_sensors, t0);
     usleep(1000); /*ms -> us*/
   }
   return -1;
