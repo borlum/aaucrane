@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include <math.h>
 #include <unistd.h>
-#include <singal>
+#include <singal.h>
 
 #define DIGITAL_IO_SUBDEV 2
 #define MAGNET_FLIP 3
