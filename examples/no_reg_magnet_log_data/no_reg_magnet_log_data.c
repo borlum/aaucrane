@@ -10,6 +10,7 @@
 #define MAGNET_FLIP 3
 //48 = 7
 #define MAGNET_ENABLE 7
+const unsigned long long nano = 1000000000;
 
 int run = 1;
 
@@ -69,7 +70,7 @@ void save_data(FILE *fp, int *sensors, int num_sensors, unsigned long t0){
   clock_gettime(CLOCK_REALTIME, &tm);
   t_sample = (tm.tv_nsec + tm.tv_sec * nano) / 1000; 
 
-  fprintf(fp, "%ld,",  (t_sample - t_0));
+  fprintf(fp, "%ld,",  (t_sample - t0));
   
   for (int i = 0; i < num_sensors; i++) {
     comedi_data_read(device, 0, sensors[i], range, aref, &data);
@@ -84,7 +85,7 @@ void save_data(FILE *fp, int *sensors, int num_sensors, unsigned long t0){
 
 int main(int argc, char *argv[])
 {
-  unsigned long t_0;
+  unsigned long t0;
   struct timespec tm;
   int sensors[] = {0, 12, 13, 2, 3, 4, 9, 10}; /* TIMESTAMP,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT */
   int num_sensors = sizeof(sensors) / sizeof(int);
