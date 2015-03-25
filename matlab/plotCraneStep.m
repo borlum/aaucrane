@@ -6,7 +6,9 @@ function [] = plotCraneStep(test)
         return;
     end
 
-    plotAngleStep(grabData(test));
+    plotAngleAndX(grabData(test));
+    %plotCraneMovement(grabData(test));
+    %plotAngleStep(grabData(test));
     %plotXStep(grabData(test));
 
     function [] = plotXStep(stepData)
@@ -31,12 +33,48 @@ function [] = plotCraneStep(test)
         grid on;
     end
 
+    function [] = plotCraneMovement(stepData)
+      x_pos = 0.4841 * stepData.x - 0.6302;
+      y_pos = -0.1348 * stepData.y + 0.2395 + 10*0.1348;
+      figure;
+
+      subplot(2,1,1);
+      plot(stepData.t, stepData.x, stepData.t, stepData.y, stepData.t, stepData.phi);
+      legend('X_{pos}', 'Y_{pos}', 'Load angle');
+      title('Crane sensor data');
+
+      subplot(2,1,2)
+      plot(x_pos, y_pos, stepData.t, stepData.phi);
+      title('Movement of the crane');
+      set(gca,'YDir','reverse');
+      ylim([0, 10*0.1348]);
+      xlim([0, 4]);
+    end
+
+    function [] = plotAngleAndX(stepData);
+      x_pos = 0.4841 * stepData.x - 0.6302;
+      y_pos = -0.1348 * stepData.y + 0.2395 + 10*0.1348;
+      theta = (0.31 * stepData.phi - 1.63);
+
+      [ax,h1,h2] = plotyy(stepData.t, [x_pos, y_pos], stepData.t, theta);
+      set(gca,'YDir','reverse');
+      legend('x', 'y', '\theta');
+      title('Crane sensor data');
+      set(ax(1), 'YLim', [0 4])
+      ylabel(ax(1), '[m]');
+      set(ax(2), 'YLim', [-1.3 0.5])
+      ylabel(ax(2), '[rad]');
+      xlabel('[s]');
+
+    end
+    
     function [data] = grabData(test)
         CRANE_URL = 'http://172.26.12.144/data';
         TMP_FILE  = 'tmp.csv';
         websave(TMP_FILE, [CRANE_URL '/crane/xsteps/' num2str(test) '.csv']);
         raw = csvread(TMP_FILE, 2, 0);
         data.t   = raw(:,1) * 1e-6;
+        data.theta = raw(:,2);
         data.phi = raw(:,3);
         data.x   = raw(:,4);
         data.y   = raw(:,5);

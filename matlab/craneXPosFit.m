@@ -12,7 +12,7 @@ Vx = Vx(100:18177);
 
 x_lin = linspace(0, 4.03, length(Vx));
 
-[p, s] = polyfit(Vx, x_lin', 1);
+[p, s] = polyfit(Vx, x_lin', 1)
 
 x_est = polyval(p, Vx);
 
