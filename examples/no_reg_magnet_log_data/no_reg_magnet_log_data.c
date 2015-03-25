@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
 
     read_and_write(14, 0);
     read_and_write(15, 1);
-    control_mganet();
+    control_magnet();
     save_data(fp, sensors, num_sensors, t0);
     usleep(1000); /*ms -> us*/
   }
