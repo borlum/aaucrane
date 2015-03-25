@@ -6,8 +6,8 @@ export PATH=$PATH:/usr/realtime/bin
 
 all: example
 
-example: rtai_example.c
-	gcc -std=gnu11 rtai_example.c -lm -lcomedi -o example
+example: no_reg.c
+	gcc -std=gnu11 no_reg.c -lm -lcomedi -o no_reg
 
 clean:
 	rm example
