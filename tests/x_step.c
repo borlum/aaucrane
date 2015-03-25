@@ -18,7 +18,7 @@ FILE *fp;
 
 pthread_t thread_sampler;
 
-int sensors[] = {0, 12, 1, 2, 3, 4, 9, 10};
+int sensors[] = {0, 12, 13, 2, 3, 4, 9, 10};
 int len = sizeof(sensors) / sizeof(int);
 
 int payload_length;
