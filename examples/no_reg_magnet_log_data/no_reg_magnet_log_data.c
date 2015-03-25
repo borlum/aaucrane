@@ -5,6 +5,7 @@
 #include <math.h>
 #include <unistd.h>
 #include <signal.h>
+#include <time.h>
 
 #define DIGITAL_IO_SUBDEV 2
 #define MAGNET_FLIP 3
@@ -80,7 +81,7 @@ int main(int argc, char *argv[])
   int num_sensors = sizeof(sensors) / sizeof(int);
   char data_filename[100];
   FILE *fp;
-  sptinf(data_filename, "/var/www/html/data/crane/xsteps/MANUAL_%d.csv", (int)time(NULL));
+  sprintf(data_filename, "/var/www/html/data/crane/xsteps/MANUAL_%d.csv", (int)time(NULL));
   device = comedi_open(filename);
   if(device == NULL)
   {
