@@ -59,6 +59,10 @@ void control_magnet() {
 }
 
 void save_data(FILE *fp, int *sensors, int num_sensors){
+  lsampl_t data, maxdata;
+  comedi_range *range_info;
+  double physical_value;
+  
   for (int i = 0; i < num_sensors; i++) {
     comedi_data_read(device, 0, sensors[i], range, aref, &data);
     comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
