@@ -4,13 +4,14 @@
 #include <ctype.h>
 #include <math.h>
 #include <unistd.h>
+#include <singal>
 
 #define DIGITAL_IO_SUBDEV 2
 #define MAGNET_FLIP 3
 //48 = 7
 #define MAGNET_ENABLE 7
 
-boolean run = true;
+int run = 1;
 
 int range = 0;
 int aref = AREF_GROUND;
@@ -20,7 +21,7 @@ const char filename[] = "/dev/comedi0";
 
 void signal_handler(int signal){
   if(signal == SIGINT)
-    run = false;
+    run = 0;
 }
 
 int read_and_write(int in_channel, int out_channel) {
@@ -83,6 +84,8 @@ int main(int argc, char *argv[])
     return -1;
   }
 
+  signal(SIGINT, signal_handler);
+  
   fp = fopen(data_filename, "w");
   fprintf(fp, "TIMESTAMP,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
 
