@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
   comedi_dio_config(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, COMEDI_OUTPUT);
 
   clock_gettime(CLOCK_REALTIME, &tm);
-  t_0 = (tm.tv_nsec + tm.tv_sec * nano) / 1000;
+  t0 = (tm.tv_nsec + tm.tv_sec * nano) / 1000;
   
   while(run)
   {
