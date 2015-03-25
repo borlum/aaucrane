@@ -45,7 +45,7 @@ void *sampler(void *args) {
 
   while (1) {
     if (sampl_nr == 100) {
-      comedi_data_write(device, 1, 1, range, aref, 4094); /* STEP */
+      comedi_data_write(device, 1, 0, range, aref, 3000); /* STEP */
     }
 
     clock_gettime(CLOCK_REALTIME, &tm);
@@ -64,6 +64,11 @@ void *sampler(void *args) {
     }
     fprintf(fp, "\n");
     sampl_nr++;
+
+    if(sampl_nr == 10000){
+      comedi_data_write(device, 1, 0, range, aref, 2047);
+    }
+
     usleep(1000);
   }
 }
