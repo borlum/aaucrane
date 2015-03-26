@@ -25,7 +25,6 @@ plot(Vx, x, Vx, x_lin);
 title('Position sensor, x');
 xlabel('Voltage [V]');
 ylabel('x [m]');
-<<<<<<< HEAD
 xlim([Vx(1) Vx(end)]);
 ylim([x(1) x(end)]);
 grid on;
