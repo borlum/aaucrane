@@ -15,6 +15,13 @@ s = tf('s');
 
 h = ((-mp*l)/(mt+mp))/(s^2*(I+l^2-(mp^2*l^2)/(mt+mp))+b*s+mp*g*l)
 
-impulse(h, plot_time)
-hold on;
-step(h, plot_time)
+%impulse(h, plot_time)
+%hold on;
+%step(h, plot_time)
+
+
+%% plot 2
+
+H = (mp * l * mt * s^2) / (mp^2 * l * s^2 - mp * g * l * (mp + mt) - s^2 * (I + l^2 * mp) * (mt + mp)) -  mt / (mp*l)
+
+impulse(H, plot_time)

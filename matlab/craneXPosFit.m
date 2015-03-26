@@ -12,7 +12,7 @@ Vx = Vx(100:18177);
 
 x_lin = linspace(0, 4.03, length(Vx));
 
-[p, s] = polyfit(Vx, x_lin', 1);
+[p, s] = polyfit(Vx, x_lin', 1)
 
 x_est = polyval(p, Vx);
 
@@ -25,6 +25,7 @@ plot(Vx, x, Vx, x_lin);
 title('Position sensor, x');
 xlabel('Voltage [V]');
 ylabel('x [m]');
+<<<<<<< HEAD
 xlim([Vx(1) Vx(end)]);
 ylim([x(1) x(end)]);
 grid on;
