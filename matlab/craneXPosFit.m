@@ -25,4 +25,7 @@ plot(Vx, x, Vx, x_lin);
 title('Position sensor, x');
 xlabel('Voltage [V]');
 ylabel('x [m]');
+xlim([Vx(1) Vx(end)]);
+ylim([x(1) x(end)]);
 grid on;
+legend('Linear regression', 'Measured', 'location', 'southeast');

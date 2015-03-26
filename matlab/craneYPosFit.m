@@ -8,7 +8,7 @@ raw = csvread(TMP_FILE, 1, 0);
 Vy = raw(:,5);
 
 % GRAB ONLY LINEAR PART
-Vy = Vy(1:6500);
+Vy = Vy(1:6000);
 
 y_lin = linspace(0.02, 0.85, length(Vy));
 
@@ -27,4 +27,7 @@ plot(Vy, y, Vy, y_lin);
 title('Position sensor, y');
 xlabel('Voltage [V]');
 ylabel('y [m]');
+xlim([Vy(1) Vy(end)]);
+ylim([y(1) y(end)]);
+legend('Linear regression', 'Measured', 'location', 'southeast');
 grid on;
