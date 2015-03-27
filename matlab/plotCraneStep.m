@@ -6,8 +6,8 @@ function [] = plotCraneStep(test)
         return;
     end
 
-    plotAngleAndX(grabData(test));
-    %plotCraneMovement(grabData(test));
+    %plotAngleAndX(grabData(test));
+    plotCraneMovement(grabData(test));
     %plotAngleStep(grabData(test));
     %plotXStep(grabData(test));
 
@@ -34,7 +34,7 @@ function [] = plotCraneStep(test)
     end
 
     function [] = plotCraneMovement(stepData)
-      x_pos = 0.4841 * stepData.x - 0.6302;
+      x_pos = 0.5 * stepData.x - 0.8;
       y_pos = -0.1348 * stepData.y + 0.2395 + 10*0.1348;
       figure;
 
