@@ -24,4 +24,7 @@ h = ((-mp*l)/(mt+mp))/(s^2*(I+l^2-(mp^2*l^2)/(mt+mp))+b*s+mp*g*l)
 
 H = (mp * l * mt * s^2) / (mp^2 * l * s^2 - mp * g * l * (mp + mt) - s^2 * (I + l^2 * mp) * (mt + mp)) -  mt / (mp*l)
 
-impulse(H, plot_time)
+%impulse(H, plot_time)
+
+H2 = (mp * l * s^2) / ((I + mp*l^2)*s^2 + mp*g*l)
+step(H2)
