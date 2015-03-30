@@ -6,7 +6,7 @@ function [] = plotCraneStep(test)
         return;
     end
 
-    %plotAngleAndX(grabData(test));
+    plotAngleAndX(grabData(test));
     plotCraneMovement(grabData(test));
     %plotAngleStep(grabData(test));
     %plotXStep(grabData(test));
@@ -36,14 +36,14 @@ function [] = plotCraneStep(test)
     function [] = plotCraneMovement(stepData)
       x_pos = 0.5 * stepData.x - 0.8;
       y_pos = -0.1348 * stepData.y + 0.2395 + 10*0.1348;
-      figure;
+      %figure;
 
-      subplot(2,1,1);
-      plot(stepData.t, stepData.x, stepData.t, stepData.y, stepData.t, stepData.phi);
-      legend('X_{pos}', 'Y_{pos}', 'Load angle');
-      title('Crane sensor data');
+      %subplot(2,1,1);
+      %plot(stepData.t, stepData.x, stepData.t, stepData.y, stepData.t, stepData.phi);
+      %legend('X_{pos}', 'Y_{pos}', 'Load angle');
+      %title('Crane sensor data');
 
-      subplot(2,1,2)
+      %subplot(2,1,2)
       plot(x_pos, y_pos, stepData.t, stepData.phi);
       title('Movement of the crane');
       set(gca,'YDir','reverse');

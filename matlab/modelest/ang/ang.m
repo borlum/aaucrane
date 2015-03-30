@@ -11,7 +11,7 @@ idx_end = idx_end(1);
 t = t(1:idx_end);
 t = linspace(0,t(idx_end), idx_end);
 
-y = (DATA(:,3) - 1.85) * 0.47;
+y = 2*(0.5279 * DATA(:,2) - 3.85);
 y = y(1:idx_end);
 u = DATA(:,8) * 2;
 u = -u(1:idx_end);
