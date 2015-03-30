@@ -5,6 +5,7 @@
 #include <time.h>
 #include <comedilib.h>
 #include <pthread.h>
+#include <stdbool.h>
 
 #define DIGITAL_IO_SUBDEV 2
 #define MAGNET_ENABLE 7
