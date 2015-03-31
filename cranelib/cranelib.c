@@ -16,6 +16,10 @@ int initialize_crane()
 
     #ifndef TESTING
     NI_card = comedi_open(DEVICE);
+    /*Global config*/
+    comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
+    comedi_dio_config(DEVICE, DIO_SUBDEV, CHAN_MAGNET_OUT, COMEDI_OUTPUT);
+    comedi_dio_config(DEVICE, DIO_SUBDEV, CHAN_MAGNET_BTN, COMEDI_INPUT);
     #endif
 
     if (NI_card == NULL) {
@@ -72,6 +76,9 @@ int run_motor(int voltage, int axis)
     old_range = old_max - old_min;
     new_range = new_max - new_min;
 
+    /* SEE:
+    http://stackoverflow.com/questions/929103/convert-a-number-range-to-another-range-maintaining-ratio
+     */
     new_val = (((old_val - old_min) * new_range) / old_range) + new_min;
 
     #ifndef TESTING
@@ -85,7 +92,7 @@ int run_motor(int voltage, int axis)
         return -1;
     }
 
-    if (comedi_data_write(NI_card, ANALOG_OUT_SUBDEV, axis, 0, AREF_GROUND, new_val) == -1) {
+    if (comedi_data_write(NI_card, AOUT_SUBDEV, axis, 0, AREF_GROUND, new_val) == -1) {
         return -1;
     }
     #endif
@@ -94,19 +101,135 @@ int run_motor(int voltage, int axis)
 }
 
 /**
- * Samples and evaluates the current payload angle
+ * Samples the current payload angle
  * @return Current angle in radians
  */
 double get_angle()
 {
-    return 0.0;
+    return (get_angle_raw() - 1.85) * 0.31;
 }
 
 /**
- * Samples and evaluates the current payload angle
+ * Samples the current payload angle
  * @return Current angle in volts
  */
 double get_angle_raw()
+{     
+    return get_sensor_raw(CHAN_ANGLE_IN);
+}
+
+/**
+ * Samples the current x position
+ * @return Current position in metres
+ */
+double get_xpos()
 {
-    return 0.0;
+    return (get_xpos_raw() * 0.5) - 0.8;
+}
+
+/**
+ * Samples the current x position (trolley)
+ * @return Current position in volts
+ */
+double get_xpos_raw()
+{
+    return get_sensor_raw(CHAN_XPOS_IN);
+}
+
+/**
+ * Samples current y position (magnet)
+ * @return Current position in metres
+ */
+double get_ypos()
+{
+    return (get_ypos_raw() * - 0.13) + 1.8;
+}
+
+/**
+ * Samples current y position (magnet)
+ * @return Current position in volts
+ */
+double get_ypos_raw()
+{
+    return get_sensor_raw(CHAN_YPOS_IN);
+}
+
+/**
+ * Samples current motor(x) velocity (shaft)
+ * @return Current velocity in rad/s
+ */
+double get_motorx_velocity()
+{
+    return (get_motorx_velocity_raw() * 34.8) - 4.0;
+}
+
+/**
+ * Samples current motor(x) velocity (shaft)
+ * @return Current velocity in volts
+ */
+double get_motorx_velocity_raw()
+{
+    return get_sensor_raw(CHAN_XVEL_IN);
+}
+
+/**
+ * Samples current motor(y) velocity (shaft)
+ * @return Current velocity in rad/s
+ */
+double get_motory_velocity()
+{
+    /*TODO: THIS IS WRONG!!!*/
+    return (get_motory_velocity_raw() * 34.8) - 4.0;
+}
+
+/**
+ * Samples current motor(y) velocity (shaft)
+ * @return Current velocity in volts
+ */
+double get_motory_velocity_raw()
+{
+    return get_sensor_raw(CHAN_YVEL_IN);
+}
+
+/**
+ * Samples input voltage supplied to motor(x)
+ * @return Voltage supplied to motor
+ */
+double get_motorx_voltage()
+{
+    return get_sensor_raw(CHAN_XIN_IN) * 2;
+}
+
+/**
+ * Samples input voltage supplied to motor(y)
+ * @return Voltage supplied to motor
+ */
+double get_motory_voltage()
+{
+    return get_sensor_raw(CHAN_YIN_IN) * 2;
+}
+
+/**
+ * Get an arbitrary raw sensor value specified by channel
+ * @param    channel The channel to read from
+ * @return Current sensor output in volts
+ */
+double get_sensor_raw(int channel)
+{
+    double physical_value = -1;
+    
+    #ifndef TESTING
+    lsampl_t data, max_data;
+    comedi_range *range_info;
+
+    comedi_data_read(DEVICE, AIN_SUBDEV, channel, 0, AREF_GROUND, &data);
+    
+    range_info     = comedi_get_range(DEVICE, AIN_SUBDEV, channel, 0);
+    max_data       = comedi_get_maxdata(DEVICE, AIN_SUBDEV, channel);
+    physical_value = comedi_to_phys(data, range_info, max_data);
+
+    return physical_value;
+    #endif
+
+    return physical_value;
 }
