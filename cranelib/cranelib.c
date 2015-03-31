@@ -18,8 +18,8 @@ int initialize_crane()
     NI_card = comedi_open(DEVICE);
     /*Global config*/
     comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
-    comedi_dio_config(DEVICE, DIO_SUBDEV, CHAN_MAGNET_OUT, COMEDI_OUTPUT);
-    comedi_dio_config(DEVICE, DIO_SUBDEV, CHAN_MAGNET_BTN, COMEDI_INPUT);
+    comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, COMEDI_OUTPUT);
+    comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, COMEDI_INPUT);
     #endif
 
     if (NI_card == NULL) {
@@ -222,10 +222,10 @@ double get_sensor_raw(int channel)
     lsampl_t data, max_data;
     comedi_range *range_info;
 
-    comedi_data_read(DEVICE, AIN_SUBDEV, channel, 0, AREF_GROUND, &data);
+    comedi_data_read(NI_card, AIN_SUBDEV, channel, 0, AREF_GROUND, &data);
     
-    range_info     = comedi_get_range(DEVICE, AIN_SUBDEV, channel, 0);
-    max_data       = comedi_get_maxdata(DEVICE, AIN_SUBDEV, channel);
+    range_info     = comedi_get_range(NI_card, AIN_SUBDEV, channel, 0);
+    max_data       = comedi_get_maxdata(NI_card, AIN_SUBDEV, channel);
     physical_value = comedi_to_phys(data, range_info, max_data);
 
     return physical_value;
