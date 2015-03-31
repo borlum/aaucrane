@@ -41,7 +41,7 @@ void *sampler(void *args) {
   clock_gettime(CLOCK_REALTIME, &tm);
   t_0 = (tm.tv_nsec + tm.tv_sec * nano) / 1000;
   char tmp[150];
-  sprintf(tmp, "/var/www/html/data/crane/x_square/%d.csv", (int)time(NULL));
+  sprintf(tmp, "/var/www/html/data/crane/xsquare/%d.csv", (int)time(NULL));
   printf("2\n");
   fp = fopen(tmp, "w");
   printf("3\n");
