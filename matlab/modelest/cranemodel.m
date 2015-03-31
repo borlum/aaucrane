@@ -29,8 +29,14 @@ Ip = 0.9485;
 
 W = (-mp*l*s^2)/((Ip * mp*l^2)*s^2 - b*s + mp*g*l);
 
-inner = feedback(6.6 * M * X, 1);
+C2 = 26.3;
 
-C1 =  -50 * ((s + 1)/(s + 10));
+inner = feedback(C2 * M * X, 1);
 
-%complete = feedback(9 * inner*W, 1);
+
+z = 0.0003;
+wn = 3.9;
+
+%C1 = (s^2 + 2*z*wn*s + wn^2)/(s + wn)^2;
+
+C1 = (s^2 + wn^2)/(s + wn)^2;
