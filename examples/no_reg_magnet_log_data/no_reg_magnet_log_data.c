@@ -41,7 +41,7 @@ int read_and_write(int in_channel, int out_channel) {
     return -1;
   }
 
-  comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
+  comedi_set_global_oor_behavior(COMEDI_OOR_NUMBER);
   range_info     = comedi_get_range(device, 0, in_channel, range);
   maxdata        = comedi_get_maxdata(device, 0, in_channel);
   physical_value = comedi_to_phys(data, range_info, maxdata);

@@ -18,7 +18,7 @@ FILE *fp;
 
 pthread_t thread_sampler;
 
-int sensors[] = {0, 12, 13, 2, 3, 4, 9, 10};
+int sensors[] = {0, 12, 13, 2, 11, 4, 9, 10};
 int len = sizeof(sensors) / sizeof(int);
 
 int payload_length;
@@ -42,9 +42,11 @@ void *sampler(void *args) {
   fp = fopen(tmp, "w");
   fprintf(fp, "WEIGHT: %d, LENGTH: %d\n", payload_weight, payload_length);
   fprintf(fp, "TIMESTAMP,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
+  
+  int step = 1;
 
   while (1) {
-    if (sampl_nr == 100) {
+    if (step) {
       comedi_data_write(device, 1, 0, range, aref, 3000); /* STEP */
     }
 
@@ -56,7 +58,7 @@ void *sampler(void *args) {
     for (int i = 0; i < len; i++) {
       /* Log data */
       comedi_data_read(device, 0, sensors[i], range, aref, &data);
-      comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
+      comedi_set_global_oor_behavior(COMEDI_OOR_NUMBER);
       range_info     = comedi_get_range(device,   0, sensors[i], range);
       maxdata        = comedi_get_maxdata(device, 0, sensors[i]);
       physical_value = comedi_to_phys(data, range_info, maxdata);
@@ -65,8 +67,9 @@ void *sampler(void *args) {
     fprintf(fp, "\n");
     sampl_nr++;
 
-    if(sampl_nr == 10000){
+    if(sampl_nr == 3000){
       comedi_data_write(device, 1, 0, range, aref, 2047);
+      step = 0;
     }
 
     usleep(1000);

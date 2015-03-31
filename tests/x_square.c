@@ -19,13 +19,14 @@ FILE *fp;
 
 pthread_t thread_sampler;
 
-int sensors[] = {0, 12, 13, 2, 3, 4, 9, 10};
+int sensors[] = {0, 12, 13, 2, 11, 4, 9, 10};
 int len = sizeof(sensors) / sizeof(int);
 
 int payload_length;
 int payload_weight;
 
 void *sampler(void *args) {
+  printf("Task running\n");
   lsampl_t data, maxdata;
   comedi_range *range_info;
   double physical_value;
@@ -35,22 +36,26 @@ void *sampler(void *args) {
   unsigned long t_0, t_sample;
   struct timespec tm;
 
-  boolean high = false;
-  
+  bool high = false;
+  printf("1\n");  
   clock_gettime(CLOCK_REALTIME, &tm);
   t_0 = (tm.tv_nsec + tm.tv_sec * nano) / 1000;
-
-  char tmp[80];
+  char tmp[150];
   sprintf(tmp, "/var/www/html/data/crane/x_square/%d.csv", (int)time(NULL));
+  printf("2\n");
   fp = fopen(tmp, "w");
+  printf("3\n");
   fprintf(fp, "WEIGHT: %d, LENGTH: %d\n", payload_weight, payload_length);
   fprintf(fp, "TIMESTAMP,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
 
+  printf("File created\n");
+  int periods = 0;
   while (1) {
-    if (sampl_nr == 100) {
-      comedi_data_write(device, 1, 0, range, aref, 3000); /* STEP */
-      high = true;
-    }
+    //if (sampl_nr == 100) {
+    //  comedi_data_write(device, 1, 0, range, aref, 3000); /* STEP */
+    //  high = true;
+    //  printf("Started\n");
+    //}
 
     clock_gettime(CLOCK_REALTIME, &tm);
     t_sample = (tm.tv_nsec + tm.tv_sec * nano) / 1000; 
@@ -69,15 +74,18 @@ void *sampler(void *args) {
     fprintf(fp, "\n");
     sampl_nr++;
 
-    if( (sampl_nr % 250) == 0){
+    if( (sampl_nr % 750) == 0 && periods < 4){
       if(high){
+	printf("Setting low\n");
 	comedi_data_write(device, 1, 0, range, aref, 2047);
 	high = false;
       }
       else{
-	comedi_data_write(device, 1, 0, range, aref, 3000);
-	high = false;
+	printf("Setting high\n");
+	comedi_data_write(device, 1, 0, range, aref, 3500);
+	high = true;
       }
+      periods++;
     }
 
     usleep(1000);
