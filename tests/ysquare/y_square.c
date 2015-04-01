@@ -1,12 +1,16 @@
 #include <pthread.h>
 #include <cranelib.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #define DATA_PATH "/var/www/html/data/crane/ysteps/"
 #define DATA_HEADER "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n"
 
 pthread_t thread_sampler;
 FILE * fp;
+
+int t_on          = 0;
+int nr_of_periods = 0;
 
 void *sampler(void *args)
 {
@@ -15,6 +19,8 @@ void *sampler(void *args)
     unsigned int sample_nr = 0;
 
     t_0 = get_time_micros();
+
+    periods = 0;
     running = 0;
     while (1) {
         /*GRAB TIMESTAMP*/
@@ -34,17 +40,17 @@ void *sampler(void *args)
     
         sample_nr++;
 
-        if ((sample_nr % 1000) == 0 && periods < 4) {
+        if ((sample_nr % t_on) == 0 && periods < nr_of_periods) {
             if (running) {
-                printf("GOING UP!!\n");
                 run_motory(-14);
                 running = 0;
             } else {
-                printf("GOING DOWN!!\n");
                 run_motory(14);
                 running = 1;
             }
             periods++;
+        } else if (periods == nr_of_periods) {
+            run_motory(0);
         }
 
         usleep(1000);
@@ -53,10 +59,13 @@ void *sampler(void *args)
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2) {
-        printf("usage: %s \"[test parameters (e.g. mass + length)]\"\n", argv[0]);
+    if (argc != 4) {
+        printf("usage: %s N T \"[test parameters (e.g. mass + length)]\"\n", argv[0]);
         return 0;
     }
+
+    nr_of_periods = strtol(argv[1], NULL, 10);
+    t_on          = strtol(argv[2], NULL, 10);
 
     initialize_crane();
 
@@ -68,7 +77,7 @@ int main(int argc, char* argv[])
     char tmp[160];
     sprintf(tmp, "%s/%d.csv", DATA_PATH, (int)time(NULL));
     fp = fopen(tmp, "w");
-    fprintf(fp, "%s\n", argv[1]);
+    fprintf(fp, "%s\n", argv[3]);
     fprintf(fp, DATA_HEADER);
 
     pthread_create(&thread_sampler, NULL, &sampler, NULL);

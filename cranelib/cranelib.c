@@ -70,7 +70,7 @@ int run_motor(int voltage, int axis)
 
     old_val = voltage;
     
-    old_max =  14; new_max  = 4096;
+    old_max =  14; new_max  = 4000;
     old_min = -14; new_min  =    0;
 
     old_range = old_max - old_min;
