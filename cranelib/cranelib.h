@@ -1,8 +1,11 @@
 #include <stdio.h>
+#include <time.h>
 
 #ifndef TESTING
 #include <comedilib.h>
 #endif
+
+#define NANO_SEC 1000000000
 
 /*CRANE CONFIGURATION*/
 #define AIN_SUBDEV 0
@@ -52,3 +55,5 @@ double get_motorx_voltage();
 double get_motory_voltage();
 
 double get_sensor_raw(int channel);
+
+unsigned long get_time_millis();

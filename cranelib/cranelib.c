@@ -124,7 +124,7 @@ double get_angle_raw()
  */
 double get_xpos()
 {
-    return (get_xpos_raw() * 0.5) - 0.8;
+    return ((get_xpos_raw() * 0.5) - 0.8) + 4.0;
 }
 
 /**
@@ -232,4 +232,15 @@ double get_sensor_raw(int channel)
     #endif
 
     return physical_value;
+}
+
+/**
+ * Get current time in milliseconds
+ * @return Current time in ms
+ */
+unsigned long get_time_millis()
+{
+    struct timespec tm;
+    clock_gettime(CLOCK_REALTIME, &tm);
+    return (tm.tv_nsec + tm.tv_sec * NANO_SEC) / 1000000;
 }
