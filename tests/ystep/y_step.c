@@ -2,7 +2,7 @@
 #include <cranelib.h>
 #include <unistd.h>
 
-#define DATA_PATH "/var/www/html/data/crane/xsteps/"
+#define DATA_PATH "/var/www/html/data/crane/ysteps/"
 #define DATA_HEADER "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n"
 
 pthread_t thread_sampler;
