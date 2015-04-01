@@ -36,7 +36,7 @@ void *sampler(void *args)
     
         sample_nr++;
 
-        if ((sample_nr % 2000) == 0 && periods < 4) {
+        if ((sample_nr % 1000) == 0 && periods < 8) {
             if (running) {
                 printf("GOING UP!!\n");
                 printf("MOTOR PWR = %d\n", run_motory(-13));
