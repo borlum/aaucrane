@@ -26,8 +26,11 @@ int main(int argc,char* argv[]){
   printf("Moving to x = %f\n", x_ref);
 
   while(output != 0){
-    output = (x_ref - get_xpos()) * K_p;
+    x_err = get_xpos();
+    output = (x_ref - x_err) * K_p;
+    printf("X_ref: %3f | X_err: %3f | Output: %3f\n", x_ref, x_err, output);
 
+    
     if(output > 14)
       output = 14;
     else if (output < -14)
