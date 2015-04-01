@@ -1,0 +1,22 @@
+INC=-I/usr/local/lib
+GCC=gcc -std=gnu11 -Wall -pedantic
+LIBS=-lm -lcomedi
+TESTING=-D TESTING
+
+all: libcrane
+
+libcrane: libcrane.c libcrane.h
+	$(GCC) -c libcrane.c $(LIBS) $(INC)
+
+testing: libcrane.c libcrane.h tests/libcrane_tests.c
+	$(GCC) $(TESTING) -c libcrane.c $(INC)
+	$(GCC) $(TESTING) tests/libcrane_tests.c $(INC) libcrane.o -o testsuite
+
+run_tests:
+	@./testsuite
+
+clean:
+	@rm libcrane.o
+	@rm testsuite
+
+.PHONY: run_tests clean
