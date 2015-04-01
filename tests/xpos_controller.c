@@ -14,7 +14,7 @@ int main(int argc,char* argv[]){
     printf("usage: %s <distance in meters>", argv[0]);
   }
 
-  for(int i = 0; i < argc){
+  for(int i = 0; i < argc; i++){
     ptinf("%c", argv[i]);
   }
   
