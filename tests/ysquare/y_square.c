@@ -34,7 +34,7 @@ void *sampler(void *args)
     
         sample_nr++;
 
-        if (sample_nr % 1000 && periods < 4) {
+        if ((sample_nr % 1000) == 0 && periods < 4) {
             if (running) {
                 run_motory(-14);
                 running = 0;
