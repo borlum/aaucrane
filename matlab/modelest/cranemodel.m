@@ -36,7 +36,7 @@ inner = feedback(C2 * M * X, 1);
 n = 4;
 p = 20;
 
-z = 0.00;
+z = 0.01;
 wn = 3.93;
 
 %C = (s+n)/(s+p);

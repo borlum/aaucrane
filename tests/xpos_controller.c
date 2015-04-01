@@ -1,7 +1,9 @@
 #include <libcrane.h>
 
-#define K_theta = 12
-#define K_p = 26.6
+static double K_theta = 12;
+static double K_p = 26.6;
+
+double notch_filter(double theta);
 
 int main(int argc,char* argv[]){
 
