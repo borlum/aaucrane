@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <libcrane.h>
 
 static double K_theta = 12;
@@ -12,10 +13,7 @@ int main(int argc,char* argv[]){
   
   if(argc != 2){
     printf("usage: %s <distance in meters>", argv[0]);
-  }
-
-  for(int i = 0; i < argc; i++){
-    ptinf("%c", argv[i]);
+    exit(1);
   }
   
   double angle_ref = 0;
@@ -26,7 +24,7 @@ int main(int argc,char* argv[]){
 
   double output = -1;
 
-  printf("%f\n", x_ref);
+  printf("Moving to x = %f\n", x_ref);
 
   while(output != 0){
     angle_err = (angle_ref - get_angle()) * K_theta;
@@ -42,6 +40,9 @@ int main(int argc,char* argv[]){
 
     run_motorx(output);
   }  
+  
+  printf("Jobs done\n");
+
 }
 
 double notch_filter(double theta){
