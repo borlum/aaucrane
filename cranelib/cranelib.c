@@ -251,5 +251,5 @@ unsigned long get_time_micros()
 {
     struct timespec tm;
     clock_gettime(CLOCK_REALTIME, &tm);
-    return (tm.tv_nsec + tm.tv_sec * NANO_SEC) / 1000;
+    return (tm.tv_nsec + (unsigned long long)tm.tv_sec * NANO_SEC) / 1000;
 }
