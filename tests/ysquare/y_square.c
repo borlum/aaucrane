@@ -8,6 +8,9 @@
 pthread_t thread_sampler;
 FILE * fp;
 
+int t_on          = 0;
+int nr_of_periods = 0;
+
 void *sampler(void *args)
 {
     int periods, running;
@@ -36,19 +39,17 @@ void *sampler(void *args)
     
         sample_nr++;
 
-        if ((sample_nr % 1000) == 0 && periods < 8) {
+        if ((sample_nr % t_on) == 0 && periods < nr_of_periods) {
             if (running) {
-                printf("GOING UP!!\n");
-                printf("MOTOR PWR = %d\n", run_motory(-14));
+                run_motory(-14);
                 running = 0;
             } else {
-                printf("GOING DOWN!!\n");
-                printf("MOTOR PWR = %d\n", run_motory(14));
+                run_motory(14);
                 running = 1;
             }
             periods++;
-        } else if (periods == 8) {
-            printf("MOTOR PWR = %d\n", run_motory(0));
+        } else if (periods == nr_of_periods) {
+            run_motory(0);
         }
 
         usleep(1000);
@@ -58,9 +59,12 @@ void *sampler(void *args)
 int main(int argc, char* argv[])
 {
     if (argc != 2) {
-        printf("usage: %s \"[test parameters (e.g. mass + length)]\"\n", argv[0]);
+        printf("usage: %s N T \"[test parameters (e.g. mass + length)]\"\n", argv[0]);
         return 0;
     }
+
+    nr_of_periods = argv[1];
+    t_on = argv[2];
 
     initialize_crane();
 
@@ -72,7 +76,7 @@ int main(int argc, char* argv[])
     char tmp[160];
     sprintf(tmp, "%s/%d.csv", DATA_PATH, (int)time(NULL));
     fp = fopen(tmp, "w");
-    fprintf(fp, "%s\n", argv[1]);
+    fprintf(fp, "%s\n", argv[3]);
     fprintf(fp, DATA_HEADER);
 
     pthread_create(&thread_sampler, NULL, &sampler, NULL);
