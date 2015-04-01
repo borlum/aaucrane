@@ -36,9 +36,11 @@ void *sampler(void *args)
 
         if ((sample_nr % 1000) == 0 && periods < 4) {
             if (running) {
+                printf("GOING UP!!\n");
                 run_motory(-14);
                 running = 0;
             } else {
+                printf("GOING DOWN!!\n");
                 run_motory(14);
                 running = 1;
             }
