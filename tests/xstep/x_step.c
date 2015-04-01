@@ -24,9 +24,9 @@ void *sampler(void *args)
         fprintf(fp, "%ld,",  (t_sample - t_0));
         fprintf(fp, "\n");
     
-        sampl_nr++;
+        sample_nr++;
 
-        if (sampl_nr == 3000) {
+        if (sample_nr == 3000) {
             step = 0;
         }
         usleep(1000);
