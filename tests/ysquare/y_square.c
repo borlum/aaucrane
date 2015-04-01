@@ -47,7 +47,7 @@ void *sampler(void *args)
                 running = 1;
             }
             periods++;
-        } else if (periods == 4) {
+        } else if (periods == 8) {
             printf("MOTOR PWR = %d\n", run_motory(0));
         }
 
