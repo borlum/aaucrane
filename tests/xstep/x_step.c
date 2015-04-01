@@ -3,18 +3,19 @@
 #include <unistd.h>
 
 pthread_t thread_sampler;
+FILE * fp;
 
 void *sampler(void *args)
 {
     unsigned long t_0, t_sample;
+    int step = 1;
+    unsigned int sample_nr = 0;
 
     char tmp[80];
     sprintf(tmp, "/var/www/html/data/crane/xsteps/%d.csv", (int)time(NULL));
     fp = fopen(tmp, "w");
     fprintf(fp, "TIMESTAMP,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
   
-    int step = 1;
-
     while (1) {
         if (step) {
             /*GO*/
