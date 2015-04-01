@@ -43,10 +43,12 @@ void *sampler(void *args)
                 running = 0;
             } else {
                 printf("GOING DOWN!!\n");
-                run_motory(6);
+                run_motory(14);
                 running = 1;
             }
             periods++;
+        } else {
+            run_motory(0);
         }
 
         usleep(1000);
