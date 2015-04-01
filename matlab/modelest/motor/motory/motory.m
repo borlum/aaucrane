@@ -20,6 +20,6 @@ u = (-u(1:idx_end)) + u(1);
 
 save measmotor t u y;
 
-process = 'motor';
+process = 'motory';
 
 delete(TMP_FILE);
