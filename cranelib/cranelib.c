@@ -119,6 +119,15 @@ double get_angle_raw()
 }
 
 /**
+ * Samples the current payload angle using potmeter
+ * @return Current angle in volts
+ */
+double get_old_angle_raw()
+{
+    return get_sensor_raw(CHAN_ANGLE_OLD_IN);
+}
+
+/**
  * Samples the current x position
  * @return Current position in metres
  */

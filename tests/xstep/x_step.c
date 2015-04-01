@@ -2,6 +2,9 @@
 #include <cranelib.h>
 #include <unistd.h>
 
+#define DATA_PATH "/var/www/html/data/crane/xsteps/"
+#define DATA_HEADER "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n"
+
 pthread_t thread_sampler;
 FILE * fp;
 
@@ -39,17 +42,23 @@ void *sampler(void *args)
 
 int main(int argc, char* argv[])
 {
+    if (argc != 2) {
+        printf("usage: %s [test parameters (e.g. mass + length)]", argv[0]);
+        return 0;
+    }
+
     initialize_crane();
 
     /* RESET */
     run_motorx(0);
     run_motory(0);
 
-    /*PREPARE FILE HEADER*/
-    char tmp[80];
-    sprintf(tmp, "/var/www/html/data/crane/xsteps/%d.csv", (int)time(NULL));
+    /*PREPARE FILE*/
+    char tmp[160];
+    sprintf(tmp, "%s/%d.csv", DATA_PATH, (int)time(NULL));
     fp = fopen(tmp, "w");
-    fprintf(fp, "TIMESTAMP,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
+    fprintf(fp, "%s\n", argv[1]);
+    fprintf(fp, DATA_HEADER);
 
     pthread_create(&thread_sampler, NULL, &sampler, NULL);
 

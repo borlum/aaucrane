@@ -20,6 +20,7 @@
 #define CHAN_YMOTOR_OUT 1
 
 #define CHAN_ANGLE_IN 12
+#define CHAN_ANGLE_OLD_IN 0
 
 #define CHAN_XPOS_IN 13
 #define CHAN_YPOS_IN 2
@@ -38,6 +39,8 @@ int run_motor(int voltage, int axis);
 
 double get_angle();
 double get_angle_raw();
+
+double get_old_angle_raw();
 
 double get_xpos();
 double get_xpos_raw();
