@@ -31,9 +31,11 @@ int main(int argc,char* argv[]){
     else if (output < -14)
       output = -14;
 
-    printf("OUTPUT: %f\n", output);
+    printf("OUTPUT: %f\n", (flaot) output);
     
-    run_motorx(output);
+    printf("ret val %d\n", run_motorx( (int) output));
+
+    usleep(1000 * 500);
   }  
   
   printf("Jobs done\n");
