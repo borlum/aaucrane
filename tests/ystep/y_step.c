@@ -2,7 +2,7 @@
 #include <cranelib.h>
 #include <unistd.h>
 
-#define DATA_PATH "/var/www/html/data/crane/xsteps/"
+#define DATA_PATH "/var/www/html/data/crane/ysteps/"
 #define DATA_HEADER "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n"
 
 pthread_t thread_sampler;
@@ -18,7 +18,7 @@ void *sampler(void *args)
     step = 1;
     while (1) {
         if (step) {
-            run_motorx(7);
+            run_motory(7);
         }
 
         /*GRAB TIMESTAMP*/
@@ -39,7 +39,7 @@ void *sampler(void *args)
         sample_nr++;
 
         if (sample_nr == 3000) {
-            run_motorx(0);
+            run_motory(0);
             step = 0;
         }
 

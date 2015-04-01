@@ -6,11 +6,11 @@ INC += -I../../cranelib
 GCC=gcc -std=gnu11
 LIBS=-lm -lpthread -lcomedi
 
-all: x_step
+all: y_step
 
-x_step: x_step.c
+y_step: y_step.c
 	cd $(CRANELIB_PATH) && make
-	$(GCC) x_step.c $(INC) $(CRANELIB_PATH)/cranelib.o $(LIBS) -o x_step
+	$(GCC) y_step.c $(INC) $(CRANELIB_PATH)/cranelib.o $(LIBS) -o y_step
 
 clean:
-	rm x_step
+	rm y_step
