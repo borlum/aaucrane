@@ -10,7 +10,7 @@ all: x_step
 
 x_step: x_step.c
 	cd $(CRANELIB_PATH) && make
-	$(GCC) x_step.c $(LIBS) $(INC) $(CRANELIB_PATH)/cranelib.o -o x_step
+	$(GCC) x_step.c $(INC) $(CRANELIB_PATH)/cranelib.o $(LIBS) -o x_step
 
 clean:
 	rm x_step
