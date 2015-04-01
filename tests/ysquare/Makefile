@@ -8,9 +8,9 @@ LIBS=-lm -lpthread -lcomedi
 
 all: y_square
 
-y_step: y_square.c
+y_square: y_square.c
 	cd $(CRANELIB_PATH) && make
-	$(GCC) y_step.c $(INC) $(CRANELIB_PATH)/cranelib.o $(LIBS) -o y_square
+	$(GCC) y_square.c $(INC) $(CRANELIB_PATH)/cranelib.o $(LIBS) -o y_square
 
 clean:
 	rm y_square
