@@ -33,7 +33,7 @@ int main(int argc,char* argv[]){
     else if (output < -14)
       output = -14;
 
-    printf("OUTPUT: %f\n", (flaot) output);
+    printf("OUTPUT: %f\n", (float) output);
     
     printf("ret val %d\n", run_motorx( (int) output));
 
