@@ -2,7 +2,7 @@
 CRANE_URL = 'http://172.26.12.144/data';
 TMP_FILE  = 'tmp.csv';
 
-websave(TMP_FILE, [CRANE_URL '/crane/x_square/1427800240.csv']);
+websave(TMP_FILE, [CRANE_URL '/crane/xsquare/1427800240.csv']);
 %websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427451475.csv']);
 DATA = csvread(TMP_FILE, 2, 0);
 t = DATA(:,1) * 1e-6;

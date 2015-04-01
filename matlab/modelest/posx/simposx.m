@@ -2,8 +2,8 @@ function y = simposx(u,t)
 s = tf('s');
 
 % FROM SENSTOOLS...
-b = 0.0014;
-I = 0.0017;
+b = 0.0040;
+I = 0.0013;
 
 kt = 0.03;
 ra = 0.43;
