@@ -1,10 +1,10 @@
 #include "cranelib.h"
 
-#ifndef TESTING
+//#ifndef TESTING
 comedi_t *NI_card;
-#else
-int *NI_card;
-#endif
+//#else
+//int *NI_card;
+//#endif
 
 /**
  * Open comedi driver for interfacing w. crane
@@ -14,13 +14,13 @@ int initialize_crane()
 {   
     NI_card = NULL;
 
-    #ifndef TESTING
+    //#ifndef TESTING
     NI_card = comedi_open(DEVICE);
     /*Global config*/
     comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
     comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, COMEDI_OUTPUT);
     comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, COMEDI_INPUT);
-    #endif
+    //#endif
 
     if (NI_card == NULL) {
         return 0;
