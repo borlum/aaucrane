@@ -43,7 +43,7 @@ void *sampler(void *args)
 int main(int argc, char* argv[])
 {
     if (argc != 2) {
-        printf("usage: %s [test parameters (e.g. mass + length)]\n", argv[0]);
+        printf("usage: %s \"[test parameters (e.g. mass + length)]\"\n", argv[0]);
         return 0;
     }
 

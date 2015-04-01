@@ -1,5 +1,5 @@
 INC=-I/usr/local/lib
-GCC=gcc -Wall -pedantic
+GCC=gcc -std=gnu11 -Wall -pedantic
 LIBS=-lm -lcomedi
 TESTING=-D TESTING
 
