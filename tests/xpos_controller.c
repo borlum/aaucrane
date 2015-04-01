@@ -31,7 +31,7 @@ int main(int argc,char* argv[]){
     else if (output < -14)
       output = -14;
 
-    printf("OUTPUT: %f", output);
+    printf("OUTPUT: %f\n", output);
     
     run_motorx(output);
   }  
