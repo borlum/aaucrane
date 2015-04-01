@@ -1,4 +1,4 @@
-#include "cranelib.h"
+#include "libcrane.h"
 
 #ifndef TESTING
 comedi_t *NI_card;

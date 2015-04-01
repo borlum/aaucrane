@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../cranelib.h"
+#include "../libcrane.h"
 #include "minunit.h"
 
 int tests_run = 0;

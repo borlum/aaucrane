@@ -6,8 +6,9 @@ function [] = plotCraneStep(test)
         return;
     end
 
-    plotAngleAndX(grabData(test));
-    plotCraneMovement(grabData(test));
+    plotYStep(grabData(test))
+    %plotAngleAndX(grabData(test));
+    %plotCraneMovement(grabData(test));
     %plotAngleStep(grabData(test));
     %plotXStep(grabData(test));
 
@@ -22,6 +23,18 @@ function [] = plotCraneStep(test)
         grid on;
     end
 
+    function [] = plotYStep(stepData)
+      plot(stepData.t, stepData.y);
+      xlabel('Time [s]');
+      ylabel('Voltage [V]');
+      tmp = ['Step response (' num2str(stepData.yin) ' V input, y-axis)'];
+      title(tmp);
+      xlim([0 stepData.t(end)]);
+      ylim([min(stepData.y) max(stepData.y)]);
+      grid on;
+    end
+
+    
     function [] = plotAngleStep(stepData)
         plot(stepData.t, stepData.phi);
         xlabel('Time [s]');
@@ -69,9 +82,8 @@ function [] = plotCraneStep(test)
     end
     
     function [data] = grabData(test)
-        CRANE_URL = 'http://172.26.12.144/data';
         TMP_FILE  = 'tmp.csv';
-        websave(TMP_FILE, [CRANE_URL '/crane/xsteps/' num2str(test) '.csv']);
+        websave(TMP_FILE, test);
         raw = csvread(TMP_FILE, 2, 0);
         data.t   = raw(:,1) * 1e-6;
         data.theta = raw(:,2);
