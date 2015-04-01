@@ -13,6 +13,10 @@ int main(int argc,char* argv[]){
   if(argc != 2){
     printf("usage: %s <distance in meters>", argv[0]);
   }
+
+  for(int i = 0; i < argc){
+    ptinf("%c", argv[i]);
+  }
   
   double angle_ref = 0;
   double angle_err = 0;
@@ -21,6 +25,8 @@ int main(int argc,char* argv[]){
   double x_err = 0;
 
   double output = -1;
+
+  printf("%f", x_ref);
   
   while(output != 0){
     angle_err = (angle_ref - get_angle()) * K_theta;
