@@ -31,6 +31,9 @@
 #define CHAN_XIN_IN 9
 #define CHAN_YIN_IN 10
 
+#define CHAN_CTRLPAD_X_IN 14
+#define CHAN_CTRLPAD_Y_IN 15
+
 int initialize_crane();
 
 int run_motorx(int voltage);
@@ -56,6 +59,14 @@ double get_motory_velocity_raw();
 
 double get_motorx_voltage();
 double get_motory_voltage();
+
+double get_ctrlpad_x();
+double get_ctrlpad_y();
+
+int get_ctrlpad_magnet_switch();
+
+void enable_magnet();
+void disable_magnet();
 
 double get_sensor_raw(int channel);
 

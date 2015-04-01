@@ -219,6 +219,60 @@ double get_motory_voltage()
 }
 
 /**
+ * Samples current x-axis voltage of control pad
+ * @return Control pad x-axis voltage
+ */
+double get_ctrlpad_x()
+{
+    return get_sensor_raw(CHAN_CTRLPAD_X_IN);
+}
+
+/**
+ * Samples current y-axis voltage of control pad
+ * @return Control pad y-axis voltage
+ */
+double get_ctrlpad_y()
+{
+    return get_sensor_raw(CHAN_CTRLPAD_Y_IN);
+}
+
+/**
+ * Gets current state of magnet switch on control pad
+ * @return 1 = ON, 0 = OFF
+ */
+int get_ctrlpad_magnet_switch()
+{   
+    #ifndef TESTING
+    lsampl_t in;
+    comedi_dio_read(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, &in);
+    #else
+    int in = 1;
+    #endif
+
+    return (int)in;
+}
+
+/**
+ * Turn on magnet
+ */
+void enable_magnet()
+{   
+    #ifndef TESTING
+    comedi_dio_write(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, 1);
+    #endif
+}
+
+/**
+ * Turn off magnet
+ */
+void disable_magnet()
+{
+    #ifndef TESTING
+    comedi_dio_write(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, 0);
+    #endif
+}
+
+/**
  * Get an arbitrary raw sensor value specified by channel
  * @param    channel The channel to read from
  * @return Current sensor output in volts
