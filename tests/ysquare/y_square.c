@@ -59,7 +59,7 @@ void *sampler(void *args)
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2) {
+    if (argc != 4) {
         printf("usage: %s N T \"[test parameters (e.g. mass + length)]\"\n", argv[0]);
         return 0;
     }
