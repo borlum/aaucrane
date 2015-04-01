@@ -1,6 +1,7 @@
 #include <pthread.h>
 #include <cranelib.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #define DATA_PATH "/var/www/html/data/crane/ysteps/"
 #define DATA_HEADER "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n"
