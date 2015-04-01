@@ -35,7 +35,7 @@ void *sampler(void *args)
         fprintf(fp, "\n");
     
         sample_nr++;
-        printf("SAMPL_NR = %d, running = %d, periods = %d\n", sample_nr, running, periods);
+        
         if ((sample_nr % 1000) == 0 && periods < 4) {
             if (running) {
                 printf("GOING UP!!\n");
