@@ -1,5 +1,6 @@
 #include <pthread.h>
 #include <cranelib.h>
+#include <unistd.h>
 
 pthread_t thread_sampler;
 
@@ -25,7 +26,6 @@ void *sampler(void *args)
         sampl_nr++;
 
         if (sampl_nr == 3000) {
-            comedi_data_write(device, 1, 0, range, aref, 2047);
             step = 0;
         }
         usleep(1000);
