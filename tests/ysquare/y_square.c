@@ -35,15 +35,15 @@ void *sampler(void *args)
         fprintf(fp, "\n");
     
         sample_nr++;
-
+        printf("SAMPL_NR = %d, running = %d, periods = %d\n", sample_nr, running, periods);
         if ((sample_nr % 1000) == 0 && periods < 4) {
             if (running) {
                 printf("GOING UP!!\n");
-                run_motory(14);
+                run_motory(0);
                 running = 0;
             } else {
                 printf("GOING DOWN!!\n");
-                run_motory(0);
+                run_motory(6);
                 running = 1;
             }
             periods++;
