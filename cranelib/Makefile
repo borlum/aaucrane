@@ -1,4 +1,4 @@
-#INC=-I/usr/local/lib
+INC=-I/usr/local/lib
 GCC=gcc -Wall -pedantic
 LIBS=-lm -lcomedi
 TESTING=-D TESTING

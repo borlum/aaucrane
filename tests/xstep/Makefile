@@ -1,7 +1,5 @@
 CRANELIB_PATH = ../../cranelib
 
-INC += -I/usr/realtime/bin
-INC += -I/usr/realtime/include
 INC += -I/usr/local/lib
 INC += -I../../cranelib
 
