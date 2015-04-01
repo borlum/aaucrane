@@ -16,9 +16,6 @@ int main(int argc,char* argv[]){
     exit(1);
   }
   
-  double angle_ref = 0;
-  double angle_err = 0;
-
   double x_ref = atof(argv[1]);
   double x_err = 0;
 
@@ -27,11 +24,7 @@ int main(int argc,char* argv[]){
   printf("Moving to x = %f\n", x_ref);
 
   while(output != 0){
-    angle_err = (angle_ref - get_angle()) * K_theta;
-
-    output = notch_filter(angle_err);
-
-    output = (output + x_ref - get_xpos()) * K_p;
+    output = (x_ref - get_xpos()) * K_p;
 
     if(output > 14)
       output = 14;
@@ -43,8 +36,4 @@ int main(int argc,char* argv[]){
   
   printf("Jobs done\n");
 
-}
-
-double notch_filter(double theta){
-  return theta;
 }
