@@ -1,6 +1,7 @@
 #include <pthread.h>
 #include <cranelib.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #define DATA_PATH "/var/www/html/data/crane/ysteps/"
 #define DATA_HEADER "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n"
@@ -63,8 +64,8 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    nr_of_periods = argv[1];
-    t_on = argv[2];
+    nr_of_periods = strtonum(argv[1], 1, 64, NULL);
+    t_on          = strtonum(argv[2], 1, 64, NULL);
 
     initialize_crane();
 
