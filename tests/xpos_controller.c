@@ -26,8 +26,8 @@ int main(int argc,char* argv[]){
 
   double output = -1;
 
-  printf("%f", x_ref);
-  
+  printf("%f\n", x_ref);
+
   while(output != 0){
     angle_err = (angle_ref - get_angle()) * K_theta;
 
