@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <unistd.h>
+
 #include <libcrane.h>
 
 static double K_theta = 12;
@@ -32,7 +34,7 @@ int main(int argc,char* argv[]){
       output = -14;
 
     printf("OUTPUT: %f\n", output);
-    
+    usleep(1000 * 500);
     run_motorx(output);
   }  
   
