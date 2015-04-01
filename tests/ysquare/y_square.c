@@ -15,6 +15,8 @@ void *sampler(void *args)
     unsigned int sample_nr = 0;
 
     t_0 = get_time_micros();
+
+    periods = 0;
     running = 0;
     while (1) {
         /*GRAB TIMESTAMP*/
