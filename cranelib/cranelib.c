@@ -235,12 +235,12 @@ double get_sensor_raw(int channel)
 }
 
 /**
- * Get current time in milliseconds
- * @return Current time in ms
+ * Get current time in microseconds
+ * @return Current time in us
  */
-unsigned long get_time_millis()
+unsigned long get_time_micros()
 {
     struct timespec tm;
     clock_gettime(CLOCK_REALTIME, &tm);
-    return (tm.tv_nsec + tm.tv_sec * NANO_SEC) / 1000000;
+    return (tm.tv_nsec + tm.tv_sec * NANO_SEC) / 1000;
 }
