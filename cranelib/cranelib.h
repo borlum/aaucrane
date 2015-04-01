@@ -56,4 +56,4 @@ double get_motory_voltage();
 
 double get_sensor_raw(int channel);
 
-unsigned long get_time_millis();
+unsigned long get_time_micros();
