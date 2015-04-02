@@ -224,21 +224,21 @@ double get_motory_voltage()
  */
 int get_ctrlpad_x()
 {
-  int raw_val;
+  double raw_val;
 
-  int old_val, new_val;
-  int old_range, new_range, old_max, old_min, new_max, new_min;
+  double old_val, new_val;
+  double old_range, new_range, old_max, old_min, new_max, new_min;
 
   printf("Inside X\n");
 
-  raw_val = (int) round(get_sensor_raw(CHAN_CTRLPAD_X_IN));
+  raw_val = round(get_sensor_raw(CHAN_CTRLPAD_X_IN));
 
   printf("X raw: %d\n", raw_val);
   
   old_val = raw_val;
   
-  old_max =  10; new_max  =  14;
-  old_min = 10; new_min   = -14;
+  old_max =  10; new_max   =  14;
+  old_min = 0;   new_min   = -14;
 
   old_range = old_max - old_min;
   new_range = new_max - new_min;
@@ -252,23 +252,23 @@ int get_ctrlpad_x()
  * Samples current y-axis voltage of control pad
  * @return Control pad y-axis voltage
  */
-int get_ctrlpad_y()
+double get_ctrlpad_y()
 {
-  int raw_val;
+  double raw_val;
 
-  int old_val, new_val;
-  int old_range, new_range, old_max, old_min, new_max, new_min;
+  double old_val, new_val;
+  double old_range, new_range, old_max, old_min, new_max, new_min;
 
   printf("Inside Y\n");
 
-  raw_val = (int) round(get_sensor_raw(CHAN_CTRLPAD_Y_IN));
+  raw_val = round(get_sensor_raw(CHAN_CTRLPAD_Y_IN));
 
   printf("y raw: %d", raw_val);
   
   old_val = raw_val;
   
-  old_max =  10; new_max  =  14;
-  old_min = 10; new_min   = -14;
+  old_max =  10; new_max   =  14;
+  old_min = 0;   new_min   = -14;
 
   old_range = old_max - old_min;
   new_range = new_max - new_min;
