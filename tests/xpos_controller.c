@@ -46,7 +46,7 @@ int main(int argc,char* argv[]){
     
     if(x_out == 0){
       run_motorx(0);
-      while( (y_ref = y_pos = get_ypos() != 0) ){
+      while(y_out!= 0){
 	y_pos = get_ypos();
 	y_out = (y_ref - y_pos) * 80;
 
