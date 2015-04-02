@@ -23,35 +23,40 @@ int main(int argc,char* argv[]){
   int i = 0;
     
   double x_ref = atof(argv[1]);
-  double x_err = 0;
+  double x_pos = 0;
 
   double output = -1;
 
   printf("Moving to x = %f\n", x_ref);
 
-  while(output != 0){
+  while(1){
 
-    //E[i % 3] = - get_angle() * 12;
-    //X[i % 3] = 0.2*E[i % 3] - 0.4*E[(i-1) % 3] + 0.2*E[(i-2) % 3] + 1.9*X[(i-1) % 3] - 0.9*X[(i-2) % 3];
+    E[i % 3] = - get_angle() * 12;
+    X[i % 3] = 0.2*E[i % 3] - 0.4*E[(i-1) % 3] + 0.2*E[(i-2) % 3] + 1.9*X[(i-1) % 3] - 0.9*X[(i-2) % 3];
+
     
-    x_err = get_xpos();
-    output = (x_ref + X[i % 3] - x_err) * K_p;
+   printf("X[%d] %f\n", (i % 3), X[i % 3]);
+    
+    x_pos = get_xpos();
+    output = (x_ref + X[i % 3] - x_pos) * K_p;
 
-    if(x_ref - 0.015 > get_xpos && get_xpos x_ref + 0.015)
+    if( (x_ref - 0.01) < x_pos && x_pos < (x_ref + 0.01) )
       output = 0;
     
-    printf("X_ref: %3f | X_err: %3f | Output: %3f\n", x_ref, x_err, output);
+    printf("X_ref: %3f | X + W: %3f | X_err: %3f | Output: %3f\n", x_ref, x_ref + X[i % 3], x_pos, output);
 
-    if(output == 0)
+    if(output == 0){
+      run_motorx(0);
       continue;
+    }
     else if(output > 14)
       output = 14;
     else if (output < -14)
       output = -14;
-    else if(-4 < output && output < 0)
-      output = -3;
-    else if (4 > output && output > 0)
-      output = 3;
+    else if(-5 < output && output < 0)
+      output = -5;
+    else if (5 > output && output > 0)
+      output = 5;
 
 
     printf("Readback voltage: %f\n", get_motorx_voltage());
