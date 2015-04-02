@@ -35,8 +35,8 @@ void *xcontroller()
   mqd_t input;
   mqd_t output;
 
-  input = mq_open(TOX, O_RDONLY | O_NONBLOCK | O_CREAT);
-  output = mq_open(TOM, O_WRONLY | O_CREAT);
+  input = mq_open(TOX, O_RDONLY | O_NONBLOCK);
+  output = mq_open(TOM, O_WRONLY);
 
   char * input_buffer = (char *)malloc(sizeof(double));
 
@@ -71,8 +71,8 @@ void *ycontroller()
   mqd_t input;
   mqd_t output;
 
-  input = mq_open(TOY, O_RDONLY | O_NONBLOCK | O_CREAT);
-  output = mq_open(TOM, O_WRONLY | O_CREAT);
+  input = mq_open(TOY, O_RDONLY | O_NONBLOCK);
+  output = mq_open(TOM, O_WRONLY);
 
   char* input_buffer = (char*) malloc(sizeof(double));
 
@@ -109,9 +109,11 @@ void *controller(void * args)
   mqd_t output_y;
   int tmp;
 
-  input = mq_open(TOM, O_RDONLY | O_CREAT);
-  output_x = mq_open(TOX, O_WRONLY | O_CREAT);
-  output_y = mq_open(TOY, O_WRONLY | O_CREAT);
+  mq_attr attr = {.mq_maxmgs = 1, .mq_msgsize = sizeof(double);};
+  
+  input = mq_open(TOM, O_RDONLY | O_CREAT, &attr);
+  output_x = mq_open(TOX, O_WRONLY | O_CREAT, &attr);
+  output_y = mq_open(TOY, O_WRONLY | O_CREAT, &attr);
 
   char * input_buffer = malloc(sizeof(int));
 
@@ -193,9 +195,10 @@ int main(int argc,char* argv[]){
   run_motorx(0);
   run_motory(0);
 
+  pthread_create(&thread_controller, NULL, &controller, &commands);
+  usleep(1000 * 100); /* Must create queues */
   pthread_create(&thread_xcontroller, NULL, &xcontroller, NULL);
   pthread_create(&thread_ycontroller, NULL, &ycontroller, NULL);
-  pthread_create(&thread_controller, NULL, &controller, &commands);
 
   while(1) {    
     usleep(1000 * 100);
