@@ -46,22 +46,22 @@ int main(int argc,char* argv[]){
     
     if(x_out == 0){
       run_motorx(0);
-      while( (y_ref = y_pos = get_ypos() != 0) )
-      y_pos = get_ypos();
-      y_out = (y_ref - y_pos) * 80;
+      while( (y_ref = y_pos = get_ypos() != 0) ){
+	y_pos = get_ypos();
+	y_out = (y_ref - y_pos) * 80;
 
-      if( (y_ref - 0.001) < y_pos && y_pos < (y_ref + 0.001) )
-	y_out = 0;
+	if( (y_ref - 0.001) < y_pos && y_pos < (y_ref + 0.001) )
+	  y_out = 0;
 
-      printf("y_ref: %3f | y_pos: %3f | Output: %3f\n", y_ref, y_pos, y_out);
+	printf("y_ref: %3f | y_pos: %3f | Output: %3f\n", y_ref, y_pos, y_out);
 
-      if(-5 < y_out && y_out < 0)
-	y_out = -5;
-      else if (5 > y_out && y_out > 0)
-	y_out = 5;
+	if(-5 < y_out && y_out < 0)
+	  y_out = -5;
+	else if (5 > y_out && y_out > 0)
+	  y_out = 5;
 
-      run_motory((int)y_out);
-
+	run_motory((int)y_out);
+      }
     }
     else if(x_out > 14)
       x_out = 14;
