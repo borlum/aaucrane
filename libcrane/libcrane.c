@@ -1,5 +1,5 @@
 #include "libcrane.h"
-
+#include <math.h>
 #ifndef TESTING
 comedi_t *NI_card;
 #else
@@ -133,7 +133,7 @@ double get_old_angle_raw()
  */
 double get_xpos()
 {
-    return ((get_xpos_raw() * 0.5) - 0.8) + 4.0;
+    return ((get_xpos_raw() * 0.5) - 0.8);
 }
 
 /**
@@ -224,7 +224,24 @@ double get_motory_voltage()
  */
 double get_ctrlpad_x()
 {
-    return get_sensor_raw(CHAN_CTRLPAD_X_IN);
+  double raw_val;
+
+  double old_val, new_val;
+  double old_range, new_range, old_max, old_min, new_max, new_min;
+
+  raw_val = get_sensor_raw(CHAN_CTRLPAD_X_IN);
+  
+  old_val = raw_val;
+  
+  old_max =  10; new_max   =  14;
+  old_min = 0;   new_min   = -14;
+
+  old_range = old_max - old_min;
+  new_range = new_max - new_min;
+
+  new_val = (((old_val - old_min) * new_range) / old_range) + new_min;
+
+  return new_val;
 }
 
 /**
@@ -233,7 +250,24 @@ double get_ctrlpad_x()
  */
 double get_ctrlpad_y()
 {
-    return get_sensor_raw(CHAN_CTRLPAD_Y_IN);
+  double raw_val;
+
+  double old_val, new_val;
+  double old_range, new_range, old_max, old_min, new_max, new_min;
+
+  raw_val = get_sensor_raw(CHAN_CTRLPAD_Y_IN);
+  
+  old_val = raw_val;
+  
+  old_max =  10; new_max   =  14;
+  old_min = 0;   new_min   = -14;
+
+  old_range = old_max - old_min;
+  new_range = new_max - new_min;
+
+  new_val = (((old_val - old_min) * new_range) / old_range) + new_min;
+
+  return new_val;
 }
 
 /**
