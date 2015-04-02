@@ -1,3 +1,4 @@
+TARGET=manual
 CRANELIB_PATH = ../../libcrane
 
 INC += -I/usr/local/lib
@@ -6,11 +7,11 @@ INC += -I../../libcrane
 GCC=gcc -std=gnu11
 LIBS=-lm -lpthread -lcomedi
 
-all: manual
+all: $(TARGET)
 
-manuel: manual.c
+$(TARGET): $(TARGET).c
 	cd $(CRANELIB_PATH) && make
-	$(GCC) manual.c $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o manual
+	$(GCC) $(TARGET).c $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o $(TARGET)
 
 clean:
-	rm y_square
+	rm xpos_controller
