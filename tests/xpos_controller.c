@@ -46,7 +46,7 @@ int main(int argc,char* argv[]){
     
     if(x_out == 0){
       run_motorx(0);
-/*
+      while( (y_ref = y_pos = get_ypos() != 0) )
       y_pos = get_ypos();
       y_out = (y_ref - y_pos) * 80;
 
@@ -59,8 +59,8 @@ int main(int argc,char* argv[]){
 	y_out = -5;
       else if (5 > y_out && y_out > 0)
 	y_out = 5;
-*/
-      //run_motory((int)y_out);
+
+      run_motory((int)y_out);
 
     }
     else if(x_out > 14)
