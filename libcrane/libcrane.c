@@ -248,9 +248,9 @@ int get_ctrlpad_x()
  * Samples current y-axis voltage of control pad
  * @return Control pad y-axis voltage
  */
-double get_ctrlpad_y()
+int get_ctrlpad_y()
 {
-    double raw_val;
+  double raw_val;
 
   int old_val, new_val;
   int old_range, new_range, old_max, old_min, new_max, new_min;

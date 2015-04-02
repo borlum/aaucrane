@@ -60,8 +60,8 @@ double get_motory_velocity_raw();
 double get_motorx_voltage();
 double get_motory_voltage();
 
-double get_ctrlpad_x();
-double get_ctrlpad_y();
+int get_ctrlpad_x();
+int get_ctrlpad_y();
 
 int get_ctrlpad_magnet_switch();
 
