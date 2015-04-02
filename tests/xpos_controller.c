@@ -62,6 +62,7 @@ int main(int argc,char* argv[]){
 
 	run_motory((int)y_out);
       }
+      enable_magnet();
     }
     else if(x_out > 14)
       x_out = 14;
