@@ -110,17 +110,17 @@ void *controller(void * args)
   mqd_t output_y;
   int tmp;
 
-  mq_attr attr = {.mq_maxmgs = 1, .mq_msgsize = sizeof(double);};
+  struct mq_attr attr = {.mq_maxmgs = 1, .mq_msgsize = sizeof(double);};
   
-  input = mq_open(TOM, O_RDONLY | O_CREAT, &attr);
-  output_x = mq_open(TOX, O_WRONLY | O_CREAT, &attr);
-  output_y = mq_open(TOY, O_WRONLY | O_CREAT, &attr);
+  input = mq_open(TOM, O_RDONLY | O_CREAT, 0664, &attr);
+  output_x = mq_open(TOX, O_WRONLY | O_CREAT, 0664, &attr);
+  output_y = mq_open(TOY, O_WRONLY | O_CREAT, 0664, &attr);
 
   char * input_buffer = malloc(sizeof(int));
 
   struct command* commands = args;
 
-  mq_send(output_x, (char *)&(commands->x1), sizeof(double), 0);
+ asdafsadsa mq_send(output_x, (char *)&(commands->x1), sizeof(double), 0);
 
   if (mq_receive(input, input_buffer, sizeof(int), 0) > 0) {
     tmp = (int)input_buffer;
