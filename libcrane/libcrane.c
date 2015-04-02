@@ -224,12 +224,12 @@ double get_motory_voltage()
  */
 int get_ctrlpad_x()
 {
-  double raw_val;
+  int raw_val;
 
   int old_val, new_val;
   int old_range, new_range, old_max, old_min, new_max, new_min;
 
-  raw_val = get_sensor_raw(CHAN_CTRLPAD_X_IN);
+  raw_val = (int) get_sensor_raw(CHAN_CTRLPAD_X_IN);
 
   old_val = raw_val;
   
@@ -250,12 +250,12 @@ int get_ctrlpad_x()
  */
 int get_ctrlpad_y()
 {
-  double raw_val;
+  int raw_val;
 
   int old_val, new_val;
   int old_range, new_range, old_max, old_min, new_max, new_min;
 
-  raw_val = get_sensor_raw(CHAN_CTRLPAD_Y_IN);
+  raw_val = (int) get_sensor_raw(CHAN_CTRLPAD_Y_IN);
 
   old_val = raw_val;
   
