@@ -77,7 +77,6 @@ void *xcontroller()
     if(new){
       new = 0;
       int msg = 1;
-      usleep(1000 * 1000);
       mq_send(output, (char*) &msg, sizeof(int), 0);
     }
 #endif
