@@ -222,7 +222,7 @@ double get_motory_voltage()
  * Samples current x-axis voltage of control pad
  * @return Control pad x-axis voltage
  */
-int get_ctrlpad_x()
+double get_ctrlpad_x()
 {
   double raw_val;
 
