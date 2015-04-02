@@ -53,7 +53,7 @@ void *xcontroller()
   while (1) {
     if (mq_receive(input, input_buffer, MSG_SIZE, 0) > 0) {
       memcpy(&x_ref, input_buffer, sizeof(double));
-      printf("[X] New x_ref = %f\n", x_ref);
+      printf("[X] New x_ref = %.3f\n", x_ref);
 #ifdef TEST
       new = 1;
 #endif
@@ -106,7 +106,7 @@ void *ycontroller()
   while (1) {
     if (mq_receive(input, input_buffer, MSG_SIZE, 0) > 0) {
       memcpy(&y_ref, input_buffer, sizeof(double));
-      printf("[Y] New y_ref = %f\n", y_ref);
+      printf("[Y] New y_ref = %.3f\n", y_ref);
 #ifdef TEST
       new = 1;
 #endif
@@ -159,61 +159,46 @@ void *controller(void * args)
 
   struct command* commands = args;
 
+  /* Move to x1 */
   mq_send(output_x, (char*) &(commands->x1), sizeof(double), 0);
+  mq_receive(input, input_buffer, MSG_SIZE, 0);
+  printf("[C] X moved to %.3f\n", commands->x1);
 
-  if (mq_receive(input, input_buffer, MSG_SIZE, 0) > 0) {
-    tmp = (int) *input_buffer;
-    printf("[C] FROM INPUT QUEUE: %d\n", tmp);
-  }else{
-    printf("[C]: Error %d: %s\n", errno, strerror(errno));
-  }
+  /* Move to y1 */
+  mq_send(output_y, (char *)&(commands->y1), sizeof(double), 0);
+  mq_receive(input, input_buffer, MSG_SIZE, 0);
+  printf("[C] Y moved to: %.3f\n", commands->y1);
 
-  if (tmp == 1) {
-    mq_send(output_y, (char *)&(commands->y1), sizeof(double), 0);
-  }
-
-
-  if (mq_receive(input, input_buffer, MSG_SIZE, 0) > 0) {
-    tmp = (int) *input_buffer;
-    printf("[C] FROM INPUT QUEUE: %d\n", tmp);
-  }
-
-  if (tmp == 2) {
+  /* Pick up container */
+  printf("[C] Picking up container @ (%.3f, %.3f)\n", commands->x1, commands->y1);
 #ifndef TEST
     enable_magnet();
 #endif
-    mq_send(output_y, (char *)&(commands->yc), sizeof(double), 0);
-  }
 
-  if (mq_receive(input, input_buffer, MSG_SIZE, 0) > 0) {
-    tmp = (int) *input_buffer;
-    printf("[C] FROM INPUT QUEUE: %d\n", tmp);
-  }
+  /* Move to carry height */
+  mq_send(output_y, (char *)&(commands->yc), sizeof(double), 0);
+  mq_receive(input, input_buffer, MSG_SIZE, 0);
+  printf("[C] In carrying height (%.3fm)\n", commands->yc);
+  
+  /* Move to x2 */
+  mq_send(output_x, (char *)&(commands->x2), sizeof(double), 0);
+  mq_receive(input, input_buffer, MSG_SIZE, 0);
+  printf("[C] X moved to: %.3f\n", commands->x2);
 
-  if (tmp == 2) {
-    mq_send(output_x, (char *)&(commands->x2), sizeof(double), 0);
-  }
+  /* Move to y2 */
+  mq_send(output_y, (char *)&(commands->y2), sizeof(double), 0);
+  mq_receive(input, input_buffer, MSG_SIZE, 0);
+  printf("[C] Y moved to: %.3f\n", commands->y2);
 
-  if (mq_receive(input, input_buffer, MSG_SIZE, 0) > 0) {
-    tmp = (int) *input_buffer;
-    printf("[C] FROM INPUT QUEUE: %d\n", tmp);
-  }
-
-  if (tmp == 1) {
-    mq_send(output_y, (char *)&(commands->y2), sizeof(double), 0);
-  }
-
-  if (mq_receive(input, input_buffer, MSG_SIZE, 0) > 0) {
-    tmp = (int) *input_buffer;
-    printf("[C] FROM INPUT QUEUE: %d\n", tmp);
-  }
-
+  /* Dropping container */
+  printf("[C] Dropping container\n");
   if (tmp == 2) {
 #ifndef TEST
     disable_magnet();
 #endif
   }
 
+  /* Move to start (0,0) */
   double nul = 0;
   mq_send(output_x, (char*) &nul, sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
