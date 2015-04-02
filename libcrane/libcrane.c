@@ -1,5 +1,5 @@
 #include "libcrane.h"
-
+#include <math.h>
 #ifndef TESTING
 comedi_t *NI_card;
 #else
@@ -229,9 +229,11 @@ int get_ctrlpad_x()
   int old_val, new_val;
   int old_range, new_range, old_max, old_min, new_max, new_min;
 
-  raw_val = (int) get_sensor_raw(CHAN_CTRLPAD_X_IN);
+  printf("Inside X\n");
 
-  printf("X raw: %d", raw_val);
+  raw_val = (int) round(get_sensor_raw(CHAN_CTRLPAD_X_IN));
+
+  printf("X raw: %d\n", raw_val);
   
   old_val = raw_val;
   
@@ -257,7 +259,9 @@ int get_ctrlpad_y()
   int old_val, new_val;
   int old_range, new_range, old_max, old_min, new_max, new_min;
 
-  raw_val = (int) get_sensor_raw(CHAN_CTRLPAD_Y_IN);
+  printf("Inside Y\n");
+
+  raw_val = (int) round(get_sensor_raw(CHAN_CTRLPAD_Y_IN));
 
   printf("y raw: %d", raw_val);
   
