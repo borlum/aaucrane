@@ -6,11 +6,11 @@ INC += -I../../libcrane
 GCC=gcc -std=gnu11
 LIBS=-lm -lpthread -lcomedi
 
-all: manuel
+all: manual
 
-manuel: manuel.c
+manuel: manual.c
 	cd $(CRANELIB_PATH) && make
-	$(GCC) manuel.c $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o manuel
+	$(GCC) manual.c $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o manual
 
 clean:
 	rm y_square
