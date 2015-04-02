@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include <fcntl.h>
 #include <mqueue.h>
+#include <string.h>
 
 #define X_ERR_BAND 0.015
 #define C2 26.3
@@ -40,7 +41,7 @@ void *xcontroller()
   double x_ref = 0;
   double x_pos = 0;
   double x_err = 0;
-  double output = 0;
+  double out = 0;
 
   while (1) {
     if (mq_receive(input, input_buffer, sizeof(double), 0) > 0) {
@@ -57,8 +58,8 @@ void *xcontroller()
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
 
-    output = x_err * C2;
-    run_motorx(output);
+    out = x_err * C2;
+    run_motorx(out);
   }
 }
 
@@ -70,10 +71,12 @@ void *ycontroller()
   input = mq_open(TOY, O_RDONLY|O_NONBLOCK);
   output = mq_open(TOM, O_WRONLY);
 
+   char* input_buffer = (char*) malloc(sizeof(double));
+
   double y_ref = 0;
   double y_pos = 0;
   double y_err = 0;
-  double output = 0;
+  double out = 0;
 
   while (1) {
     if (mq_receive(input, input_buffer, sizeof(double), 0) > 0) {
@@ -90,8 +93,8 @@ void *ycontroller()
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
 
-    output = y_err * C3;
-    run_motory(output);
+    out = y_err * C3;
+    run_motory(out);
   }
 }
 
@@ -108,9 +111,9 @@ void *controller(void * args)
 
   char * input_buffer = malloc(sizeof(int));
 
-  struct command commands = (struct command)*args;
+  struct command* commands = args;
 
-  mq_send(output_x, (char *)&commands.x1, sizeof(double), 0);
+  mq_send(output_x, (char *)&(commands->x1), sizeof(double), 0);
 
   if (mq_receive(input, input_buffer, sizeof(int), 0) > 0) {
     tmp = (int)input_buffer;
@@ -172,10 +175,10 @@ int main(int argc,char* argv[]){
   }
 
   struct command commands = {
-    .x1 = argv[1],
-    .y1 = argv[2],
-    .x2 = argv[3],
-    .y2 = argv[4],
+    .x1 = atof(argv[1]),
+    .y1 = atof(argv[2]),
+    .x2 = atof(argv[3]),
+    .y2 = atof(argv[4]),
     .yc = 0.5
   };
   

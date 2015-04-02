@@ -5,7 +5,7 @@ INC += -I/usr/local/lib
 INC += -I../libcrane
 
 GCC=gcc -std=gnu11
-LIBS=-lm -lpthread -lcomedi
+LIBS=-lm -lpthread -lrt -lcomedi
 
 all: $(TARGET)
 
