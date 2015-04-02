@@ -31,20 +31,22 @@ int main(int argc,char* argv[]){
 
   while(1){
 
-    E[i % 3] = - get_angle() * 12;
-    X[i % 3] = 0.2*E[i % 3] - 0.4*E[(i-1) % 3] + 0.2*E[(i-2) % 3] + 1.9*X[(i-1) % 3] - 0.9*X[(i-2) % 3];
+    //E[i % 3] = - get_angle() * 12;
+    //X[i % 3] = 0.2*E[i % 3] - 0.4*E[(i-1) % 3] + 0.2*E[(i-2) % 3] + 1.9*X[(i-1) % 3] - 0.9*X[(i-2) % 3];
 
     
-   printf("X[%d] %f\n", (i % 3), X[i % 3]);
+    printf("Angle X %f\n", 0.03 * get_angle());
     
     x_pos = get_xpos();
-    output = (x_ref + X[i % 3] - x_pos) * K_p;
+    output = (x_ref + 0.03 * get_angle() - x_pos) * K_p;
 
     if( (x_ref - 0.01) < x_pos && x_pos < (x_ref + 0.01) )
       output = 0;
-    
+
     printf("X_ref: %3f | X + W: %3f | X_err: %3f | Output: %3f\n", x_ref, x_ref + X[i % 3], x_pos, output);
 
+    i++;
+    
     if(output == 0){
       run_motorx(0);
       continue;
@@ -64,7 +66,6 @@ int main(int argc,char* argv[]){
     run_motorx((int)output);
     
     usleep(1000 * 100);
-    i++;
   }  
   
   printf("Jobs done\n");
