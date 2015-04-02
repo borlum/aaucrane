@@ -41,12 +41,13 @@ int main(int argc,char* argv[]){
     if( (x_ref - 0.01) < x_pos && x_pos < (x_ref + 0.01) )
       output = 0;
 
-    printf("X_ref: %3f | Angle: %3f | X_err: %3f | Output: %3f\n", x_ref, 0.03 * get_angle(), x_pos, output);
+    printf("X_ref: %3f | Angle: %3f | X_err: %3f | Output: %3f\n", x_ref, get_angle(), x_pos, output);
 
     i++;
     
     if(output == 0){
       run_motorx(0);
+      usleep(1000 * 100);
       continue;
     }
     else if(output > 14)
