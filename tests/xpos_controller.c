@@ -37,16 +37,20 @@ int main(int argc,char* argv[]){
     x_err = get_xpos();
     output = (x_ref + X[i % 3] - x_err) * K_p;
 
+    if(x_ref - 0.015 > get_xpos && get_xpos x_ref + 0.015)
+      output = 0;
+    
     printf("X_ref: %3f | X_err: %3f | Output: %3f\n", x_ref, x_err, output);
 
-    
-    if(output > 14)
+    if(output == 0)
+      continue;
+    else if(output > 14)
       output = 14;
     else if (output < -14)
       output = -14;
-    else if(-4 < output && output < -0.005)
+    else if(-4 < output && output < 0)
       output = -3;
-    else if (4 > output && output > 0.005)
+    else if (4 > output && output > 0)
       output = 3;
 
 
