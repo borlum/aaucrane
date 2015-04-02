@@ -222,9 +222,26 @@ double get_motory_voltage()
  * Samples current x-axis voltage of control pad
  * @return Control pad x-axis voltage
  */
-double get_ctrlpad_x()
+int get_ctrlpad_x()
 {
-    return get_sensor_raw(CHAN_CTRLPAD_X_IN);
+  double raw_val;
+
+  int old_val, new_val;
+  int old_range, new_range, old_max, old_min, new_max, new_min;
+
+  raw_val = get_sensor_raw(CHAN_CTRLPAD_X_IN);
+
+  old_val = raw_val;
+  
+  old_max =  10; new_max  =  14;
+  old_min = 10; new_min   = -14;
+
+  old_range = old_max - old_min;
+  new_range = new_max - new_min;
+
+  new_val = (((old_val - old_min) * new_range) / old_range) + new_min;
+
+  return new_val;
 }
 
 /**
@@ -233,7 +250,24 @@ double get_ctrlpad_x()
  */
 double get_ctrlpad_y()
 {
-    return get_sensor_raw(CHAN_CTRLPAD_Y_IN);
+    double raw_val;
+
+  int old_val, new_val;
+  int old_range, new_range, old_max, old_min, new_max, new_min;
+
+  raw_val = get_sensor_raw(CHAN_CTRLPAD_Y_IN);
+
+  old_val = raw_val;
+  
+  old_max =  10; new_max  =  14;
+  old_min = 10; new_min   = -14;
+
+  old_range = old_max - old_min;
+  new_range = new_max - new_min;
+
+  new_val = (((old_val - old_min) * new_range) / old_range) + new_min;
+
+  return new_val;
 }
 
 /**
