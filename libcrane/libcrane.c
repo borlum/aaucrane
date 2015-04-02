@@ -231,6 +231,8 @@ int get_ctrlpad_x()
 
   raw_val = (int) get_sensor_raw(CHAN_CTRLPAD_X_IN);
 
+  printf("X raw: %d", raw_val);
+  
   old_val = raw_val;
   
   old_max =  10; new_max  =  14;
@@ -257,6 +259,8 @@ int get_ctrlpad_y()
 
   raw_val = (int) get_sensor_raw(CHAN_CTRLPAD_Y_IN);
 
+  printf("y raw: %d", raw_val);
+  
   old_val = raw_val;
   
   old_max =  10; new_max  =  14;
