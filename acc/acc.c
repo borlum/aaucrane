@@ -122,6 +122,8 @@ void *controller(void * args)
   if (mq_receive(input, input_buffer, sizeof(int), 0) > 0) {
     tmp = (int)input_buffer;
     printf("VI FIK: %d\n", tmp);
+  }else{
+    printf("Error %d: %s\n", errno, strerror(errno));
   }
   printf("After 1. receive\n");
 
