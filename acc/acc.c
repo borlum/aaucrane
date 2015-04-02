@@ -74,7 +74,7 @@ void *ycontroller()
   input = mq_open(TOY, O_RDONLY|O_NONBLOCK);
   output = mq_open(TOM, O_WRONLY);
 
-   char* input_buffer = (char*) malloc(sizeof(double));
+  char* input_buffer = (char*) malloc(sizeof(double));
 
   double y_ref = 0;
   double y_pos = 0;
@@ -123,6 +123,7 @@ void *controller(void * args)
     tmp = (int)input_buffer;
     printf("VI FIK: %d\n", tmp);
   }
+  printf("After 1. receive\n");
 
   if (tmp == 1) {
     mq_send(output_y, (char *)&(commands->y1), sizeof(double), 0);
