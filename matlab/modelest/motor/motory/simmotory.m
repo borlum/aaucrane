@@ -1,4 +1,4 @@
-function y = simmotor(u,t,par)
+function y = simmotory(u,t,par)
 b = par(1);
 I = par(2);
 

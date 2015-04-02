@@ -19,8 +19,8 @@ y = y(1:idx_end);
 u = DATA(:,8) * 2;
 u = (-u(1:idx_end)) + u(1);
 
-save measmotor t u y
+save measmotorx t u y
 
-process = 'motor';
+process = 'motorx';
 
 delete(TMP_FILE);
