@@ -35,8 +35,8 @@ void *xcontroller()
   mqd_t input;
   mqd_t output;
 
-  input = mq_open(TOX, O_RDONLY|O_NONBLOCK);
-  output = mq_open(TOM, O_WRONLY);
+  input = mq_open(TOX, O_RDONLY | O_NONBLOCK | O_CREAT);
+  output = mq_open(TOM, O_WRONLY | O_CREAT);
 
   char * input_buffer = (char *)malloc(sizeof(double));
 
@@ -71,8 +71,8 @@ void *ycontroller()
   mqd_t input;
   mqd_t output;
 
-  input = mq_open(TOY, O_RDONLY|O_NONBLOCK);
-  output = mq_open(TOM, O_WRONLY);
+  input = mq_open(TOY, O_RDONLY | O_NONBLOCK | O_CREAT);
+  output = mq_open(TOM, O_WRONLY | O_CREAT);
 
   char* input_buffer = (char*) malloc(sizeof(double));
 
@@ -109,9 +109,9 @@ void *controller(void * args)
   mqd_t output_y;
   int tmp;
 
-  input = mq_open(TOM, O_RDONLY);
-  output_x = mq_open(TOX, O_WRONLY);
-  output_y = mq_open(TOY, O_WRONLY);
+  input = mq_open(TOM, O_RDONLY | O_CREAT);
+  output_x = mq_open(TOX, O_WRONLY | O_CREAT);
+  output_y = mq_open(TOY, O_WRONLY | O_CREAT);
 
   char * input_buffer = malloc(sizeof(int));
 
