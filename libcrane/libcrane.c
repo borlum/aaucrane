@@ -17,7 +17,7 @@ int initialize_crane()
     #ifndef TESTING
     NI_card = comedi_open(DEVICE);
     /*Global config*/
-    comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
+    comedi_set_global_oor_behavior(COMEDI_OOR_NUMBER);
     comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, COMEDI_OUTPUT);
     comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, COMEDI_INPUT);
     #endif
@@ -151,7 +151,7 @@ double get_xpos_raw()
  */
 double get_ypos()
 {
-    return (get_ypos_raw() * - 0.13) + 1.8;
+    return (get_ypos_raw() * - 0.15) + 1.35;
 }
 
 /**
