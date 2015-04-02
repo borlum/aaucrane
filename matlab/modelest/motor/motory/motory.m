@@ -14,11 +14,11 @@ t = t(1:idx_end);
 t = linspace(0,t(idx_end), idx_end);
 
 y = DATA(:,7) * 34.1834 + 1.6613;
-y = y(1:idx_end);
-u = DATA(:,9) * 2;
-u = (-u(1:idx_end)) + u(1);
+y = y(1:idx_end) - y(1);
+u = DATA(:,9);
+u = (u(1:idx_end)) + u(20);
 
-save measmotor t u y;
+save measmotory t u y;
 
 process = 'motory';
 
