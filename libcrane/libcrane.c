@@ -229,11 +229,7 @@ int get_ctrlpad_x()
   double old_val, new_val;
   double old_range, new_range, old_max, old_min, new_max, new_min;
 
-  printf("Inside X\n");
-
-  raw_val = round(get_sensor_raw(CHAN_CTRLPAD_X_IN));
-
-  printf("X raw: %d\n", raw_val);
+  raw_val = get_sensor_raw(CHAN_CTRLPAD_X_IN);
   
   old_val = raw_val;
   
@@ -259,11 +255,7 @@ double get_ctrlpad_y()
   double old_val, new_val;
   double old_range, new_range, old_max, old_min, new_max, new_min;
 
-  printf("Inside Y\n");
-
-  raw_val = round(get_sensor_raw(CHAN_CTRLPAD_Y_IN));
-
-  printf("y raw: %d", raw_val);
+  raw_val = get_sensor_raw(CHAN_CTRLPAD_Y_IN);
   
   old_val = raw_val;
   
