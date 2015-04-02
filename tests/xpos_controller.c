@@ -31,8 +31,8 @@ int main(int argc,char* argv[]){
 
   while(output != 0){
 
-    E[i % 3] = - get_angle() * 12;
-    X[i % 3] = 0.2*E[i % 3] - 0.4*E[(i-1) % 3] + 0.2*E[(i-2) % 3] + 1.9*X[(i-1) % 3] - 0.9*X[(i-2) % 3];
+    //E[i % 3] = - get_angle() * 12;
+    //X[i % 3] = 0.2*E[i % 3] - 0.4*E[(i-1) % 3] + 0.2*E[(i-2) % 3] + 1.9*X[(i-1) % 3] - 0.9*X[(i-2) % 3];
     
     x_err = get_xpos();
     output = (x_ref + X[i % 3] - x_err) * K_p;
@@ -44,12 +44,17 @@ int main(int argc,char* argv[]){
       output = 14;
     else if (output < -14)
       output = -14;
+    else if(-4 < output && output < -0.005)
+      output = -3;
+    else if (4 > output && output > 0.005)
+      output = 3;
 
-    printf("OUTPUT: %f\n", (float) output);
+
+    printf("Readback voltage: %f\n", get_motorx_voltage());
+
+    run_motorx((int)output);
     
-    printf("ret val %d\n", run_motorx( (int) output));
-
-    usleep(1000 * 500);
+    usleep(1000 * 100);
     i++;
   }  
   
