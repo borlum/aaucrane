@@ -17,7 +17,7 @@
 
 pthread_t thread_xcontroller;
 pthread_t thread_ycontroller;
-pthread_t thread_main;
+pthread_t thread_controller;
 
 struct command
 {
@@ -121,7 +121,7 @@ void *controller(void * args)
   }
 
   if (tmp == 1) {
-    mq_send(output_y, (char *)&commands.y1, sizeof(double), 0);
+    mq_send(output_y, (char *)&(commands->y1), sizeof(double), 0);
   }
 
   if (mq_receive(input, input_buffer, sizeof(int), 0) > 0) {
@@ -131,7 +131,7 @@ void *controller(void * args)
 
   if (tmp == 2) {
     enable_magnet();
-    mq_send(output_y, (char *)&commands.yc, sizeof(double), 0);
+    mq_send(output_y, (char *)&(commands->yc), sizeof(double), 0);
   }
 
   if (mq_receive(input, input_buffer, sizeof(int), 0) > 0) {
@@ -140,7 +140,7 @@ void *controller(void * args)
   }
 
   if (tmp == 2) {
-    mq_send(output_x, (char *)&commands.x2, sizeof(double), 0);
+    mq_send(output_x, (char *)&(commands->x2), sizeof(double), 0);
   }
 
   if (mq_receive(input, input_buffer, sizeof(int), 0) > 0) {
@@ -149,7 +149,7 @@ void *controller(void * args)
   }
 
   if (tmp == 1) {
-    mq_send(output_y, (char *)&commands.y2, sizeof(double), 0);
+    mq_send(output_y, (char *)&(commands->y2), sizeof(double), 0);
   }
 
   if (mq_receive(input, input_buffer, sizeof(int), 0) > 0) {
@@ -162,8 +162,8 @@ void *controller(void * args)
   }
 
   double nul = 0;
-  mq_send(output_x, &nul, sizeof(double), 0);
-  mq_send(output_y, &nul, sizeof(double), 0);
+  mq_send(output_x, (char*) &nul, sizeof(double), 0);
+  mq_send(output_y, (char*) &nul, sizeof(double), 0);
   usleep(5000);
   exit(0);
 }
