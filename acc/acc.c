@@ -31,6 +31,7 @@ struct command
 
 void *xcontroller()
 {
+  printf("Starting xcontroller task");
   mqd_t input;
   mqd_t output;
 
@@ -66,6 +67,7 @@ void *xcontroller()
 
 void *ycontroller()
 {
+  printf("Starting ycontroller task");
   mqd_t input;
   mqd_t output;
 
@@ -101,6 +103,7 @@ void *ycontroller()
 
 void *controller(void * args)
 {
+  printf("Starting controller task");
   mqd_t input;
   mqd_t output_x;
   mqd_t output_y;
