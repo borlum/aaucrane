@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
 #include <libcrane.h>
 #include <pthread.h>
 #include <fcntl.h>
@@ -7,6 +8,7 @@
 #include <string.h>
 
 #define X_ERR_BAND 0.015
+#define Y_ERR_BAND 0.005
 #define C2 26.3
 #define C3 80
 
@@ -17,7 +19,7 @@
 
 pthread_t thread_xcontroller;
 pthread_t thread_ycontroller;
-pthread_t thread_main;
+pthread_t thread_controller;
 
 struct command
 {
@@ -30,10 +32,11 @@ struct command
 
 void *xcontroller()
 {
+  printf("Starting xcontroller task\n");
   mqd_t input;
   mqd_t output;
 
-  input = mq_open(TOX, O_RDONLY|O_NONBLOCK);
+  input = mq_open(TOX, O_RDONLY | O_NONBLOCK);
   output = mq_open(TOM, O_WRONLY);
 
   char * input_buffer = (char *)malloc(sizeof(double));
@@ -65,13 +68,14 @@ void *xcontroller()
 
 void *ycontroller()
 {
+  printf("Starting ycontroller task\n");
   mqd_t input;
   mqd_t output;
 
-  input = mq_open(TOY, O_RDONLY|O_NONBLOCK);
+  input = mq_open(TOY, O_RDONLY | O_NONBLOCK);
   output = mq_open(TOM, O_WRONLY);
 
-   char* input_buffer = (char*) malloc(sizeof(double));
+  char* input_buffer = (char*) malloc(sizeof(double));
 
   double y_ref = 0;
   double y_pos = 0;
@@ -100,28 +104,34 @@ void *ycontroller()
 
 void *controller(void * args)
 {
+  printf("Starting controller task\n");
   mqd_t input;
   mqd_t output_x;
   mqd_t output_y;
   int tmp;
 
-  input = mq_open(TOM, O_RDONLY);
-  output_x = mq_open(TOX, O_WRONLY);
-  output_y = mq_open(TOY, O_WRONLY);
+  struct mq_attr attr = {.mq_maxmgs = 1, .mq_msgsize = sizeof(double)};
+  
+  input = mq_open(TOM, O_RDONLY | O_CREAT, 0664, &attr);
+  output_x = mq_open(TOX, O_WRONLY | O_CREAT, 0664, &attr);
+  output_y = mq_open(TOY, O_WRONLY | O_CREAT, 0664, &attr);
 
   char * input_buffer = malloc(sizeof(int));
 
   struct command* commands = args;
 
-  mq_send(output_x, (char *)&(commands->x1), sizeof(double), 0);
+ asdafsadsa mq_send(output_x, (char *)&(commands->x1), sizeof(double), 0);
 
   if (mq_receive(input, input_buffer, sizeof(int), 0) > 0) {
     tmp = (int)input_buffer;
     printf("VI FIK: %d\n", tmp);
+  }else{
+    printf("Error %d: %s\n", errno, strerror(errno));
   }
+  printf("After 1. receive\n");
 
   if (tmp == 1) {
-    mq_send(output_y, (char *)&commands.y1, sizeof(double), 0);
+    mq_send(output_y, (char *)&(commands->y1), sizeof(double), 0);
   }
 
   if (mq_receive(input, input_buffer, sizeof(int), 0) > 0) {
@@ -131,7 +141,7 @@ void *controller(void * args)
 
   if (tmp == 2) {
     enable_magnet();
-    mq_send(output_y, (char *)&commands.yc, sizeof(double), 0);
+    mq_send(output_y, (char *)&(commands->yc), sizeof(double), 0);
   }
 
   if (mq_receive(input, input_buffer, sizeof(int), 0) > 0) {
@@ -140,7 +150,7 @@ void *controller(void * args)
   }
 
   if (tmp == 2) {
-    mq_send(output_x, (char *)&commands.x2, sizeof(double), 0);
+    mq_send(output_x, (char *)&(commands->x2), sizeof(double), 0);
   }
 
   if (mq_receive(input, input_buffer, sizeof(int), 0) > 0) {
@@ -149,7 +159,7 @@ void *controller(void * args)
   }
 
   if (tmp == 1) {
-    mq_send(output_y, (char *)&commands.y2, sizeof(double), 0);
+    mq_send(output_y, (char *)&(commands->y2), sizeof(double), 0);
   }
 
   if (mq_receive(input, input_buffer, sizeof(int), 0) > 0) {
@@ -162,8 +172,8 @@ void *controller(void * args)
   }
 
   double nul = 0;
-  mq_send(output_x, &nul, sizeof(double), 0);
-  mq_send(output_y, &nul, sizeof(double), 0);
+  mq_send(output_x, (char*) &nul, sizeof(double), 0);
+  mq_send(output_y, (char*) &nul, sizeof(double), 0);
   usleep(5000);
   exit(0);
 }
@@ -186,9 +196,10 @@ int main(int argc,char* argv[]){
   run_motorx(0);
   run_motory(0);
 
+  pthread_create(&thread_controller, NULL, &controller, &commands);
+  usleep(1000 * 100); /* Must create queues */
   pthread_create(&thread_xcontroller, NULL, &xcontroller, NULL);
   pthread_create(&thread_ycontroller, NULL, &ycontroller, NULL);
-  pthread_create(&thread_controller, NULL, &controller, &commands);
 
   while(1) {    
     usleep(1000 * 100);
