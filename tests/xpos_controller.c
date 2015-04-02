@@ -1,5 +1,8 @@
 #include <stdlib.h>
+
 #include <libcrane.h>
+#include <libringbuffer.h>
+
 
 static double K_theta = 12;
 static double K_p = 26.6;
@@ -11,12 +14,15 @@ int main(int argc,char* argv[]){
     printf("usage: %s <distance in meters>", argv[0]);
     exit(1);
   }
-
+  
   initialize_crane();  
   run_motorx(0);
   run_motory(0);
 
-  
+  float X[3] = {0}; 
+  float E[3] = {0};
+  int i = 0;
+    
   double x_ref = atof(argv[1]);
   double x_err = 0;
 
@@ -25,8 +31,13 @@ int main(int argc,char* argv[]){
   printf("Moving to x = %f\n", x_ref);
 
   while(output != 0){
+
+    E[i % 3] = - get_angle() * 12;
+    X[i % 3] = 0.2*E[i % 3] - 0.4*E[(i-1) % 3] + 0.2*E[(i-2) % 3] + 1.9*X[(i-1) % 3] - 0.9*X[(i-2) % 3];
+    
     x_err = get_xpos();
-    output = (x_ref - x_err) * K_p;
+    output = (x_ref + X[i % 3] - x_err) * K_p;
+
     printf("X_ref: %3f | X_err: %3f | Output: %3f\n", x_ref, x_err, output);
 
     
@@ -40,6 +51,7 @@ int main(int argc,char* argv[]){
     printf("ret val %d\n", run_motorx( (int) output));
 
     usleep(1000 * 500);
+    i++;
   }  
   
   printf("Jobs done\n");
