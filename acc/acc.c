@@ -110,7 +110,7 @@ void *controller(void * args)
   mqd_t output_y;
   int tmp;
 
-  struct mq_attr attr = {.mq_maxmgs = 1, .mq_msgsize = sizeof(double);};
+  struct mq_attr attr = {.mq_maxmgs = 1, .mq_msgsize = sizeof(double)};
   
   input = mq_open(TOM, O_RDONLY | O_CREAT, 0664, &attr);
   output_x = mq_open(TOX, O_WRONLY | O_CREAT, 0664, &attr);
