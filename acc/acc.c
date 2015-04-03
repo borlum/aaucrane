@@ -227,6 +227,7 @@ void *controller(void * args)
   if (mq_unlink(TOM) == -1)
     printf("[C] ERROR: %s", strerror(errno));
 
+  while(1);
   /* Power down */
 #ifndef TEST
   run_motorx(0);
