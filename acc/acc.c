@@ -200,18 +200,13 @@ void *controller(void * args)
 #endif
   }
   
-  if (pthread_cancel(thread_xcontroller) != 0)
-    printf("[C] Error: %s", strerror(errno));
-  if (pthread_cancel(thread_xcontroller != 0))
-    printf("[C] Error: %s", strerror(errno));
-   /* Move to start (0,0) */
-  /*
+  /* Move to start (0,0) */
   double nul = 0.50;
   mq_send(output_x, (char*) &nul, sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
+  usleep(1000 * 5000);
   mq_send(output_y, (char*) &nul, sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
-  */
 
   /* Power down */
 #ifndef TEST
