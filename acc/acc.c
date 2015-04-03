@@ -81,7 +81,6 @@ void *xcontroller()
     }
 #endif
   }
-  usleep(1000 * 1000);
 }
 
 void *ycontroller()
@@ -130,7 +129,6 @@ void *ycontroller()
     }
 #endif
   }
-  usleep(1000 * 1000);
 }
 
 void *controller(void * args)
@@ -172,7 +170,7 @@ void *controller(void * args)
   /* Pick up container */
   printf("[C] Picking up container @ (%.3f, %.3f)\n", commands->x1, commands->y1);
 #ifndef TEST
-    enable_magnet();
+  //    enable_magnet();
 #endif
 
   /* Move to carry height */
@@ -194,7 +192,7 @@ void *controller(void * args)
   printf("[C] Dropping container\n");
   if (tmp == 2) {
 #ifndef TEST
-    disable_magnet();
+    //    disable_magnet();
 #endif
   }
 
