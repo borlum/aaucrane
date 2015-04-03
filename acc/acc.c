@@ -116,7 +116,6 @@ void *ycontroller()
 
     if (fabs(y_err) < Y_ERR_BAND && new_ref) {
       /*Settled*/
-      printf("[Y] in position\n");
       new_ref = 0;
       int msg = 2;
       mq_send(output, (char *)&msg, sizeof(int), 0);
@@ -131,6 +130,8 @@ void *ycontroller()
       mq_send(output, (char*) &msg, sizeof(int), 0);
     }
 #endif
+    sleep(1000 * 200);
+    printf("[Y]: out %d\n", out);
   }
 }
 
