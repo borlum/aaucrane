@@ -172,7 +172,7 @@ void *controller(void * args)
 #ifndef TEST
   //    enable_magnet();
 #endif
-
+  usleep(1000 * 1000);
   /* Move to carry height */
   mq_send(output_y, (char *)&(commands->yc), sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
@@ -195,7 +195,7 @@ void *controller(void * args)
     //    disable_magnet();
 #endif
   }
-
+  usleep(1000 * 1000);
   /* Move to start (0,0) */
   double nul = 0.50;
   mq_send(output_x, (char*) &nul, sizeof(double), 0);
