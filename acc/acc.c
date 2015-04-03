@@ -74,7 +74,9 @@ void *xcontroller()
     angle_err = angle_ref - angle_pos;
     x_ref = x_ref + (angle_err * 0.03);
     x_err = x_ref - x_pos;
-
+    
+    printf("X_ref: %.3f | X_pos: %.3f | Angle_err: %.3f\n", x_ref, x_pos, angle_err);
+    
     if ( (fabs(x_err) < X_ERR_BAND) && new_ref) {
       /*Settled*/
       printf("[X] Settled: pos_sensor = %.3f | x_ref = %.3f\n", fabs(x_err), x_ref);
