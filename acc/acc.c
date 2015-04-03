@@ -122,7 +122,9 @@ void *ycontroller()
     }
 
     out = y_err * C3;
-    run_motory(out);
+  
+    printf("[Y]: out %d, motor: %d\n", (int) out, run_motory(out));
+    usleep(1000 * 200);
 #else
     if(new_ref){
       new_ref = 0;
@@ -130,8 +132,6 @@ void *ycontroller()
       mq_send(output, (char*) &msg, sizeof(int), 0);
     }
 #endif
-    usleep(1000 * 200);
-    printf("[Y]: out %d\n", (int) out);
   }
 }
 
