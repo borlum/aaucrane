@@ -200,7 +200,7 @@ void *controller(void * args)
   }
   
   /* Move to start (0,0) */
-  double nul = 0.50;
+  double nul = 0.0;
   printf("[C] Resetting Y\n");
   mq_send(output_y, (char*) &nul, sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
