@@ -163,6 +163,7 @@ void *controller(void * args)
   printf("[C] X moved to %.3f\n", commands->x1);
 
   /* Move to y1 */
+  usleep(1000 * 5000);
   mq_send(output_y, (char *)&(commands->y1), sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
   printf("[C] Y moved to: %.3f\n", commands->y1);
@@ -172,18 +173,21 @@ void *controller(void * args)
 #ifndef TEST
   //    enable_magnet();
 #endif
-  usleep(1000 * 5000);
+  
   /* Move to carry height */
+  usleep(1000 * 5000);
   mq_send(output_y, (char *)&(commands->yc), sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
   printf("[C] In carrying height (%.3fm)\n", commands->yc);
   
   /* Move to x2 */
+  usleep(1000 * 5000);
   mq_send(output_x, (char *)&(commands->x2), sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
   printf("[C] X moved to: %.3f\n", commands->x2);
 
   /* Move to y2 */
+  usleep(1000 * 5000);
   mq_send(output_y, (char *)&(commands->y2), sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
   printf("[C] Y moved to: %.3f\n", commands->y2);
