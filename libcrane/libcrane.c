@@ -60,6 +60,8 @@ int run_motor(int voltage, int axis)
     int old_val, new_val;
     int old_range, new_range, old_max, old_min, new_max, new_min;
 
+    voltage = -voltage; /* Changed direction of moters */
+    
     if (voltage > 14) {
         voltage = 14;
     }
