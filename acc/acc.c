@@ -199,6 +199,11 @@ void *controller(void * args)
     //    disable_magnet();
 #endif
   }
+  
+  if (pthread_cancel(thread_xcontroller) == -1)
+    printf("[C] Error: %s", strerror(errno));
+  if (pthread_cancel(thread_xcontroller == -1))
+    printf("[C] Error: %s", strerror(errno));
   usleep(1000 * 5000);
   /* Move to start (0,0) */
   /*
