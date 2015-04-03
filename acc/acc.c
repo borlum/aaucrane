@@ -75,7 +75,7 @@ void *xcontroller()
     x_ref = x_ref + (angle_err * 0.03);
     x_err = x_ref - x_pos;
     
-    printf("X_ref: %.3f | X_pos: %.3f | Angle_err: %.3f\n", x_ref, x_pos, angle_err);
+    printf("X_ref: %.3f | X_pos: %.3f | Angle_pos: %.3f\n", x_ref, x_pos, angle_pos);
     
     if ( (fabs(x_err) < X_ERR_BAND) && new_ref) {
       /*Settled*/
