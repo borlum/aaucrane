@@ -159,7 +159,7 @@ double get_xpos_raw()
  */
 double get_ypos()
 {
-    return (get_ypos_raw() * - 0.15) + 1.35;
+    return ((get_ypos_raw() * - 0.15) + 1.35) + 0.2;
 }
 
 /**
