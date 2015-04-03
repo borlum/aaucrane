@@ -68,6 +68,14 @@ int run_motor(int voltage, int axis)
         voltage = -14;
     }
 
+    if (voltage > -4 && voltage < 0) {
+      voltage = -4;
+    }
+
+    if (voltage < 4 && voltage > 0) {
+      voltage = 4;
+    }
+
     old_val = voltage;
     
     old_max =  14; new_max  = 4000;
