@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
-// #include <libcrane.h>
+#ifndef TEST
+#include <libcrane.h>
+#endif
 #include <pthread.h>
 #include <fcntl.h>
 #include <mqueue.h>
@@ -142,9 +144,12 @@ void *controller(void * args)
   attr.mq_curmsgs = 0;  
 
   
-  input = mq_open(TOM, O_RDONLY | O_CREAT, 0664, &attr);
-  output_x = mq_open(TOX, O_WRONLY | O_CREAT, 0664, &attr);
-  output_y = mq_open(TOY, O_WRONLY | O_CREAT, 0664, &attr);
+  if ( (input = mq_open(TOM, O_RDONLY | O_CREAT, 0664, &attr)) == -1)
+    printf("[C] ERROR: %s", strerror(errno));
+  if ( (output_x = mq_open(TOX, O_WRONLY | O_CREAT, 0664, &attr)) == -1)
+    printf("[C] ERROR: %s", strerror(errno));
+  if ( (output_y = mq_open(TOY, O_WRONLY | O_CREAT, 0664, &attr)) == -1)
+    printf("[C] ERROR: %s", strerror(errno));
 
   char * input_buffer = malloc(sizeof(double));
 
@@ -195,7 +200,13 @@ void *controller(void * args)
   mq_receive(input, input_buffer, MSG_SIZE, 0);
   mq_send(output_y, (char*) &nul, sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
-  
+
+
+  /* Power down */
+#ifndef TEST
+  run_motorx(0);
+  run_motory(0);
+#endif
   exit(0);
 }
 
