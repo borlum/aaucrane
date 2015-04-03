@@ -72,7 +72,7 @@ void *xcontroller()
     x_pos = get_xpos();
     angle_pos = get_angle();
     angle_err = angle_ref - angle_pos;
-    x_err = x_ref - (angle_err * 0.5) - x_pos;
+    x_err = x_ref - (angle_err * 1) - x_pos;
     
     printf("X_ref: %.3f | X_pos: %.3f | Angle_pos: %.3f\n", x_ref, x_pos, angle_pos);
     
