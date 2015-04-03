@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include <math.h>
 
 #ifndef TEST
 #include <libcrane.h>
@@ -65,15 +66,16 @@ void *xcontroller()
     x_pos = get_xpos();
     x_err = x_ref - x_pos;
 
-    if ( (abs(x_err) < X_ERR_BAND) && new_ref) {
+    if ( (fabs(x_err) < X_ERR_BAND) && new_ref) {
       /*Settled*/
-      printf("[X] Settled: pos_sensor =  %d | x_ref = %.3f\n", abs(x_err), x_ref);
+      printf("[X] Settled: pos_sensor = %.3f | x_ref = %.3f\n", fabs(x_err), x_ref);
       new_ref = 0;
       int msg = 1;
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
     out = x_err * C2;
-    run_motorx(out);
+    printf("[X]: out %d, motor: %d\n", (int) out, run_motorx(out));
+    usleep(1000 * 200);
 #else
     if(new_ref){
       new_ref = 0;
@@ -113,16 +115,17 @@ void *ycontroller()
     y_pos = get_ypos();
     y_err = y_ref - y_pos;
 
-    if (abs(y_err) < Y_ERR_BAND && new_ref) {
+    if (fabs(y_err) < Y_ERR_BAND && new_ref) {
       /*Settled*/
-      printf("[Y] in position\n");
       new_ref = 0;
       int msg = 2;
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
 
     out = y_err * C3;
-    run_motory(out);
+  
+    printf("[Y]: out %d, motor: %d\n", (int) out, run_motory(out));
+    usleep(1000 * 200);
 #else
     if(new_ref){
       new_ref = 0;
