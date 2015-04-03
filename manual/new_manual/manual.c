@@ -11,6 +11,13 @@ int main(int argc, char* argv[])
     printf("X_pos: %3f | Y_pos: %3f at %3f | ANGLE: %3f\n", get_xpos(), get_ypos(), get_ypos_raw(), get_angle());
     run_motorx(get_ctrlpad_x());
     run_motory(get_ctrlpad_y());
+
+    if (get_ctrlpad_magnet_switch()) {
+        enable_magnet();
+    } else {
+        disable_magnet();
+    }
+
     usleep(1000 * 100);
   }
 }
