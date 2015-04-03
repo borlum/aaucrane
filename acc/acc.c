@@ -204,11 +204,9 @@ void *controller(void * args)
 
   /* Dropping container */
   printf("[C] Dropping container\n");
-  if (tmp == 2) {
 #ifndef TEST
     disable_magnet();
 #endif
-  }
   
   /* Move to start (0,0) */
   double nul = 0;
