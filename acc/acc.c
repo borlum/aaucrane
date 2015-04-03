@@ -179,7 +179,6 @@ void *controller(void * args)
   printf("[C] In carrying height (%.3fm)\n", commands->yc);
   
   /* Move to x2 */
-  usleep(1000 * 5000);
   mq_send(output_x, (char *)&(commands->x2), sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
   printf("[C] X moved to: %.3f\n", commands->x2);
