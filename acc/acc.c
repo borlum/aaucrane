@@ -243,7 +243,7 @@ int main(int argc,char* argv[]){
 #endif
 
   pthread_create(&thread_controller, NULL, &controller, &commands);
-  usleep(1000 * 100);
+  usleep(1000 * 1000);
   pthread_create(&thread_xcontroller, NULL, &xcontroller, NULL);
   pthread_create(&thread_ycontroller, NULL, &ycontroller, NULL);
 
