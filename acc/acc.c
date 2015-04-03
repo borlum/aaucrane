@@ -67,7 +67,7 @@ void *xcontroller()
 
     if (abs(x_err) < X_ERR_BAND && new_ref) {
       /*Settled*/
-      printf("[X] Settled: pos_sensor =  %.3f| x_ref = %.3f\n", get_xpos(), x_ref);
+      printf("[X] Settled: pos_sensor =  %.3f| x_ref = %.3f\n", x_pos, x_ref);
       new_ref = 0;
       int msg = 1;
       mq_send(output, (char *)&msg, sizeof(int), 0);
