@@ -206,8 +206,14 @@ void *controller(void * args)
   printf("[C] Resetting X\n");
   mq_send(output_x, (char*) &nul, sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
-  usleep(1000 * 5000);
-  
+
+  if (mq_unlink(TOX) == -1)
+    printf("[C] ERROR: %s", strerror(errno));
+  if (mq_unlink(TOY) == -1)
+    printf("[C] ERROR: %s", strerror(errno));
+  if (mq_unlink(TOM) == -1)
+    printf("[C] ERROR: %s", strerror(errno));
+
   /* Power down */
 #ifndef TEST
   run_motorx(0);
