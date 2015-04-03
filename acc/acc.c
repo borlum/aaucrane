@@ -210,6 +210,7 @@ void *controller(void * args)
   printf("[C] Resetting X\n");
   mq_send(output_x, (char*) &nul, sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
+  usleep(1000 * 5000);
   
   /* Power down */
 #ifndef TEST
