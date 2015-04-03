@@ -48,7 +48,7 @@ void *xcontroller()
   char * input_buffer = (char *)malloc(sizeof(MSG_SIZE));
 
   int new_ref = 0;
-  double x_ref = 0.5;
+  double x_ref = 0;
   double x_pos = 0;
   double x_err = 0;
 
@@ -107,7 +107,7 @@ void *ycontroller()
   char* input_buffer = (char*) malloc(sizeof(double));
 
   int new_ref = 0;  
-  double y_ref = 0.5;
+  double y_ref = 0;
   double y_pos = 0;
   double y_err = 0;
   double out = 0;
