@@ -202,12 +202,15 @@ void *controller(void * args)
   
   /* Move to start (0,0) */
   double nul = 0.50;
-  mq_send(output_x, (char*) &nul, sizeof(double), 0);
-  mq_receive(input, input_buffer, MSG_SIZE, 0);
-  usleep(1000 * 5000);
+  printf("[C] Resetting Y\n");
   mq_send(output_y, (char*) &nul, sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
 
+  usleep(1000 * 5000);
+  printf("[C] Resetting X\n");
+  mq_send(output_x, (char*) &nul, sizeof(double), 0);
+  mq_receive(input, input_buffer, MSG_SIZE, 0);
+  
   /* Power down */
 #ifndef TEST
   run_motorx(0);
