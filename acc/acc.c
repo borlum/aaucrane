@@ -185,7 +185,7 @@ void *controller(void * args)
   printf("[C] Picking up container @ (%.3f, %.3f)\n", commands->x1, commands->y1);
 #ifndef TEST
   enable_magnet();
-  usleep(1000 * 500);
+  usleep(1000 * 5000);
 #endif
   
   /* Move to carry height */
