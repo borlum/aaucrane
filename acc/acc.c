@@ -14,7 +14,7 @@
 #include <stdio.h>
 
 #define X_ERR_BAND 0.015
-#define Y_ERR_BAND 0.005
+#define Y_ERR_BAND 0.015
 #define C2 26.3
 #define C3 80
 
