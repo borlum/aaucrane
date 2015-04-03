@@ -130,7 +130,7 @@ void *ycontroller()
       mq_send(output, (char*) &msg, sizeof(int), 0);
     }
 #endif
-    sleep(1000 * 200);
+    usleep(1000 * 200);
     printf("[Y]: out %d\n", (int) out);
   }
 }
