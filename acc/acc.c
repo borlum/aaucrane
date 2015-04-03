@@ -48,7 +48,7 @@ void *xcontroller()
   char * input_buffer = (char *)malloc(sizeof(MSG_SIZE));
 
   int new_ref = 0;
-  double x_ref = 0.5;
+  double x_ref = 0;
   double x_pos = 0;
   double x_err = 0;
 
@@ -72,7 +72,7 @@ void *xcontroller()
     x_pos = get_xpos();
     angle_pos = get_angle();
     angle_err = angle_ref - angle_pos;
-    x_err = x_ref - (angle_err * 5) - x_pos;
+    x_err = x_ref - (angle_err * 10) - x_pos;
     
     printf("X_ref: %.3f | X_pos: %.3f | Angle_pos: %.3f\n", x_ref, x_pos, angle_pos);
     
@@ -107,7 +107,7 @@ void *ycontroller()
   char* input_buffer = (char*) malloc(sizeof(double));
 
   int new_ref = 0;  
-  double y_ref = 0.5;
+  double y_ref = 0;
   double y_pos = 0;
   double y_err = 0;
   double out = 0;
@@ -185,6 +185,7 @@ void *controller(void * args)
   printf("[C] Picking up container @ (%.3f, %.3f)\n", commands->x1, commands->y1);
 #ifndef TEST
   enable_magnet();
+  usleep(1000 * 5000);
 #endif
   
   /* Move to carry height */
@@ -204,11 +205,9 @@ void *controller(void * args)
 
   /* Dropping container */
   printf("[C] Dropping container\n");
-  if (tmp == 2) {
 #ifndef TEST
     disable_magnet();
 #endif
-  }
   
   /* Move to start (0,0) */
   double nul = 0;
@@ -227,6 +226,7 @@ void *controller(void * args)
   if (mq_unlink(TOM) == -1)
     printf("[C] ERROR: %s", strerror(errno));
 
+  while(1);
   /* Power down */
 #ifndef TEST
   run_motorx(0);
