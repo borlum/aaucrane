@@ -34,9 +34,6 @@ struct command
 
 void *xcontroller()
 {
-#ifdef TEST
-  int new = 0;
-#endif
   mqd_t input;
   mqd_t output;
 
@@ -45,6 +42,7 @@ void *xcontroller()
 
   char * input_buffer = (char *)malloc(sizeof(MSG_SIZE));
 
+  int new_ref = 0;
   double x_ref = 0;
   double x_pos = 0;
   double x_err = 0;
@@ -54,9 +52,7 @@ void *xcontroller()
     if (mq_receive(input, input_buffer, MSG_SIZE, 0) > 0) {
       memcpy(&x_ref, input_buffer, sizeof(double));
       printf("[X] New x_ref = %.3f\n", x_ref);
-#ifdef TEST
-      new = 1;
-#endif
+      new_ref = 1;
     }
     else if (errno != EAGAIN){ /* Ingen ting i køen */
       printf("[X]: error %d, %s\n", errno, strerror(errno));
@@ -65,19 +61,19 @@ void *xcontroller()
     x_pos = get_xpos();
     x_err = x_ref - x_pos;
 
-    if (abs(x_err) < X_ERR_BAND) {
+    if (abs(x_err) < X_ERR_BAND && new_ref) {
       /*Settled*/
+      new_ref = 0;
       int msg = 1;
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
-
     out = x_err * C2;
     run_motorx(out);
 #else
-    if(new){
-      new = 0;
+    if(new_ref){
+      new_ref = 0;
       int msg = 1;
-      mq_send(output, (char*) &msg, sizeof(int), 0);
+      mq_send(output, (char *)&msg, sizeof(int), 0);
     }
 #endif
   }
@@ -85,10 +81,6 @@ void *xcontroller()
 
 void *ycontroller()
 {
-#ifdef TEST
-  int new = 0;
-#endif
-
   mqd_t input;
   mqd_t output;
 
@@ -97,6 +89,7 @@ void *ycontroller()
 
   char* input_buffer = (char*) malloc(sizeof(double));
 
+  int new_ref = 0;  
   double y_ref = 0;
   double y_pos = 0;
   double y_err = 0;
@@ -106,9 +99,7 @@ void *ycontroller()
     if (mq_receive(input, input_buffer, MSG_SIZE, 0) > 0) {
       memcpy(&y_ref, input_buffer, sizeof(double));
       printf("[Y] New y_ref = %.3f\n", y_ref);
-#ifdef TEST
-      new = 1;
-#endif
+      new_ref = 1;
     }
     else if (errno != EAGAIN){ /* Ingen ting i køen */
       printf("[Y]: error %d, %s\n", errno, strerror(errno));
@@ -117,8 +108,9 @@ void *ycontroller()
     y_pos = get_ypos();
     y_err = y_ref - y_pos;
 
-    if (abs(y_err) < Y_ERR_BAND) {
+    if (abs(y_err) < Y_ERR_BAND && new_ref) {
       /*Settled*/
+      new_ref = 0;
       int msg = 2;
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
@@ -126,8 +118,8 @@ void *ycontroller()
     out = y_err * C3;
     run_motory(out);
 #else
-    if(new){
-      new = 0;
+    if(new_ref){
+      new_ref = 0;
       int msg = 2;
       mq_send(output, (char*) &msg, sizeof(int), 0);
     }

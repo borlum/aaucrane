@@ -41,16 +41,13 @@ wn = 3.93;
 
 %C = (s+n)/(s+p);
 
-k = 0.2;
+k = 1;
 
-C1 = k * (s^2 + 2*z*wn*s + wn^2)/(s + wn)^2;
+C1 = k* (s^2 + 2*z*wn*s + wn^2)/(s + wn)^2;
 
 %C1 = (s^2 + wn^2)/(s + wn)^2;
 
 
 %% Band Stop
-wn = 3.93;
-Bw =2;
-n = 2;
-[num denom] = butter(4,[0.1 150],'stop','s'); 
-BS = tf(num, denom);
+bw = 20;
+C3 = (s^2 + wn^2) / (s^2 + bw*s + wn^2);
