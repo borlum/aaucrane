@@ -51,6 +51,12 @@ void *xcontroller()
   double x_ref = 0.5;
   double x_pos = 0;
   double x_err = 0;
+
+  double angle_ref = 0;
+  double angle_pos = 0;
+  double angle_err = 0;
+
+  
   double out = 0;
 
   while (1) {
@@ -64,8 +70,12 @@ void *xcontroller()
     }
 #ifndef TEST
     x_pos = get_xpos();
-    x_err = x_ref - x_pos;
-
+    angle_pos = get_angle();
+    angle_err = angle_ref - angle_pos;
+    x_err = x_ref - (angle_err * 5) - x_pos;
+    
+    printf("X_ref: %.3f | X_pos: %.3f | Angle_pos: %.3f\n", x_ref, x_pos, angle_pos);
+    
     if ( (fabs(x_err) < X_ERR_BAND) && new_ref) {
       /*Settled*/
       printf("[X] Settled: pos_sensor = %.3f | x_ref = %.3f\n", fabs(x_err), x_ref);
@@ -82,6 +92,7 @@ void *xcontroller()
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
 #endif
+    usleep(1000 * 10);
   }
 }
 
@@ -164,7 +175,7 @@ void *controller(void * args)
   mq_send(output_x, (char*) &(commands->x1), sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
   printf("[C] X moved to %.3f\n", commands->x1);
-
+  
   /* Move to y1 */
   mq_send(output_y, (char *)&(commands->y1), sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
@@ -200,7 +211,7 @@ void *controller(void * args)
   }
   
   /* Move to start (0,0) */
-  double nul = 0.50;
+  double nul = 0;
   printf("[C] Resetting Y\n");
   mq_send(output_y, (char*) &nul, sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
@@ -208,7 +219,7 @@ void *controller(void * args)
   printf("[C] Resetting X\n");
   mq_send(output_x, (char*) &nul, sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
-
+  
   if (mq_unlink(TOX) == -1)
     printf("[C] ERROR: %s", strerror(errno));
   if (mq_unlink(TOY) == -1)
