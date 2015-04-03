@@ -51,6 +51,12 @@ void *xcontroller()
   double x_ref = 0.5;
   double x_pos = 0;
   double x_err = 0;
+
+  double angle_ref = 0;
+  double angle_pos = 0;
+  double angle_err = 0;
+
+  
   double out = 0;
 
   while (1) {
@@ -64,6 +70,9 @@ void *xcontroller()
     }
 #ifndef TEST
     x_pos = get_xpos();
+    angle_pos = get_angle();
+    angle_err = angle_ref - angle_pos;
+    x_ref = x_ref + (angle_err * 0.03);
     x_err = x_ref - x_pos;
 
     if ( (fabs(x_err) < X_ERR_BAND) && new_ref) {
@@ -200,7 +209,7 @@ void *controller(void * args)
   }
   
   /* Move to start (0,0) */
-  double nul = 0.0;
+  double nul = 1;
   printf("[C] Resetting Y\n");
   mq_send(output_y, (char*) &nul, sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
@@ -209,6 +218,8 @@ void *controller(void * args)
   mq_send(output_x, (char*) &nul, sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
 
+  while(1);
+  
   if (mq_unlink(TOX) == -1)
     printf("[C] ERROR: %s", strerror(errno));
   if (mq_unlink(TOY) == -1)
