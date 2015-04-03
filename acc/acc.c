@@ -175,8 +175,6 @@ void *controller(void * args)
   mq_send(output_x, (char*) &(commands->x1), sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
   printf("[C] X moved to %.3f\n", commands->x1);
-
-  while(1);
   
   /* Move to y1 */
   mq_send(output_y, (char *)&(commands->y1), sizeof(double), 0);
