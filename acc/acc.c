@@ -163,7 +163,7 @@ void *controller(void * args)
   printf("[C] X moved to %.3f\n", commands->x1);
 
   /* Move to y1 */
-  usleep(1000 * 5000);
+  //usleep(1000 * 5000);
   mq_send(output_y, (char *)&(commands->y1), sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
   printf("[C] Y moved to: %.3f\n", commands->y1);
