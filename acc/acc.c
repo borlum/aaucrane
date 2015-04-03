@@ -74,8 +74,7 @@ void *xcontroller()
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
     out = x_err * C2;
-    printf("[X]: out %d, motor: %d\n", (int) out, run_motorx(out));
-    usleep(1000 * 200);
+    run_motorx(out);
 #else
     if(new_ref){
       new_ref = 0;
@@ -124,8 +123,7 @@ void *ycontroller()
 
     out = y_err * C3;
   
-    printf("[Y]: out %d, motor: %d\n", (int) out, run_motory(out));
-    usleep(1000 * 200);
+    run_motory(out);
 #else
     if(new_ref){
       new_ref = 0;
