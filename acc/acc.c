@@ -217,8 +217,6 @@ void *controller(void * args)
   printf("[C] Resetting X\n");
   mq_send(output_x, (char*) &nul, sizeof(double), 0);
   mq_receive(input, input_buffer, MSG_SIZE, 0);
-
-  while(1);
   
   if (mq_unlink(TOX) == -1)
     printf("[C] ERROR: %s", strerror(errno));
