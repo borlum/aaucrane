@@ -1,9 +1,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+
 #ifndef TEST
 #include <libcrane.h>
 #endif
+
 #include <pthread.h>
 #include <fcntl.h>
 #include <mqueue.h>
@@ -79,6 +81,7 @@ void *xcontroller()
     }
 #endif
   }
+  usleep(1000 * 1000);
 }
 
 void *ycontroller()
@@ -127,6 +130,7 @@ void *ycontroller()
     }
 #endif
   }
+  usleep(1000 * 1000);
 }
 
 void *controller(void * args)
