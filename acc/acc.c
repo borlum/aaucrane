@@ -114,7 +114,7 @@ void *ycontroller()
     y_pos = get_ypos();
     y_err = y_ref - y_pos;
 
-    if (abs(y_err) < Y_ERR_BAND && new_ref) {
+    if (fabs(y_err) < Y_ERR_BAND && new_ref) {
       /*Settled*/
       printf("[Y] in position\n");
       new_ref = 0;
