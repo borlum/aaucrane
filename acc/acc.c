@@ -131,7 +131,7 @@ void *ycontroller()
     }
 #endif
     sleep(1000 * 200);
-    printf("[Y]: out %d\n", out);
+    printf("[Y]: out %d\n", (int) out);
   }
 }
 
