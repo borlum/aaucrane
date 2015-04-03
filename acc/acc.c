@@ -93,7 +93,7 @@ void *xcontroller()
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
 #endif
-    usleep(1000 * 200);
+    usleep(1000 * 10);
   }
 }
 
