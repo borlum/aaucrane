@@ -14,6 +14,8 @@
 #endif
 #include "../acc.h"
 #include "../include/controller.h"
+#include "../include/filter.h"
+
 
 void *rt_x_axies_controller(void * argc)
 {
@@ -33,7 +35,6 @@ void *rt_x_axies_controller(void * argc)
   double angle_ref = 0;
   double angle_pos = 0;
   double angle_err = 0;
-
   
   double out = 0;
 
@@ -50,7 +51,7 @@ void *rt_x_axies_controller(void * argc)
     x_pos = get_xpos();
     angle_pos = get_angle();
     angle_err = angle_ref - angle_pos;
-    x_err = x_ref - (angle_err * 10) - x_pos;
+    x_err = x_ref - x_pos - angle_controller(angle_err);
     
     printf("X_ref: %.3f | X_pos: %.3f | Angle_pos: %.3f\n", x_ref, x_pos, angle_pos);
     
@@ -61,7 +62,7 @@ void *rt_x_axies_controller(void * argc)
       int msg = 1;
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
-    out = x_err * C2;
+    out = position_controller_x(x_err);
     run_motorx(out);
 #else
     if(new_ref){
@@ -110,7 +111,7 @@ void *rt_y_axies_controller(void * argc)
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
 
-    out = y_err * C3;
+    out = position_controller_y(y_err);
   
     run_motory(out);
 #else

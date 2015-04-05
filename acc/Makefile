@@ -9,7 +9,7 @@ LIBS=-lm -lpthread -lrt -lcomedi
 
 SOURCE += $(TARGET).c
 SOURCE += src/controller.c
-
+SOURCE += src/filter.c
 
 all: $(TARGET)
 
