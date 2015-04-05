@@ -3,49 +3,48 @@
 #include <errno.h>
 #include <math.h>
 
-#ifndef TEST
-#include <libcrane.h>
-#endif
-
 #include <pthread.h>
 #include <fcntl.h>
 #include <mqueue.h>
 #include <string.h>
 #include <stdio.h>
 
-#define X_ERR_BAND 0.015
-#define Y_ERR_BAND 0.015
-#define C2 26.3
-#define C3 80
+#ifndef TEST
+#include <libcrane.h>
+#endif
+#include "acc.h"
+/* Controllers */
+static const double X_ERR_BAND = 0.015;
+static const double Y_ERR_BAND = 0.015;
+static const double C1 = 10;
+static const double C2 = 26.3;
+static const double C3 = 80;
 
-#define TOX "/tox1"
-#define TOY "/toy1"
-#define TOM "/tom1"
+/* Queue related stuff */
+static const int buffer_size = 2 * sizeof(crane_cmd_t);
+static const char* q_to_x = "/ACC_to_x";
+static const char* q_from_x = "/ACC_from_x";
 
-#define MSG_SIZE 8
+static const char* q_to_y = "/ACC_to_y";
+static const char* q_from_y = "/ACC_from_y";
 
+static const char* q_to_c = "/ACC_to_c";
+static const char* q_from_c = "/ACC_from_c";
+
+/* Threads */
 pthread_t thread_xcontroller;
 pthread_t thread_ycontroller;
 pthread_t thread_controller;
-
-struct command
-{
-  double x1;
-  double x2;
-  double y1;
-  double y2;
-  double yc;
-};
 
 void *xcontroller()
 {
   mqd_t input;
   mqd_t output;
 
-  input = mq_open(TOX, O_RDONLY | O_NONBLOCK);
-  output = mq_open(TOM, O_WRONLY);
+  input = mq_open(q_to_x, O_RDONLY | O_NONBLOCK);
+  output = mq_open(q_from_x, O_WRONLY);
 
-  char * input_buffer = (char *)malloc(sizeof(MSG_SIZE));
+  char * input_buffer = (char *)malloc(buffer_size);
 
   int new_ref = 0;
   double x_ref = 0;
@@ -60,7 +59,7 @@ void *xcontroller()
   double out = 0;
 
   while (1) {
-    if (mq_receive(input, input_buffer, MSG_SIZE, 0) > 0) {
+    if (mq_receive(input, input_buffer, buffer_size, 0) > 0) {
       memcpy(&x_ref, input_buffer, sizeof(double));
       printf("[X] New x_ref = %.3f\n", x_ref);
       new_ref = 1;
@@ -101,10 +100,10 @@ void *ycontroller()
   mqd_t input;
   mqd_t output;
 
-  input = mq_open(TOY, O_RDONLY | O_NONBLOCK);
-  output = mq_open(TOM, O_WRONLY);
+  input = mq_open(q_to_y, O_RDONLY | O_NONBLOCK);
+  output = mq_open(q_from_y, O_WRONLY);
 
-  char* input_buffer = (char*) malloc(sizeof(double));
+  char* input_buffer = (char*) malloc(buffer_size);
 
   int new_ref = 0;  
   double y_ref = 0;
@@ -113,7 +112,7 @@ void *ycontroller()
   double out = 0;
 
   while (1) {
-    if (mq_receive(input, input_buffer, MSG_SIZE, 0) > 0) {
+    if (mq_receive(input, input_buffer, buffer_size, 0) > 0) {
       memcpy(&y_ref, input_buffer, sizeof(double));
       printf("[Y] New y_ref = %.3f\n", y_ref);
       new_ref = 1;
@@ -148,120 +147,130 @@ void *ycontroller()
 void *controller(void * args)
 {
   printf("Starting controller task\n");
-  mqd_t input;
-  mqd_t output_x;
-  mqd_t output_y;
-  int tmp;
+  mqd_t to_x, from_x;
+  mqd_t to_y, from_y;
+  mqd_t to_c, from_c;
 
-  struct mq_attr attr;  
-  attr.mq_flags = 0;  
-  attr.mq_maxmsg = 10;  
-  attr.mq_msgsize = sizeof(double);  
-  attr.mq_curmsgs = 0;  
+  double reset_pos_flag = 0;
+  
+  crane_cmd_t* cmd;
+  char * buffer = malloc(buffer_size);
+
+  to_x = mq_open(q_to_x, O_WRONLY);
+  from_x = mq_open(q_from_x, O_RDONLY);
+
+  to_y = mq_open(q_to_y, O_WRONLY);
+  from_y = mq_open(q_from_y, O_RDONLY);
+  
+  to_c = mq_open(q_to_c, O_RDONLY);
+  from_c = mq_open(q_from_c, O_WRONLY);
 
   
-  if ( (input = mq_open(TOM, O_RDONLY | O_CREAT, 0664, &attr)) == -1)
-    printf("[C] ERROR: %s", strerror(errno));
-  if ( (output_x = mq_open(TOX, O_WRONLY | O_CREAT, 0664, &attr)) == -1)
-    printf("[C] ERROR: %s", strerror(errno));
-  if ( (output_y = mq_open(TOY, O_WRONLY | O_CREAT, 0664, &attr)) == -1)
-    printf("[C] ERROR: %s", strerror(errno));
-
-  char * input_buffer = malloc(sizeof(double));
-
-  struct command* commands = args;
-
-  /* Move to x1 */
-  mq_send(output_x, (char*) &(commands->x1), sizeof(double), 0);
-  mq_receive(input, input_buffer, MSG_SIZE, 0);
-  printf("[C] X moved to %.3f\n", commands->x1);
-  
-  /* Move to y1 */
-  mq_send(output_y, (char *)&(commands->y1), sizeof(double), 0);
-  mq_receive(input, input_buffer, MSG_SIZE, 0);
-  printf("[C] Y moved to: %.3f\n", commands->y1);
-
-  /* Pick up container */
-  printf("[C] Picking up container @ (%.3f, %.3f)\n", commands->x1, commands->y1);
+  while(1){
+    printf("Crane reday for next command... \n");
+    mq_receive(to_c, buffer, buffer_size, 0);
+    cmd = (crane_cmd_t*) buffer;
+    
+    printf("#### NEW COMMAND ####\n");
+    printf("GOTO (%.3f, %.3f)\n", cmd->x_ref[0], cmd->y_ref[0]);
+    printf("%s magnet\n", cmd->magnet == ENABLE ? "Enable" : "Disable");
+    printf("Carry @ %.3f\n", cmd->carry_height);
+    printf("GOTO (%.3f, %.3f)\n", cmd->x_ref[1], cmd->y_ref[1]);
+    printf("Disable magnet\n");
+    printf("#### END COMMAND ####\n");
+    
+    
+    mq_send(to_x, (char *) &(cmd->x_ref[0]), sizeof(cmd->x_ref[0]), 0);
+    mq_receive(from_x, NULL, buffer_size, 0);
+    printf("[C] Moved to x: %.3f\n", cmd->x_ref[0]);
+    
+    mq_send(to_y, (char *) &(cmd->y_ref[0]), sizeof(cmd->y_ref[0]), 0);
+    mq_receive(from_y, NULL, buffer_size, 0);
+    printf("[C] Moved to y: %.3f\n", cmd->y_ref[0]);
+    
+    if(cmd->magnet == ENABLE){
 #ifndef TEST
-  enable_magnet();
-  usleep(1000 * 5000);
+      enable_magnet();
+#else
+      printf("Magnet enabled\n");
 #endif
-  
-  /* Move to carry height */
-  mq_send(output_y, (char *)&(commands->yc), sizeof(double), 0);
-  mq_receive(input, input_buffer, MSG_SIZE, 0);
-  printf("[C] In carrying height (%.3fm)\n", commands->yc);
-  
-  /* Move to x2 */
-  mq_send(output_x, (char *)&(commands->x2), sizeof(double), 0);
-  mq_receive(input, input_buffer, MSG_SIZE, 0);
-  printf("[C] X moved to: %.3f\n", commands->x2);
+    }
+    mq_send(to_y, (char *) &(cmd->carry_height), sizeof(cmd->carry_height), 0);
+    mq_receive(from_y, NULL, buffer_size, 0);
+    printf("[C] Moved to y: %.3f\n", cmd->carry_height);
 
-  /* Move to y2 */
-  mq_send(output_y, (char *)&(commands->y2), sizeof(double), 0);
-  mq_receive(input, input_buffer, MSG_SIZE, 0);
-  printf("[C] Y moved to: %.3f\n", commands->y2);
+    mq_send(to_x, (char *) &(cmd->x_ref[1]), sizeof(cmd->x_ref[1]), 0);
+    mq_receive(from_x, NULL, buffer_size, 0);
+    printf("[C] Moved to x: %.3f\n", cmd->x_ref[1]);
 
-  /* Dropping container */
-  printf("[C] Dropping container\n");
+    mq_send(to_x, (char *) &(cmd->y_ref[1]), sizeof(cmd->y_ref[1]), 0);
+    mq_receive(from_x, NULL, buffer_size, 0);
+    printf("[C] Moved to y: %.3f\n", cmd->y_ref[1]);
+
+    if(cmd->magnet == ENABLE){
 #ifndef TEST
-    disable_magnet();
+      disable_magnet();
+#else
+      printf("Magnet disabled\n");
 #endif
-  
-  /* Move to start (0,0) */
-  double nul = 0;
-  printf("[C] Resetting Y\n");
-  mq_send(output_y, (char*) &nul, sizeof(double), 0);
-  mq_receive(input, input_buffer, MSG_SIZE, 0);
+    }
+    mq_send(to_y, (char *) &reset_pos_flag, sizeof(reset_pos_flag), 0);
+    mq_receive(from_y, NULL, buffer_size, 0);
 
-  printf("[C] Resetting X\n");
-  mq_send(output_x, (char*) &nul, sizeof(double), 0);
-  mq_receive(input, input_buffer, MSG_SIZE, 0);
-  
-  if (mq_unlink(TOX) == -1)
-    printf("[C] ERROR: %s", strerror(errno));
-  if (mq_unlink(TOY) == -1)
-    printf("[C] ERROR: %s", strerror(errno));
-  if (mq_unlink(TOM) == -1)
-    printf("[C] ERROR: %s", strerror(errno));
-
-  while(1);
-  /* Power down */
-#ifndef TEST
-  run_motorx(0);
-  run_motory(0);
-#endif
-  exit(0);
+    mq_send(to_x, (char *) &reset_pos_flag, sizeof(reset_pos_flag), 0);
+    mq_receive(from_x, NULL, buffer_size, 0);
+    mq_send(from_c, (char *) &cmd, sizeof(cmd), 0);
+  }
 }
 
-int main(int argc,char* argv[]){  
-  if (argc != 5) {
-    printf("usage: %s <x1 y1 x2 y2>", argv[0]);
-    exit(1);
-  }
-
-  struct command commands = {
-    .x1 = atof(argv[1]),
-    .y1 = atof(argv[2]),
-    .x2 = atof(argv[3]),
-    .y2 = atof(argv[4]),
-    .yc = 0.5
-  };
-
+int init(){
 #ifndef TEST
   initialize_crane();  
   run_motorx(0);
   run_motory(0);
 #endif
+  struct mq_attr attr;  
+  attr.mq_flags = 0;  
+  attr.mq_maxmsg = 10;  
+  attr.mq_msgsize = buffer_size;  
+  attr.mq_curmsgs = 0;  
 
-  pthread_create(&thread_controller, NULL, &controller, &commands);
-  usleep(1000 * 1000);
-  pthread_create(&thread_xcontroller, NULL, &xcontroller, NULL);
-  pthread_create(&thread_ycontroller, NULL, &ycontroller, NULL);
+  if ( mq_open(q_to_x, O_RDONLY | O_CREAT, 0664, &attr) == -1 ||
+       mq_open(q_to_y, O_WRONLY | O_CREAT, 0664, &attr) == -1 ||
+       mq_open(q_to_c, O_WRONLY | O_CREAT, 0664, &attr) == -1 ||
+       mq_open(q_from_x, O_RDONLY | O_CREAT, 0664, &attr) == -1 ||
+       mq_open(q_from_y, O_WRONLY | O_CREAT, 0664, &attr) == -1 ||
+       mq_open(q_from_c, O_WRONLY | O_CREAT, 0664, &attr) == -1
+     ){
+      printf("ERROR: %s\n", strerror(errno));
+      return -1;
+  }
+  
+  pthread_create(&thread_xcontroller, NULL, xcontroller, NULL);
+  pthread_create(&thread_ycontroller, NULL, ycontroller, NULL);
+  pthread_create(&thread_controller, NULL,controller, NULL);
+  return 0;
+}
 
-  while(1) {    
-    usleep(1000 * 100);
+int main(int argc,char* argv[]){  
+  if( init() == -1)
+    exit(-1);
+  
+  mqd_t to_c, from_c;
+  to_c = mq_open(q_to_c, O_WRONLY);
+  from_c = mq_open(q_from_c, O_RDONLY);
+
+  double tmp;
+  float a;
+  crane_cmd_t cmd;
+    
+  while(1) {
+    printf ("Enter a crane command <x1,y1 x2,y2 {1|0}>:\n");
+    scanf("%lf,%lf %lf,%lf %d",
+	  &(cmd.x_ref[0]), &(cmd.y_ref[0]), &(cmd.x_ref[1]), &(cmd.y_ref[1]), &(cmd.magnet) );
+
+    mq_send(to_c, (char *) &cmd, sizeof(cmd), 0);
+    mq_receive(from_c, NULL, buffer_size, 0);
   }  
   
 }
