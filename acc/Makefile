@@ -7,14 +7,18 @@ INC += -I../libcrane
 GCC=gcc -std=gnu11
 LIBS=-lm -lpthread -lrt -lcomedi
 
+SOURCE += $(TARGET).c
+SOURCE += src/controller.c
+
+
 all: $(TARGET)
 
 $(TARGET): $(TARGET).c
 	cd $(CRANELIB_PATH) && make
-	$(GCC) $(TARGET).c $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o $(TARGET)
+	$(GCC) $(SOURCE) $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o $(TARGET)
 
 test: $(TARGET).c
-	$(GCC) $(TARGET).c -DTEST -I/usr/local/lin -lpthread -lrt -o $(TARGET)
+	$(GCC) $(SOURCE) -DTEST -I/usr/local/lin -lpthread -lrt -o $(TARGET)
 
 clean:
 	rm $(TARGET)
