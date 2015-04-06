@@ -1,6 +1,6 @@
-#include <libcrane.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <comedi.h>
 
 #define CHAN_XIN_IN 9
 
