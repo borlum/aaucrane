@@ -116,7 +116,7 @@ int run_motor(int voltage, int axis)
  */
 double get_angle()
 {   
-    return 0.5509*get_angle_raw() - 1.0878;
+    return 0.4174*get_angle_raw() - 0.7591;
 }
 
 /**
