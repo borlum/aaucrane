@@ -53,8 +53,6 @@ void *rt_x_axies_controller(void * argc)
     angle_err = angle_ref - angle_pos;
     x_err = x_ref - x_pos - angle_controller(angle_err);
     
-    printf("X_ref: %.3f | X_pos: %.3f | Angle_pos: %.3f\n", x_ref, x_pos, angle_pos);
-    
     if ( (fabs(x_err) < X_ERR_BAND) && new_ref) {
       /*Settled*/
       printf("[X] Settled: pos_sensor = %.3f | x_ref = %.3f\n", fabs(x_err), x_ref);
@@ -63,6 +61,7 @@ void *rt_x_axies_controller(void * argc)
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
     out = position_controller_x(x_err);
+    printf("Err: %.3f | Output: %.3f\n", x_err, out);
     run_motorx(out);
 #else
     if(new_ref){
