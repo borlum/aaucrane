@@ -242,7 +242,7 @@ double get_ctrlpad_x()
   old_val = raw_val - 0.9;
   
   old_max =  9; new_max   =  14;
-  old_min = 0;   new_min   = -14;
+  old_min = 0.5;   new_min   = -14;
 
   old_range = old_max - old_min;
   new_range = new_max - new_min;
