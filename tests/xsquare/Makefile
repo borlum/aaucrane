@@ -1,11 +1,17 @@
-INC=-I/usr/realtime/bin -I/usr/realtime/include -I/usr/local/lib
+TARGET = x_square
+LIBCRANE_PATH = ../../libcrane
+
+INC += -I/usr/local/lib
+INC += -I../../libcrane
+
 GCC=gcc -std=gnu11
 LIBS=-lm -lpthread -lcomedi
 
-all: x_square
+all: $(TARGET)
 
-x_square: x_square.c
-	$(GCC) x_square.c $(LIBS) $(INC) -o x_square
+$(TARGET): $(TARGET).c
+	cd $(LIBCRANE_PATH) && make
+	$(GCC) $(TARGET).c $(INC) $(LIBCRANE_PATH)/libcrane.o $(LIBS) -o $(TARGET)
 
 clean:
-	rm x_square
+	rm $(TARGET)

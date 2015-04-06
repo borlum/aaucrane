@@ -7,7 +7,7 @@ TMP_FILE  = 'tmp.csv';
 %1427714996.csv   
 %1427715304.csv
 
-websave(TMP_FILE, [CRANE_URL '/crane/x_square/1427800240.csv']);
+websave(TMP_FILE, [CRANE_URL '/crane/xsquare/1427800240.csv']);
 %websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427719295.csv']);
 
 
@@ -21,6 +21,9 @@ t = linspace(0, t(end), length(t));
 
 y = (DATA(:,3) - 1.85) * 0.31;
 y = y(1:idx_end);
+
+%u = -((DATA(:,4) * 0.5) - 0.8);
+%u = u(1:idx_end);
 
 u = (DATA(:,8) * 2);
 u = -1*u(1:idx_end) + u(1);
