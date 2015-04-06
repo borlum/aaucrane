@@ -1,8 +1,33 @@
 #include <unistd.h>
 #include <stdlib.h>
-#include <comedi.h>
+#include <comedilib.h>
+
+#define AIN_SUBDEV 0
+#define AOUT_SUBDEV 1
+#define DIO_SUBDEV 2
+#define DEVICE "/dev/comedi0"
+
+#define CHAN_MAGNET_OUT 7
+#define CHAN_MAGNET_BTN 3
+
+#define CHAN_XMOTOR_OUT 0
+#define CHAN_YMOTOR_OUT 1
+
+#define CHAN_ANGLE_IN 12
+#define CHAN_ANGLE_OLD_IN 0
+
+#define CHAN_XPOS_IN 13
+#define CHAN_YPOS_IN 2
+
+#define CHAN_XVEL_IN 11
+#define CHAN_YVEL_IN 4
 
 #define CHAN_XIN_IN 9
+#define CHAN_YIN_IN 10
+
+#define CHAN_CTRLPAD_X_IN 14
+#define CHAN_CTRLPAD_Y_IN 15
+
 
 double get_sensor_raw(int channel)
 {
