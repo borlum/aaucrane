@@ -143,7 +143,8 @@ double get_old_angle_raw()
  */
 double get_xpos()
 {
-    return -((get_xpos_raw() * 0.5) - 0.8) + 4.0;
+    return  -0.4981*get_xpos_raw() + 4.7931;
+    /*return -((get_xpos_raw() * 0.5) - 0.8) + 4.0;*/
 }
 
 /**
@@ -161,7 +162,8 @@ double get_xpos_raw()
  */
 double get_ypos()
 {
-    return ((get_ypos_raw() * - 0.15) + 1.35) - 0.2;
+    return -0.1534*get_ypos_raw() + 1.331;
+    /*return ((get_ypos_raw() * - 0.15) + 1.35) - 0.2;*/
 }
 
 /**
