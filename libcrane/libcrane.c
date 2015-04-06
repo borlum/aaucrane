@@ -239,6 +239,8 @@ double get_ctrlpad_x()
 
   raw_val = get_sensor_raw(CHAN_CTRLPAD_X_IN);
   
+  old_val = raw_val - 0.9;
+  
   old_max =  10; new_max   =  14;
   old_min = 0;   new_min   = -14;
 
@@ -247,7 +249,7 @@ double get_ctrlpad_x()
 
   new_val = -( (((old_val - old_min) * new_range) / old_range) + new_min );
 
-  return new_val;
+  return new_val - 1.0;
 }
 /**
  * Samples current y-axis voltage of control pad
