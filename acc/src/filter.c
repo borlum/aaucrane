@@ -1,7 +1,7 @@
 #include "../include/filter.h"
 
 double angle_controller(double error){
-  double k_p = 0;
+  double k_p = 10;
   return error * k_p;
 }
 

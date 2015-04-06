@@ -79,8 +79,8 @@ void *controller(void * args)
     mq_receive(from_x, NULL, BUFFER_SIZE, 0);
     printf("[C] Moved to x: %.3f\n", cmd->x_ref[1]);
 
-    mq_send(to_x, (char *) &(cmd->y_ref[1]), sizeof(cmd->y_ref[1]), 0);
-    mq_receive(from_x, NULL, BUFFER_SIZE, 0);
+    mq_send(to_y, (char *) &(cmd->y_ref[1]), sizeof(cmd->y_ref[1]), 0);
+    mq_receive(from_y, NULL, BUFFER_SIZE, 0);
     printf("[C] Moved to y: %.3f\n", cmd->y_ref[1]);
 
     if(cmd->magnet == ENABLE){
