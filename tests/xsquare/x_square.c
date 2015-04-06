@@ -1,120 +1,94 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <time.h>
-#include <comedilib.h>
 #include <pthread.h>
-#include <stdbool.h>
+#include <libcrane.h>
+#include <unistd.h>
+#include <stdlib.h>
 
-#define DIGITAL_IO_SUBDEV 2
-#define MAGNET_ENABLE 7
-
-const int range = 0;
-const int aref = AREF_GROUND;
-const char device_name[] = "/dev/comedi0";
-comedi_t *device;
-
-FILE *fp;
+#define DATA_PATH "/var/www/html/data/crane/xsquare/"
+#define DATA_HEADER "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n"
 
 pthread_t thread_sampler;
+FILE * fp;
 
-int sensors[] = {0, 12, 13, 2, 11, 4, 9, 10};
-int len = sizeof(sensors) / sizeof(int);
+int t_on          = 0;
+int nr_of_periods = 0;
+int add_gain      = 0;
 
-int payload_length;
-int payload_weight;
+void *sampler(void *args)
+{
+    int periods, running, output;
+    unsigned long t_0, t_sample;
+    unsigned int sample_nr = 0;
 
-void *sampler(void *args) {
-  printf("Task running\n");
-  lsampl_t data, maxdata;
-  comedi_range *range_info;
-  double physical_value;
-  int sampl_nr = 0;
+    t_0 = get_time_micros();
 
-  const unsigned long long nano = 1000000000;
-  unsigned long t_0, t_sample;
-  struct timespec tm;
+    output  = 4;
+    periods = 0;
+    running = 0;
+    while (1) {
+        /*GRAB TIMESTAMP*/
+        t_sample = get_time_micros();
+        fprintf(fp, "%ld,",  (t_sample - t_0));
 
-  bool high = false;
-  printf("1\n");  
-  clock_gettime(CLOCK_REALTIME, &tm);
-  t_0 = (tm.tv_nsec + tm.tv_sec * nano) / 1000;
-  char tmp[150];
-  sprintf(tmp, "/var/www/html/data/crane/xsquare/%d.csv", (int)time(NULL));
-  printf("2\n");
-  fp = fopen(tmp, "w");
-  printf("3\n");
-  fprintf(fp, "WEIGHT: %d, LENGTH: %d\n", payload_weight, payload_length);
-  fprintf(fp, "TIMESTAMP,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n");
+        /*SAMPLE SENSORS*/
+        fprintf(fp, "%f,", get_old_angle_raw());
+        fprintf(fp, "%f,", get_angle_raw());
+        fprintf(fp, "%f,", get_xpos_raw());
+        fprintf(fp, "%f,", get_ypos_raw());
+        fprintf(fp, "%f,", get_motorx_velocity_raw());
+        fprintf(fp, "%f,", get_motory_velocity_raw());
+        fprintf(fp, "%f,", get_motorx_voltage());
+        fprintf(fp, "%f,", get_motory_voltage());
+        fprintf(fp, "\n");
+    
+        sample_nr++;
 
-  printf("File created\n");
-  int periods = 0;
-  while (1) {
-    //if (sampl_nr == 100) {
-    //  comedi_data_write(device, 1, 0, range, aref, 3000); /* STEP */
-    //  high = true;
-    //  printf("Started\n");
-    //}
+        if ((sample_nr % t_on) == 0 && periods < nr_of_periods) {
+            if (running) {
+                run_motorx(-output);
+                running = 0;
+            } else {
+                run_motorx(output);
+                running = 1;
+            }
+            periods++;
+            output = output + add_gain;
+        } else if (periods == nr_of_periods) {
+            run_motorx(0);
+        }
 
-    clock_gettime(CLOCK_REALTIME, &tm);
-    t_sample = (tm.tv_nsec + tm.tv_sec * nano) / 1000; 
-
-    fprintf(fp, "%ld,",  (t_sample - t_0));
-
-    for (int i = 0; i < len; i++) {
-      /* Log data */
-      comedi_data_read(device, 0, sensors[i], range, aref, &data);
-      comedi_set_global_oor_behavior(COMEDI_OOR_NAN);
-      range_info     = comedi_get_range(device,   0, sensors[i], range);
-      maxdata        = comedi_get_maxdata(device, 0, sensors[i]);
-      physical_value = comedi_to_phys(data, range_info, maxdata);
-      fprintf(fp, "%g,", physical_value);
+        usleep(1000);
     }
-    fprintf(fp, "\n");
-    sampl_nr++;
-
-    if( (sampl_nr % 750) == 0 && periods < 4){
-      if(high){
-	printf("Setting low\n");
-	comedi_data_write(device, 1, 0, range, aref, 2047);
-	high = false;
-      }
-      else{
-	printf("Setting high\n");
-	comedi_data_write(device, 1, 0, range, aref, 3500);
-	high = true;
-      }
-      periods++;
-    }
-
-    usleep(1000);
-  }
 }
 
-int main(int argc, char* argv[]) {
-  device = comedi_open(device_name);
-  if (device == NULL) {
-    printf("Error opening file, %s\n", device_name);
-    exit(1);
-  }
+int main(int argc, char* argv[])
+{
+    if (argc != 5) {
+        printf("usage: %s N T G \"[test parameters (e.g. mass + length)]\"\n", argv[0]);
+        return 0;
+    }
 
-  printf("TEST PARAMETERS => weight, length\n");
-  scanf("%i, %i", &payload_weight, &payload_length);
-  printf("THANK YOU! => RUNNING TEST!\n");
-  
+    nr_of_periods = strtol(argv[1], NULL, 10);
+    t_on          = strtol(argv[2], NULL, 10);
+    add_gain      = strtol(argv[3], NULL, 10);
 
-  comedi_dio_config(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, COMEDI_OUTPUT);
-  comedi_dio_write(device, DIGITAL_IO_SUBDEV, MAGNET_ENABLE, 1);
-  /* RESET */
-  comedi_data_write(device, 1, 0, range, aref, 2047);
-  usleep(5000 * 1000);
+    initialize_crane();
 
-  pthread_create(&thread_sampler, NULL, &sampler, NULL);
+    /* RESET */
+    run_motorx(0);
+    run_motory(0);
 
-  while (1) {
-    usleep(100 * 1000);
-  }
+    /*PREPARE FILE*/
+    char tmp[160];
+    sprintf(tmp, "%s/%d.csv", DATA_PATH, (int)time(NULL));
+    fp = fopen(tmp, "w");
+    fprintf(fp, "%s\n", argv[4]);
+    fprintf(fp, DATA_HEADER);
 
-  return 0;
+    pthread_create(&thread_sampler, NULL, &sampler, NULL);
+
+    while (1) {
+        usleep(100 * 1000);
+    }
+
+    return 0;
 }

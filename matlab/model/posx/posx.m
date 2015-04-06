@@ -16,4 +16,6 @@ y = y(1:idx_end);
 u = DATA(:,8) * 2;
 u = -u(1:idx_end) + u(1);
 
+save posxdata t y u;
+
 delete(TMP_FILE);
