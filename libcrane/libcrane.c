@@ -238,12 +238,10 @@ double get_ctrlpad_x()
   double old_range, new_range, old_max, old_min, new_max, new_min;
 
   raw_val = get_sensor_raw(CHAN_CTRLPAD_X_IN);
-
-  printf("RAW_VAL: %f\n", raw_val);
   
   old_val = raw_val - 0.9;
   
-  old_max =  10; new_max   =  14;
+  old_max =  9; new_max   =  14;
   old_min = 0;   new_min   = -14;
 
   old_range = old_max - old_min;
