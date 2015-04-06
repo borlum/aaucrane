@@ -247,7 +247,7 @@ double get_ctrlpad_x()
   old_range = old_max - old_min;
   new_range = new_max - new_min;
 
-  new_val = -( (((old_val - old_min) * new_range) / old_range) + new_min);
+  new_val = -( (((old_val - old_min) * new_range) / old_range) + new_min );
 
   return new_val;
 }
