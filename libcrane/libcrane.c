@@ -115,8 +115,8 @@ int run_motor(int voltage, int axis)
  * @return Current angle in radians
  */
 double get_angle()
-{
-    return asin((get_angle_raw() *(564.0/3.3) - 275.0) / 375.0);
+{   
+    return 0.5509*get_angle_raw() - 1.0878;
 }
 
 /**
