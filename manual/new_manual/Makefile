@@ -13,5 +13,9 @@ $(TARGET): $(TARGET).c
 	cd $(CRANELIB_PATH) && make
 	$(GCC) $(TARGET).c $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o $(TARGET)
 
+ANLGE: $(TARGET).c
+	cd $(CRANELIB_PATH) && make
+	$(GCC) $(TARGET).c $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -DANGLE -o $(TARGET)
+
 clean:
 	rm xpos_controller
