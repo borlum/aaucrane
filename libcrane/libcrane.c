@@ -249,7 +249,7 @@ double get_ctrlpad_x()
 
   new_val = -( (((old_val - old_min) * new_range) / old_range) + new_min );
 
-  return new_val - 1.0;
+  return new_val - 1.5;
 }
 /**
  * Samples current y-axis voltage of control pad
