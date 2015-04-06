@@ -28,6 +28,8 @@
 #define CHAN_CTRLPAD_X_IN 14
 #define CHAN_CTRLPAD_Y_IN 15
 
+comedi_t *NI_card;
+
 
 double get_sensor_raw(int channel)
 {
@@ -50,8 +52,6 @@ double get_sensor_raw(int channel)
 }
 
 int main(){
-  comedi_t *NI_card;
-
   NI_card = comedi_open(DEVICE);
   /*Global config*/
   comedi_set_global_oor_behavior(COMEDI_OOR_NUMBER);
