@@ -60,8 +60,8 @@ void *rt_x_axies_controller(void * argc)
       int msg = 1;
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
+
     out = position_controller_x(x_err);
-    printf("Err: %.3f | Output: %.3f\n", x_err, out);
     run_motorx(out);
 #else
     if(new_ref){
