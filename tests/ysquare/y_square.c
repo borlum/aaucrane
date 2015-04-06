@@ -1,9 +1,9 @@
 #include <pthread.h>
-#include <cranelib.h>
+#include <libcrane.h>
 #include <unistd.h>
 #include <stdlib.h>
 
-#define DATA_PATH "/var/www/html/data/crane/ysteps/"
+#define DATA_PATH "/var/www/html/data/crane/ysquare/"
 #define DATA_HEADER "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n"
 
 pthread_t thread_sampler;
