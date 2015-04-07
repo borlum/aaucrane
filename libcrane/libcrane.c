@@ -38,7 +38,7 @@ int initialize_crane()
  */
 int run_motorx(int voltage)
 {
-  return run_motor(-voltage, 0); /* Change X motor direction */
+    return run_motor(-voltage, 0); /* Change X motor direction */
 }
 
 /**
@@ -116,7 +116,7 @@ int run_motor(int voltage, int axis)
  */
 double get_angle()
 {   
-    return 0.4174*get_angle_raw() - 0.7591;
+    return 0.7367*get_angle_raw() - 1.3211;
 }
 
 /**

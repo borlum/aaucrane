@@ -15,7 +15,7 @@ r2 = 1 - s.normr^2 / norm(x-mean(x))^2
 % PLOT
 plot(u, x, '*', u, x_est);
 title('Position sensor, x');
-xlabel('Voltage [V]');
+xlabel('Sensor output [V]');
 ylabel('x [m]');
 xlim([0 10]);
 ylim([x(1) x(end)]);

@@ -18,9 +18,9 @@ r2 = 1 - s.normr^2 / norm(y_est-mean(y_est))^2
 % PLOT
 plot(u, y, '*', u, y_est);
 title('Position sensor, y');
-xlabel('Voltage [V]');
+xlabel('Sensor output [V]');
 ylabel('y [m]');
-xlim([0 10]);
+xlim([2 8]);
 ylim([y(1) y(end)]);
 legend('Measured', 'Linear regression', 'location', 'northeast');
 grid on;
