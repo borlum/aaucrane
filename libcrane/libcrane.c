@@ -38,7 +38,7 @@ int initialize_crane()
  */
 int run_motorx(int voltage)
 {
-  return run_motor(-voltage, 0); /* Change X motor direction */
+    return run_motor(-voltage, 0); /* Change X motor direction */
 }
 
 /**
@@ -70,12 +70,12 @@ int run_motor(int voltage, int axis)
         voltage = -MAX_MOTOR_OUTPUT;
     }
 
-    if (voltage > -5 && voltage < 0) {
-      voltage = -5;
+    if (voltage > -4.5 && voltage < 0) {
+      voltage = -4.5;
     }
 
-    if (voltage < 5 && voltage > 0) {
-      voltage = 5;
+    if (voltage < 4.5 && voltage > 0) {
+      voltage = 4.5;
     }
 
     old_val = voltage;
@@ -115,8 +115,8 @@ int run_motor(int voltage, int axis)
  * @return Current angle in radians
  */
 double get_angle()
-{
-    return (get_angle_raw() - 1.85) * 0.31;
+{   
+    return 0.7367*get_angle_raw() - 1.3211;
 }
 
 /**
