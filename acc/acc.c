@@ -62,9 +62,9 @@ void *controller(void * args)
     mq_send(to_y, (char *) &(cmd->pickup_point.y), sizeof(cmd->pickup_point.y), 0);
     mq_receive(from_y, NULL, BUFFER_SIZE, 0);
     printf("[C] Moved to y: %.3f\n", cmd->pickup_point.y);
-    
 #ifndef TEST
     enable_magnet();
+    usleep(1000 * 100);
 #else
     printf("Magnet enabled\n");
 #endif
