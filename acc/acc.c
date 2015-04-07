@@ -67,6 +67,7 @@ void *controller(void * args)
     if(cmd->magnet == ENABLE){
 #ifndef TEST
       enable_magnet();
+      usleep(1000 * 10);
 #else
       printf("Magnet enabled\n");
 #endif
