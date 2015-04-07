@@ -70,12 +70,12 @@ int run_motor(int voltage, int axis)
         voltage = -MAX_MOTOR_OUTPUT;
     }
 
-    if (voltage > -5 && voltage < 0) {
-      voltage = -5;
+    if (voltage > -4.5 && voltage < 0) {
+      voltage = -4.5;
     }
 
-    if (voltage < 5 && voltage > 0) {
-      voltage = 5;
+    if (voltage < 4.5 && voltage > 0) {
+      voltage = 4.5;
     }
 
     old_val = voltage;
