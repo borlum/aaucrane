@@ -12,9 +12,9 @@
 #ifndef TEST
 #include <libcrane.h>
 #endif
-#include "../acc.h"
-#include "../include/controller.h"
-#include "../include/filter.h"
+#include "acc.h"
+#include "controller.h"
+#include "filter.h"
 
 
 void *rt_x_axies_controller(void * argc)
