@@ -56,7 +56,6 @@ void *rt_x_axies_controller(void * argc)
     
     if ( (fabs(x_err) < X_ERR_BAND)) {
       /*Settled*/
-      printf("[X] Settled: pos_sensor = %.3f | x_ref = %.3f | Err = %.3f\n", x_pos, x_ref, fabs(x_err));
       hit_count++;
       if(hit_count >= 10 && new_ref){
         new_ref = 0;
@@ -75,7 +74,6 @@ void *rt_x_axies_controller(void * argc)
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
 #endif
-    usleep(1000 * 10);
   }
 }
 
