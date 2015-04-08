@@ -7,6 +7,11 @@ INC += -I../../libcrane
 GCC=gcc -std=gnu11
 LIBS=-lm -lpthread -lcomedi
 
+SOURCE += $(TARGET).c
+SOURCE += src/controller.c
+SOURCE += src/filter.c
+
+
 all: $(TARGET)
 
 $(TARGET): $(TARGET).c

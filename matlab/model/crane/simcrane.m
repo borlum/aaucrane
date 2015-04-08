@@ -22,6 +22,6 @@ g  = 9.82;
 b = par(3);
 Ip = par(4);
 
-W = (-mp*l*s^2)/((Ip * mp*l^2)*s^2 - b*s + mp*g*l);
+W = (-mp*l*s^2)/((Ip + mp*l^2)*s^2 - b*s + mp*g*l);
 
 y = lsim(X*W, u, t);
