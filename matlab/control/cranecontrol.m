@@ -1,7 +1,6 @@
 %==============================================================================
 % AAUCrane Control (C1 (X), C2 (W), C3 (Y))
 %==============================================================================
-clear all; close all;
 % Load models (Mx, My, X, Y, W)
 run('../model/cranemodel.m');
 
@@ -18,7 +17,7 @@ innerLoop = feedback(C1*X, 1);
 %------------------------------------------------------------------------------
 % rlocus(-innerLoop*W) shows that proportional control is not good enough!
 % The minimum overshoot obtainable is ~45% => Sucks...
-C2 = 3.6;
+C2 = 0.5;
 
 
 %------------------------------------------------------------------------------
