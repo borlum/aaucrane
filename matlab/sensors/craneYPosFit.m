@@ -1,5 +1,12 @@
 % GRAB DATA FROM CRANE
+<<<<<<< HEAD
+CRANE_URL = 'http://172.26.12.144/data';
+TMP_FILE  = 'tmp.csv';
+websave(TMP_FILE, [CRANE_URL '/crane/manual/MANUAL_1427293912.csv']);
+raw = csvread(TMP_FILE, 1, 0);
+=======
 y = [31.8 41.0 52.2 61.0 71.2 81.2 91.2 101.0 111.5 119.6];
+>>>>>>> 74654106d28931d0a165584f1dac7ba37ab604f9
 
 y = (y - y(1)) / 100;
 
