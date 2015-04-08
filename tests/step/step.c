@@ -7,6 +7,7 @@
 #include <comedilib.h>
 #include <libcrane.h>
 #include "acc.h"
+#include "controller.h"
 
 
 #define DATA_PATH "/var/www/html/data/crane/xsteps/"
@@ -94,7 +95,7 @@ int main(int argc,char* argv[]){
     printf("starting logger\n");
     pthread_create(&t_logger, NULL, logger, NULL);
 
-    mq_send(to_x, &x, sizeof(x), 0);
-    mq_send(to_y, &y, sizeof(y), 0);
+    mq_send(to_x, (char *) &x, sizeof(x), 0);
+    mq_send(to_y, (char *) &y, sizeof(y), 0);
   } 
 }
