@@ -43,6 +43,13 @@ void *sampler(void *args)
         sample_nr++;
 
         if ((sample_nr % t_on) == 0 && periods < nr_of_periods) {
+            
+            if (periods % 2) {
+                output = output + add_gain;
+                run_motorx(0);
+                usleep(1000 * 60 * 2);
+            }
+
             if (running) {
                 run_motorx(-output);
                 running = 0;
@@ -50,8 +57,8 @@ void *sampler(void *args)
                 run_motorx(output);
                 running = 1;
             }
+
             periods++;
-            output = output + add_gain;
         } else if (periods == nr_of_periods) {
             run_motorx(0);
         }
