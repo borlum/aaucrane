@@ -76,6 +76,7 @@ int main(int argc, char* argv[])
     /* RESET */
     run_motorx(0);
     run_motory(0);
+    enable_magnet();
 
     /*PREPARE FILE*/
     char tmp[160];

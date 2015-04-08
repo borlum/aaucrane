@@ -6,6 +6,8 @@ comedi_t *NI_card;
 int *NI_card;
 #endif
 
+static const double MAX_MOTOR_OUTPUT = 12.9;
+
 /**
  * Open comedi driver for interfacing w. crane
  * @return Return 0 if failed to init, 1 if success
@@ -60,12 +62,12 @@ int run_motor(int voltage, int axis)
     int old_val, new_val;
     int old_range, new_range, old_max, old_min, new_max, new_min;
     
-    if (voltage > 14) {
-        voltage = 14;
+    if (voltage > MAX_MOTOR_OUTPUT) {
+        voltage = MAX_MOTOR_OUTPUT;
     }
 
-    if (voltage < -14) {
-        voltage = -14;
+    if (voltage < -MAX_MOTOR_OUTPUT) {
+        voltage = -MAX_MOTOR_OUTPUT;
     }
 
     if (voltage > -5 && voltage < 0) {
@@ -78,8 +80,8 @@ int run_motor(int voltage, int axis)
 
     old_val = voltage;
     
-    old_max =  14; new_max  = 4000;
-    old_min = -14; new_min  =    0;
+    old_max =  MAX_MOTOR_OUTPUT; new_max  = 4000;
+    old_min = -MAX_MOTOR_OUTPUT; new_min  =    0;
 
     old_range = old_max - old_min;
     new_range = new_max - new_min;
@@ -113,8 +115,8 @@ int run_motor(int voltage, int axis)
  * @return Current angle in radians
  */
 double get_angle()
-{
-    return (get_angle_raw() - 1.85) * 0.31;
+{   
+    return 0.4174*get_angle_raw() - 0.7591;
 }
 
 /**
@@ -141,7 +143,8 @@ double get_old_angle_raw()
  */
 double get_xpos()
 {
-    return -((get_xpos_raw() * 0.5) - 0.8) + 4.0;
+    return  (-0.4981)*get_xpos_raw() + 4.7931;
+    /*return -((get_xpos_raw() * 0.5) - 0.8) + 4.0;*/
 }
 
 /**
@@ -159,7 +162,8 @@ double get_xpos_raw()
  */
 double get_ypos()
 {
-    return ((get_ypos_raw() * - 0.15) + 1.35) - 0.2;
+    return (-0.1536)*get_ypos_raw() + 1.2106;
+    /*return ((get_ypos_raw() * - 0.15) + 1.35) - 0.2;*/
 }
 
 /**
@@ -239,19 +243,18 @@ double get_ctrlpad_x()
 
   raw_val = get_sensor_raw(CHAN_CTRLPAD_X_IN);
   
-  old_val = raw_val;
+  old_val = raw_val - 0.9;
   
-  old_max =  10; new_max   =  14;
-  old_min = 0;   new_min   = -14;
+  old_max =  10; new_max   =  MAX_MOTOR_OUTPUT;
+  old_min = 0;   new_min   = -MAX_MOTOR_OUTPUT;
 
   old_range = old_max - old_min;
   new_range = new_max - new_min;
 
-  new_val = (((old_val - old_min) * new_range) / old_range) + new_min;
+  new_val = -( (((old_val - old_min) * new_range) / old_range) + new_min );
 
-  return new_val;
+  return new_val - 0.5; /* The sensor is biased, so we need to pull it down a bit */
 }
-
 /**
  * Samples current y-axis voltage of control pad
  * @return Control pad y-axis voltage
@@ -267,8 +270,8 @@ double get_ctrlpad_y()
   
   old_val = raw_val;
   
-  old_max =  10; new_max   =  14;
-  old_min = 0;   new_min   = -14;
+  old_max =  10; new_max   =  MAX_MOTOR_OUTPUT;
+  old_min = 0;   new_min   = -MAX_MOTOR_OUTPUT;
 
   old_range = old_max - old_min;
   new_range = new_max - new_min;

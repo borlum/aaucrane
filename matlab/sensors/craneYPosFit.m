@@ -1,33 +1,33 @@
 % GRAB DATA FROM CRANE
+<<<<<<< HEAD
 CRANE_URL = 'http://172.26.12.144/data';
 TMP_FILE  = 'tmp.csv';
 websave(TMP_FILE, [CRANE_URL '/crane/manual/MANUAL_1427293912.csv']);
 raw = csvread(TMP_FILE, 1, 0);
+=======
+y = [31.8 41.0 52.2 61.0 71.2 81.2 91.2 101.0 111.5 119.6];
+>>>>>>> 74654106d28931d0a165584f1dac7ba37ab604f9
 
-% GRAB DATA FOR X POS. SENSOR
-Vy = raw(:,5);
+y = (y - y(1)) / 100;
 
-% GRAB ONLY LINEAR PART
-Vy = Vy(1:6000);
+u = [7.90 7.28 6.55 5.97 5.32 4.67 4.01 3.380 2.700 2.170];
 
-y_lin = linspace(0.02, 0.85, length(Vy));
 
-[p, s] = polyfit(Vy, y_lin', 1);
+[p, s] = polyfit(u, y, 1);
+%y = -0.1534*u + 1.1331
 
-p
+y_est = polyval(p, u);
 
-y_est = polyval(p, Vy);
+%y = p(1) * Vy + p(2);
 
-y = p(1) * Vy + p(2);
-
-r2 = 1 - s.normr^2 / norm(y_lin-mean(y_lin))^2
+r2 = 1 - s.normr^2 / norm(y_est-mean(y_est))^2
 
 % PLOT
-plot(Vy, y, Vy, y_lin);
+plot(u, y, '*', u, y_est);
 title('Position sensor, y');
 xlabel('Voltage [V]');
 ylabel('y [m]');
-xlim([Vy(1) Vy(end)]);
+xlim([0 10]);
 ylim([y(1) y(end)]);
-legend('Linear regression', 'Measured', 'location', 'southeast');
+legend('Measured', 'Linear regression', 'location', 'northeast');
 grid on;
