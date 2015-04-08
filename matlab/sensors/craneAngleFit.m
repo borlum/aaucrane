@@ -17,7 +17,7 @@ r2 = 1 - s.normr^2 / norm(a-mean(a))^2
 
 % PLOT
 plot(u, a, '*', u, a_est);
-title('Angle sensor');
+%title('Angle sensor');
 xlabel('Voltage [V]');
 ylabel('\theta [rad]');
 xlim([0 3.3]);
