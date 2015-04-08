@@ -18,7 +18,7 @@ void *sampler(void *args)
     step = 1;
     while (1) {
         if (step) {
-            run_motorx(10);
+            run_motorx(7);
         }
 
         /*GRAB TIMESTAMP*/
