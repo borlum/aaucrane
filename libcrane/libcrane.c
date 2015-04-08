@@ -7,13 +7,14 @@ int *NI_card;
 #endif
 
 static const double MAX_MOTOR_OUTPUT = 12.9;
+static double ZERO_ANGLE_RAD;
 
 /**
  * Open comedi driver for interfacing w. crane
  * @return Return 0 if failed to init, 1 if success
  */
 int initialize_crane()
-{   
+{
     NI_card = NULL;
 
     #ifndef TESTING
@@ -27,6 +28,10 @@ int initialize_crane()
     if (NI_card == NULL) {
         return 0;
     }
+
+    // Find zero degree angle voltage
+    ZERO_ANGLE_RAD = 0.7367*get_angle_raw() - 1.3211;
+//    printf("%lf\n", get_angle());
 
     return 1;
 }
@@ -61,7 +66,7 @@ int run_motor(int voltage, int axis)
 {
     int old_val, new_val;
     int old_range, new_range, old_max, old_min, new_max, new_min;
-    
+
     if (voltage > MAX_MOTOR_OUTPUT) {
         voltage = MAX_MOTOR_OUTPUT;
     }
@@ -79,7 +84,7 @@ int run_motor(int voltage, int axis)
     }
 
     old_val = voltage;
-    
+
     old_max =  MAX_MOTOR_OUTPUT; new_max  = 4000;
     old_min = -MAX_MOTOR_OUTPUT; new_min  =    0;
 
@@ -115,8 +120,8 @@ int run_motor(int voltage, int axis)
  * @return Current angle in radians
  */
 double get_angle()
-{   
-    return 0.7367*get_angle_raw() - 1.3211;
+{
+    return (0.7367*get_angle_raw() - 1.3211) - ZERO_ANGLE_RAD;
 }
 
 /**
@@ -124,7 +129,7 @@ double get_angle()
  * @return Current angle in volts
  */
 double get_angle_raw()
-{     
+{
     return get_sensor_raw(CHAN_ANGLE_IN);
 }
 
@@ -242,9 +247,9 @@ double get_ctrlpad_x()
   double old_range, new_range, old_max, old_min, new_max, new_min;
 
   raw_val = get_sensor_raw(CHAN_CTRLPAD_X_IN);
-  
+
   old_val = raw_val - 0.9;
-  
+
   old_max =  10; new_max   =  MAX_MOTOR_OUTPUT;
   old_min = 0;   new_min   = -MAX_MOTOR_OUTPUT;
 
@@ -267,9 +272,9 @@ double get_ctrlpad_y()
   double old_range, new_range, old_max, old_min, new_max, new_min;
 
   raw_val = get_sensor_raw(CHAN_CTRLPAD_Y_IN);
-  
+
   old_val = raw_val;
-  
+
   old_max =  10; new_max   =  MAX_MOTOR_OUTPUT;
   old_min = 0;   new_min   = -MAX_MOTOR_OUTPUT;
 
@@ -286,7 +291,7 @@ double get_ctrlpad_y()
  * @return 1 = ON, 0 = OFF
  */
 int get_ctrlpad_magnet_switch()
-{   
+{
     #ifndef TESTING
     lsampl_t in;
     comedi_dio_read(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, &in);
@@ -301,7 +306,7 @@ int get_ctrlpad_magnet_switch()
  * Turn on magnet
  */
 void enable_magnet()
-{   
+{
     #ifndef TESTING
     comedi_dio_write(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, 1);
     #endif
@@ -325,13 +330,13 @@ void disable_magnet()
 double get_sensor_raw(int channel)
 {
     double physical_value = -1;
-    
+
     #ifndef TESTING
     lsampl_t data, max_data;
     comedi_range *range_info;
 
     comedi_data_read(NI_card, AIN_SUBDEV, channel, 0, AREF_GROUND, &data);
-    
+
     range_info     = comedi_get_range(NI_card, AIN_SUBDEV, channel, 0);
     max_data       = comedi_get_maxdata(NI_card, AIN_SUBDEV, channel);
     physical_value = comedi_to_phys(data, range_info, max_data);
