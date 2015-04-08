@@ -1,7 +1,8 @@
 #include "../include/filter.h"
 
-double angle_controller(double error, double old_error){
-  return (error * 800) - (old_error * 799.2);
+double angle_controller(double error){
+  double k_p = 2;
+  return error * k_p;
 }
 
 double position_controller_x(double error){

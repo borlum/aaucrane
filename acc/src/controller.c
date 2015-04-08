@@ -36,7 +36,6 @@ void *rt_x_axies_controller(void * argc)
   double angle_ref = 0;
   double angle_pos = 0;
   double angle_err = 0;
-  double angle_err_pre = 0;
   
   double out = 0;
 
@@ -53,8 +52,7 @@ void *rt_x_axies_controller(void * argc)
     x_pos = get_xpos();
     angle_pos = get_angle();
     angle_err = angle_ref - angle_pos;
-    x_err = x_ref - x_pos - angle_controller(angle_err, angle_err_pre);
-    angle_err_pre = angle_err;
+    x_err = x_ref - x_pos - angle_controller(angle_err);
     
     if ( (fabs(x_err) < X_ERR_BAND)) {
       /*Settled*/
