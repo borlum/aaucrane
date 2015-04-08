@@ -7,7 +7,7 @@ int *NI_card;
 #endif
 
 static const double MAX_MOTOR_OUTPUT = 12.9;
-const double ZERO_ANGLE_RAD;
+static double ZERO_ANGLE_RAD;
 
 /**
  * Open comedi driver for interfacing w. crane
