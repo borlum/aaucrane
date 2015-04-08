@@ -11,7 +11,7 @@
 #include "controller.h"
 
 
-#define DATA_PATH "/var/www/html/data/crane/xsteps/"
+#define DATA_PATH "/var/www/html/data/acc/steps/"
 #define DATA_HEADER "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n"
 
 
