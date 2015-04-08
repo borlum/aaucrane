@@ -1,6 +1,8 @@
 #include <pthread.h>
-#include <unistd.h>
 #include <mqueue.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
 
 #include <libcrane.h>
 
