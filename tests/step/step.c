@@ -17,11 +17,13 @@
 pthread_t t_xcontroller, t_ycontroller, t_logger;
 
 void* logger(void* args){
+  FILE* fp;
 
+  unsigned long t_0, t_sample;
+  
   char tmp[160];
   sprintf(tmp, "%s/%d.csv", DATA_PATH, (int)time(NULL));
   fp = fopen(tmp, "w");
-  fprintf(fp, "%s\n", argv[1]);
   fprintf(fp, DATA_HEADER);  
   
   while(1){

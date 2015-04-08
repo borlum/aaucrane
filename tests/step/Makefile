@@ -9,6 +9,9 @@ GCC=gcc -std=gnu11
 LIBS=-lm -lpthread -lrt -lcomedi
 
 SOURCE += $(TARGET).c
+SOURCE += ../../acc/src/controller.c
+SOURCE += ../../acc/src/filter.c
+
 
 all: $(TARGET)
 
