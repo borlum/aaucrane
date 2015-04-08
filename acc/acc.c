@@ -14,6 +14,7 @@
 #endif
 #include "acc.h"
 #include "include/controller.h"
+#include "include/stack.h"
 
 /* Threads */
 pthread_t thread_xcontroller;
@@ -48,48 +49,41 @@ void *controller(void * args)
     cmd = (crane_cmd_t*) buffer;
     
     printf("#### NEW COMMAND ####\n");
-    printf("GOTO (%.3f, %.3f)\n", cmd->x_ref[0], cmd->y_ref[0]);
-    printf("%s magnet\n", cmd->magnet == ENABLE ? "Enable" : "Disable");
+    printf("GOTO (%.3f, %.3f)\n", cmd->pickup_point.x, cmd->pickup_point.y);
     printf("Carry @ %.3f\n", cmd->carry_height);
-    printf("GOTO (%.3f, %.3f)\n", cmd->x_ref[1], cmd->y_ref[1]);
-    printf("Disable magnet\n");
+    printf("GOTO (%.3f, %.3f)\n", cmd->dest_point.x, cmd->dest_point.y);
     printf("#### END COMMAND ####\n");
     
     
-    mq_send(to_x, (char *) &(cmd->x_ref[0]), sizeof(cmd->x_ref[0]), 0);
+    mq_send(to_x, (char *) &(cmd->pickup_point.x), sizeof(cmd->pickup_point.x), 0);
     mq_receive(from_x, NULL, BUFFER_SIZE, 0);
-    printf("[C] Moved to x: %.3f\n", cmd->x_ref[0]);
+    printf("[C] Moved to x: %.3f\n", cmd->pickup_point.x);
     
-    mq_send(to_y, (char *) &(cmd->y_ref[0]), sizeof(cmd->y_ref[0]), 0);
+    mq_send(to_y, (char *) &(cmd->pickup_point.y), sizeof(cmd->pickup_point.y), 0);
     mq_receive(from_y, NULL, BUFFER_SIZE, 0);
-    printf("[C] Moved to y: %.3f\n", cmd->y_ref[0]);
-    
-    if(cmd->magnet == ENABLE){
+    printf("[C] Moved to y: %.3f\n", cmd->pickup_point.y);
 #ifndef TEST
-      enable_magnet();
+    enable_magnet();
+    usleep(1000 * 100);
 #else
-      printf("Magnet enabled\n");
+    printf("Magnet enabled\n");
 #endif
-    }
     mq_send(to_y, (char *) &(cmd->carry_height), sizeof(cmd->carry_height), 0);
     mq_receive(from_y, NULL, BUFFER_SIZE, 0);
     printf("[C] Moved to y: %.3f\n", cmd->carry_height);
 
-    mq_send(to_x, (char *) &(cmd->x_ref[1]), sizeof(cmd->x_ref[1]), 0);
+    mq_send(to_x, (char *) &(cmd->dest_point.x), sizeof(cmd->dest_point.x), 0);
     mq_receive(from_x, NULL, BUFFER_SIZE, 0);
-    printf("[C] Moved to x: %.3f\n", cmd->x_ref[1]);
+    printf("[C] Moved to x: %.3f\n", cmd->dest_point.x);
 
-    mq_send(to_y, (char *) &(cmd->y_ref[1]), sizeof(cmd->y_ref[1]), 0);
+    mq_send(to_y, (char *) &(cmd->dest_point.y), sizeof(cmd->dest_point.y), 0);
     mq_receive(from_y, NULL, BUFFER_SIZE, 0);
-    printf("[C] Moved to y: %.3f\n", cmd->y_ref[1]);
-
-    if(cmd->magnet == ENABLE){
+    printf("[C] Moved to y: %.3f\n", cmd->dest_point.y);
 #ifndef TEST
       disable_magnet();
 #else
       printf("Magnet disabled\n");
 #endif
-    }
     mq_send(to_y, (char *) &reset_pos_flag, sizeof(reset_pos_flag), 0);
     mq_receive(from_y, NULL, BUFFER_SIZE, 0);
 
@@ -128,25 +122,60 @@ int init(){
   return 0;
 }
 
+void place_containers(){
+  for(int i = 1; i <=3 ; i++)
+    update_status(i, 0, OCCUPIED);
+}
+
 int main(int argc,char* argv[]){  
   if( init() == -1)
     exit(-1);
+
+  init_stack();
+  place_containers();
   
   mqd_t to_c, from_c;
   to_c = mq_open(Q_TO_C, O_WRONLY);
   from_c = mq_open(Q_FROM_C, O_RDONLY);
 
-  double tmp;
-  float a;
-  crane_cmd_t cmd;
-    
-  while(1) {
-    printf ("Enter a crane command <x1,y1 x2,y2 {1|0}>:\n");
-    scanf("%lf,%lf %lf,%lf %d",
-	  &(cmd.x_ref[0]), &(cmd.y_ref[0]), &(cmd.x_ref[1]), &(cmd.y_ref[1]), &(cmd.magnet) );
-
-    mq_send(to_c, (char *) &cmd, sizeof(cmd), 0);
-    mq_receive(from_c, NULL, BUFFER_SIZE, 0);
-  }  
+  int source_row, dest_row;
+  int source_col, dest_col; 
   
+  stack_loc_t source, dest;
+  crane_cmd_t cmd;
+  
+  while(1) {
+    printf ("Enter a crane command <row,col row,col>:\n");
+    scanf("%d,%d %d,%d", &source_row, &source_col, &dest_row, &dest_col);
+    if(get_status(source_row, source_col) == FREE){
+      printf("No container found at location %d,%d\n", source_row, source_col);
+      continue;
+    }
+    if(get_status(dest_row, dest_col) == OCCUPIED){
+      printf("Destination is occupied (%d,%d)\n", dest_row, dest_col);
+      continue;
+    }
+    if(get_status(source_row, source_col + 1) == OCCUPIED){
+      printf("Sorry, a container is ontop of source (%d,%d)\n", source_row, source_col);
+      continue;
+    }
+    if(
+       source_row > STACK_WIDTH || source_col > STACK_HEIGHT ||
+       dest_row > STACK_WIDTH || dest_col > STACK_HEIGHT
+       ){
+      printf("Sorry, a container is ontop of source (%d,%d)\n", source_row, source_col);
+      continue;
+    }
+
+    source = get_stack_loc(source_row, source_col);
+    dest = get_stack_loc(dest_row, dest_col);
+
+    cmd.pickup_point = source.loc;
+    cmd.dest_point = dest.loc;
+    
+    mq_send(to_c, (char *) &cmd, sizeof(cmd), 0);
+    update_status(source_row, source_col, FREE);
+    mq_receive(from_c, NULL, BUFFER_SIZE, 0);
+    update_status(dest_row, dest_col, OCCUPIED);
+  } 
 }

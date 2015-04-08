@@ -12,9 +12,9 @@
 #ifndef TEST
 #include <libcrane.h>
 #endif
-#include "../acc.h"
-#include "../include/controller.h"
-#include "../include/filter.h"
+#include "acc.h"
+#include "controller.h"
+#include "filter.h"
 
 
 void *rt_x_axies_controller(void * argc)
@@ -27,6 +27,7 @@ void *rt_x_axies_controller(void * argc)
 
   char * input_buffer = (char *)malloc(BUFFER_SIZE);
 
+  int hit_count = 0;
   int new_ref = 0;
   double x_ref = 0;
   double x_pos = 0;
@@ -53,12 +54,15 @@ void *rt_x_axies_controller(void * argc)
     angle_err = angle_ref - angle_pos;
     x_err = x_ref - x_pos - angle_controller(angle_err);
     
-    if ( (fabs(x_err) < X_ERR_BAND) && new_ref) {
+    if ( (fabs(x_err) < X_ERR_BAND)) {
       /*Settled*/
-      printf("[X] Settled: pos_sensor = %.3f | x_ref = %.3f | Err = %.3f\n", x_pos, x_ref, fabs(x_err));
-      new_ref = 0;
-      int msg = 1;
-      mq_send(output, (char *)&msg, sizeof(int), 0);
+      hit_count++;
+      if(hit_count >= 100 && new_ref){
+        new_ref = 0;
+        hit_count = 0;
+        int msg = 1;
+        mq_send(output, (char *)&msg, sizeof(int), 0);
+      }
     }
 
     out = position_controller_x(x_err);
@@ -70,7 +74,6 @@ void *rt_x_axies_controller(void * argc)
       mq_send(output, (char *)&msg, sizeof(int), 0);
     }
 #endif
-    usleep(1000 * 10);
   }
 }
 
@@ -84,6 +87,7 @@ void *rt_y_axies_controller(void * argc)
 
   char* input_buffer = (char*) malloc(BUFFER_SIZE);
 
+  int hit_count = 0;
   int new_ref = 0;  
   double y_ref = 0;
   double y_pos = 0;
@@ -103,11 +107,15 @@ void *rt_y_axies_controller(void * argc)
     y_pos = get_ypos();
     y_err = y_ref - y_pos;
 
-    if (fabs(y_err) < Y_ERR_BAND && new_ref) {
+    if (fabs(y_err) < Y_ERR_BAND) {
       /*Settled*/
-      new_ref = 0;
-      int msg = 2;
-      mq_send(output, (char *)&msg, sizeof(int), 0);
+      hit_count++;
+      if(hit_count >= 10 && new_ref){
+         new_ref = 0;
+         hit_count = 0;
+         int msg = 2;
+         mq_send(output, (char *)&msg, sizeof(int), 0);
+      }
     }
 
     out = position_controller_y(y_err);

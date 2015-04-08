@@ -3,48 +3,48 @@
 CRANE_URL = 'http://172.26.12.144/data';
 TMP_FILE  = 'tmp.csv';
 
-websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427445542.csv']);
+websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427376971.csv']);
 meas1.data = csvread(TMP_FILE, 2, 0);
 meas1.V    = meas1.data(:,6);
-meas1.mean = mean(meas1.V(1400:4096));
+meas1.mean = mean(meas1.V(3000:4000));
 meas1.in   = 5.90 * 2;
-meas1.tac  = (2267 / 60) * 2*pi;
+meas1.tac  = (2184 / 60) * 2*pi;
 
 
-websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427445631.csv']);
+websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427377048.csv']);
 meas2.data = csvread(TMP_FILE, 2, 0);
 meas2.V    = meas2.data(:,6);
-meas2.mean = mean(meas2.V(1521:5127));
+meas2.mean = mean(meas2.V(3000:4000));
 meas2.in   = 5.10 * 2;
-meas2.tac  = (1786 / 60) * 2*pi;
+meas2.tac  = (1745 / 60) * 2*pi;
 
-websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427445759.csv']);
+websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427377122.csv']);
 meas3.data = csvread(TMP_FILE, 2, 0);
 meas3.V    = meas3.data(:,6);
-meas3.mean = mean(meas3.V(1656:6723));
+meas3.mean = mean(meas3.V(3000:4000));
 meas3.in   = 4.40 * 2;
-meas3.tac  = (1349 / 60) * 2*pi;
+meas3.tac  = (1338 / 60) * 2*pi;
 
-websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427445832.csv']);
+websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427377189.csv']);
 meas4.data = csvread(TMP_FILE, 2, 0);
 meas4.V    = meas4.data(:,6);
-meas4.mean = mean(meas4.V(1486:9359));
+meas4.mean = mean(meas4.V(3000:4000));
 meas4.in   = 3.71 * 2;
-meas4.tac  = (920 / 60) * 2*pi;
+meas4.tac  = (880 / 60) * 2*pi;
 
-websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427445941.csv']);
+websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427377279.csv']);
 meas5.data = csvread(TMP_FILE, 2, 0);
 meas5.V    = meas5.data(:,6);
-meas5.mean = mean(meas5.V(1775:17320));
+meas5.mean = mean(meas5.V(3000:4000));
 meas5.in   = 3.00 * 2;
-meas5.tac  = (500 / 60) * 2*pi;
+meas5.tac  = (442 / 60) * 2*pi;
 
-websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427446020.csv']);
+websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427377353.csv']);
 meas6.data = csvread(TMP_FILE, 2, 0);
 meas6.V    = meas6.data(:,6);
-meas6.mean = mean(meas6.V(6645:63400));
+meas6.mean = mean(meas6.V(3000:4000));
 meas6.in   = 2.28 * 2;
-meas6.tac  = (135 / 60) * 2*pi;
+meas6.tac  = (197 / 60) * 2*pi;
 
 out = [meas1.mean meas2.mean meas3.mean meas4.mean meas5.mean meas6.mean];
 tac = [meas1.tac meas2.tac meas3.tac meas4.tac meas5.tac meas6.tac];
@@ -61,10 +61,10 @@ r2 = 1 - s.normr^2 / norm(tac-mean(tac))^2
 
 % PLOT
 plot(abs(out), tac, '*', abs(out), tac_est);
-title('Velocity sensor, x');
+title('Velocity sensor, y');
 xlabel('Sensor output [V]');
 ylabel('\omega [rad/s]');
-xlim([0 7]);
+xlim([0 10]);
 ylim([0 250]);
 grid on;
 legend('Measured', 'Linear regression', 'location', 'southeast');

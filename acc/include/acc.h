@@ -14,14 +14,18 @@
 #define Q_FROM_C "/ACC_from_c"
 
 
-typedef enum {DISABLE = 0, ENABLE = 1} magnet_t;
 typedef struct crane_cmd_s crane_cmd_t;
+typedef struct point_s point_t;
+
+struct point_s{
+  double x;
+  double y;
+};
 
 struct crane_cmd_s{
-  double x_ref[2];
-  double y_ref[2];
+  point_t pickup_point;
+  point_t dest_point;
   double carry_height;
-  magnet_t magnet;
 };
 
 #endif
