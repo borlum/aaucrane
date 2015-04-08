@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <errno.h>
 
+#include <comedilib.h>
 #include <libcrane.h>
 #include "acc.h"
 
@@ -13,7 +14,7 @@
 
 
 
-pthread_t xcontroller, ycontroller, logger;
+pthread_t t_xcontroller, t_ycontroller, t_logger;
 
 void* logger(void* args){
 
@@ -85,11 +86,11 @@ int main(int argc,char* argv[]){
     scanf("%lf, %lf", &x, &y);
 
     printf("Resetting ... .. .\n");
-    pthread_create(&xcontroller, NULL, rt_x_axies_controller, NULL);
-    pthread_create(&ycontroller, NULL, rt_y_axies_controller, NULL);
+    pthread_create(&t_xcontroller, NULL, rt_x_axies_controller, NULL);
+    pthread_create(&t_ycontroller, NULL, rt_y_axies_controller, NULL);
     usleep(1000 * 1000);
     printf("starting logger\n");
-    pthread_create(&logger, NULL, logger, NULL);
+    pthread_create(&t_logger, NULL, logger, NULL);
 
     mq_send(to_x, &x, sizeof(x), 0);
     mq_send(to_y, &y, sizeof(y), 0);
