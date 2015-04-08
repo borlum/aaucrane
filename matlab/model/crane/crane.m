@@ -1,16 +1,8 @@
-% XPOS MODEL ESTIMATION
+% CRANE MODEL ESTIMATION
 CRANE_URL = 'http://172.26.12.144/data';
 TMP_FILE  = 'tmp.csv';
 
-%GODE SQUARE PULSE RESPONSES
-%1427714504.csv
-%1427714996.csv   
-%1427715304.csv
-
 websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1428482290.csv']);
-%websave(TMP_FILE, [CRANE_URL '/crane/xsquare/1427800240.csv']);
-%websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427719295.csv']);
-
 
 DATA = csvread(TMP_FILE, 2, 0);
 t = DATA(:,1) * 1e-6;
@@ -24,15 +16,11 @@ y = DATA(:,3) * 0.7367 - 1.3211;
 y = y(1:idx_end);
 y = y - y(1);
 
-%u = (DATA(:,4) * -0.4981) + 4.7931;
-%u = u(1:idx_end);
-
-
 u = (DATA(:,8) * 2);
 u = -u(1:idx_end) + u(1);
 
-save measang t u y
+save meascrane t u y
 
-process = 'ang';
+process = 'crane';
 
 delete(TMP_FILE);
