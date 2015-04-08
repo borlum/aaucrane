@@ -43,11 +43,12 @@ void *sampler(void *args)
         sample_nr++;
 
         if ((sample_nr % t_on) == 0 && periods < nr_of_periods) {
-            
-            if (periods % 2 == 0) {
+            printf(">> Change direction!\n");
+            if ((periods % 2) == 0) {
+                printf(">> One period. Increment and pause!\n");
                 output = output + add_gain;
                 run_motorx(0);
-                usleep(1000 * 60 * 2);
+                usleep(1000 * 30);
             }
 
             if (running) {
@@ -60,6 +61,7 @@ void *sampler(void *args)
 
             periods++;
         } else if (periods == nr_of_periods) {
+            printf(">> STOP!\n");
             run_motorx(0);
         }
 
