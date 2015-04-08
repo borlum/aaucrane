@@ -49,7 +49,7 @@ void *rt_x_axies_controller(void * argc)
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
 #ifndef TEST
-    printf("[X]\n")
+    printf("[X]\n");
     x_pos = get_xpos();
     angle_pos = get_angle();
     angle_err = angle_ref - angle_pos;
