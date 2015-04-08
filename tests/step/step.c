@@ -30,6 +30,7 @@ void* logger(void* args){
   fp = fopen(tmp, "w");
   fprintf(fp, DATA_HEADER);  
   
+  t_0 = get_time_micros();
   while(1){
     /*GRAB TIMESTAMP*/
     t_sample = get_time_micros();
