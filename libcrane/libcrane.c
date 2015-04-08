@@ -31,6 +31,7 @@ int initialize_crane()
 
     // Find zero degree angle voltage
     ZERO_ANGLE_RAD = 0.7367*get_angle_raw() - 1.3211;
+    printf("%lf\n", get_angle());
 
     return 1;
 }
