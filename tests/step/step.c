@@ -90,7 +90,7 @@ int main(int argc,char* argv[]){
     
   while(1) {
     printf ("Enter a step size: <x>:\n");
-    scanf("%lf, %lf", &x);
+    scanf("%lf", &x);
 
     printf("Resetting ... .. .\n");
     pthread_create(&t_xcontroller, NULL, rt_x_axies_controller, NULL);
