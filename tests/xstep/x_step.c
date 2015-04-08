@@ -1,5 +1,5 @@
 #include <pthread.h>
-#include <cranelib.h>
+#include <libcrane.h>
 #include <unistd.h>
 
 #define DATA_PATH "/var/www/html/data/crane/xsteps/"
