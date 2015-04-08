@@ -48,7 +48,7 @@ void *sampler(void *args)
                 printf(">> One period. Increment and pause!\n");
                 output = output + add_gain;
                 run_motorx(0);
-                usleep(1000 * 30);
+                usleep(1000 * 1000 * 30);
             }
 
             if (running) {
