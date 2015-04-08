@@ -1,4 +1,4 @@
-TARGET = x_step
+TARGET = y_square
 LIBCRANE_PATH = ../../libcrane
 
 INC += -I/usr/local/lib
