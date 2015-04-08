@@ -86,15 +86,15 @@ int main(int argc,char* argv[]){
   to_y = mq_open(Q_TO_X, O_RDONLY);
 
   double x;
-  double y;
+  double y = 0.223;
     
   while(1) {
-    printf ("Enter a coodinta set <x,y>:\n");
-    scanf("%lf, %lf", &x, &y);
+    printf ("Enter a step size: <x>:\n");
+    scanf("%lf, %lf", &x);
 
     printf("Resetting ... .. .\n");
     pthread_create(&t_xcontroller, NULL, rt_x_axies_controller, NULL);
-    pthread_create(&t_ycontroller, NULL, rt_y_axies_controller, NULL);
+    /*pthread_create(&t_ycontroller, NULL, rt_y_axies_controller, NULL);*/
     usleep(1000 * 1000);
     printf("starting logger\n");
     pthread_create(&t_logger, NULL, logger, NULL);
