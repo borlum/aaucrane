@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include <pthread.h>
 #include <mqueue.h>
 #include <fcntl.h>
