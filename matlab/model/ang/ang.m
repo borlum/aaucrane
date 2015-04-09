@@ -7,9 +7,10 @@ TMP_FILE  = 'tmp.csv';
 %1427714996.csv   
 %1427715304.csv
 
+
+%websave(TMP_FILE, [CRANE_URL '/crane/xsquare/1428330885.csv']);
 websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1428482290.csv']);
-%websave(TMP_FILE, [CRANE_URL '/crane/xsquare/1427800240.csv']);
-%websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1427719295.csv']);
+
 
 
 DATA = csvread(TMP_FILE, 2, 0);
@@ -34,5 +35,16 @@ u = -u(1:idx_end) + u(1);
 save measang t u y
 
 process = 'ang';
-
+%%
+load measang % loads in the data
+s = tf('s');
+Ts = 0.01; % specifies time between data
+%%
+%Deciding what input and output parameters that are used
+u = -u((975):(40000)); %Input voltage
+A = y((975):(40000))-y(976); %Output photo; Makeing a calculation in change of angle to find a velocity.
+t = t((975):(40000));
+plot(t, u);hold on
+plot(t, A);
+%%
 delete(TMP_FILE);
