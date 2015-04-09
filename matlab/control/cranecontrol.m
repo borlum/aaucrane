@@ -8,7 +8,8 @@ run('../model/cranemodel.m');
 % X(s) Control
 %------------------------------------------------------------------------------
 % rlocus(X) => No overshoot + Max gain => 26.3
-C1 = 26.3;
+%C1 = 26.3;
+C1 = 16.3; %Steffan
 % Close the loop
 innerLoop = feedback(C1*X, 1);
 
@@ -17,7 +18,8 @@ innerLoop = feedback(C1*X, 1);
 %------------------------------------------------------------------------------
 % rlocus(-innerLoop*W) shows that proportional control is not good enough!
 % The minimum overshoot obtainable is ~45% => Sucks...
-C2 = 0.5;
+%C2 = 0.5;
+C2 = 3.27; %Steffan
 
 
 %------------------------------------------------------------------------------
