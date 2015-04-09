@@ -14,8 +14,8 @@ rr = 0.08;
 
 X = M * Gr * rr * 1/s;
 
-mt = 0.5;
-mp = 3.5;
+mm = 0.8; % Magnet + krog
+mp = 2.866 + mm;
 l  = 0.65;
 g  = 9.82;
 
