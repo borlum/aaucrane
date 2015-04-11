@@ -9,9 +9,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#ifndef TEST
 #include <libcrane.h>
-#endif
 #include "acc.h"
 #include "include/controller.h"
 #include "include/stack.h"
@@ -62,12 +60,10 @@ void *controller(void * args)
     mq_send(to_y, (char *) &(cmd->pickup_point.y), sizeof(cmd->pickup_point.y), 0);
     mq_receive(from_y, NULL, BUFFER_SIZE, 0);
     printf("[C] Moved to y: %.3f\n", cmd->pickup_point.y);
-#ifndef TEST
+
     enable_magnet();
     usleep(1000 * 100);
-#else
-    printf("Magnet enabled\n");
-#endif
+
     mq_send(to_y, (char *) &(cmd->carry_height), sizeof(cmd->carry_height), 0);
     mq_receive(from_y, NULL, BUFFER_SIZE, 0);
     printf("[C] Moved to y: %.3f\n", cmd->carry_height);
@@ -79,11 +75,9 @@ void *controller(void * args)
     mq_send(to_y, (char *) &(cmd->dest_point.y), sizeof(cmd->dest_point.y), 0);
     mq_receive(from_y, NULL, BUFFER_SIZE, 0);
     printf("[C] Moved to y: %.3f\n", cmd->dest_point.y);
-#ifndef TEST
-      disable_magnet();
-#else
-      printf("Magnet disabled\n");
-#endif
+    
+    disable_magnet();
+
     mq_send(to_y, (char *) &reset_pos_flag, sizeof(reset_pos_flag), 0);
     mq_receive(from_y, NULL, BUFFER_SIZE, 0);
 
@@ -94,11 +88,9 @@ void *controller(void * args)
 }
 
 int init(){
-#ifndef TEST
   initialize_crane();  
   run_motorx(0);
   run_motory(0);
-#endif
   struct mq_attr attr;  
   attr.mq_flags = 0;  
   attr.mq_maxmsg = 10;  
