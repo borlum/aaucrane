@@ -1,7 +1,8 @@
-INC=-I/usr/local/lib
-GCC=gcc -std=gnu11 -Wall -pedantic
-LIBS=-lm -lcomedi
-TESTING=-D TESTING
+GCC     = gcc -std=gnu11 -Wall -pedantic
+
+INC     = -I/usr/local/lib
+LIBS    = -lm -lcomedi
+TESTING = -D TESTING
 
 all: libcrane
 

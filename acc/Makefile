@@ -30,3 +30,5 @@ test: $(TARGET).c
 clean:
 	rm $(TARGET)
 	cd $(CRANELIB_PATH) && make clean
+
+.PHONY: clean
