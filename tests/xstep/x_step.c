@@ -8,6 +8,8 @@
 pthread_t thread_sampler;
 FILE * fp;
 
+const static float step_size = 2.6 * 0;
+
 void *sampler(void *args)
 {
     int step;
@@ -18,7 +20,7 @@ void *sampler(void *args)
     step = 1;
     while (1) {
         if (step) {
-            run_motorx(7);
+            run_motorx(step_size);
         }
 
         /*GRAB TIMESTAMP*/
