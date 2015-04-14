@@ -17,7 +17,7 @@ t = linspace(0,t(idx_end), idx_end);
 y = DATA(:,4) * -.4981 + 4.7931;
 y = y(1:idx_end) - y(1);
 u = DATA(:,8);
-u = (-u(1:idx_end)) + u(3055);
+u = (-u(1:idx_end)) + u(idx_end);
 
 save measmotorx1 t u y
 

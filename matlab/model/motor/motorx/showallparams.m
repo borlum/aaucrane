@@ -18,3 +18,8 @@ for i = 1:3
   bode(X(i));hold on
   grid on;
 end
+
+meanbm = mean(par(:,1))
+meanI = mean(par(:,2))
+
+meanX = (kt/ra)/(kt^2/ra + meanbm + meanI*s) * Gr * rr * 1/s;
