@@ -6,7 +6,8 @@ comedi_t *NI_card;
 int *NI_card;
 #endif
 
-static const double MAX_MOTOR_OUTPUT = 12.9;
+static const double MAX_MOTOR_OUTPUT = 13;
+static const double MIN_MOTOR_OUTPUT = 4;
 static double ZERO_ANGLE_RAD;
 
 /**
@@ -75,17 +76,17 @@ int run_motor(int voltage, int axis)
         voltage = -MAX_MOTOR_OUTPUT;
     }
 
-    if (voltage > -4.5 && voltage < 0) {
-      voltage = -4.5;
+    if (voltage > -MIN_MOTOR_OUTPUT && voltage < 0) {
+      voltage = -MIN_MOTOR_OUTPUT;
     }
 
-    if (voltage < 4.5 && voltage > 0) {
-      voltage = 4.5;
+    if (voltage < MIN_MOTOR_OUTPUT && voltage > 0) {
+      voltage = MIN_MOTOR_OUTPUT;
     }
 
     old_val = voltage;
 
-    old_max =  MAX_MOTOR_OUTPUT; new_max  = 4000;
+    old_max =  MAX_MOTOR_OUTPUT; new_max  = 4400;
     old_min = -MAX_MOTOR_OUTPUT; new_min  =    0;
 
     old_range = old_max - old_min;
