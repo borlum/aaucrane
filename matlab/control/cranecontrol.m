@@ -8,7 +8,7 @@ run('../model/cranemodel.m');
 % X(s) Control
 %------------------------------------------------------------------------------
 % rlocus(X) => No overshoot + Max gain => 26.3
-C1 = 16.3;
+C1 = 11.6;
 % Close the loop
 innerLoop = feedback(C1*X, 1);
 
