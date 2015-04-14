@@ -1,16 +1,17 @@
-CRANELIB_PATH = ../../cranelib
+TARGET = y_step
+LIBCRANE_PATH = ../../libcrane
 
 INC += -I/usr/local/lib
-INC += -I../../cranelib
+INC += -I../../libcrane
 
 GCC=gcc -std=gnu11
 LIBS=-lm -lpthread -lcomedi
 
-all: y_step
+all: $(TARGET)
 
-y_step: y_step.c
-	cd $(CRANELIB_PATH) && make
-	$(GCC) y_step.c $(INC) $(CRANELIB_PATH)/cranelib.o $(LIBS) -o y_step
+$(TARGET): $(TARGET).c
+	cd $(LIBCRANE_PATH) && make
+	$(GCC) $(TARGET).c $(INC) $(LIBCRANE_PATH)/libcrane.o $(LIBS) -o $(TARGET)
 
 clean:
-	rm y_step
+	rm $(TARGET)
