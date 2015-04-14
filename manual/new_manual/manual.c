@@ -5,6 +5,8 @@
 #define DATA_PATH "/var/www/html/data/crane/manual/"
 #define DATA_HEADER "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n"
 
+FILE * fp;
+
 int main(int argc, char* argv[])
 {
   initialize_crane();
