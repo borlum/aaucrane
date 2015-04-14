@@ -16,7 +16,7 @@ t = linspace(0,t(idx_end), idx_end);
 
 y = DATA(:,4) * 34.8 - 4.0;
 y = y(1:idx_end);
-u = DATA(:,8) * 2;
+u = DATA(:,8);
 u = (-u(1:idx_end)) + u(1);
 
 save measmotorx1 t u y
@@ -52,7 +52,7 @@ t = linspace(0,t(idx_end), idx_end);
 
 y = DATA(:,4) * 34.8 - 4.0;
 y = y(1:idx_end);
-u = DATA(:,8) * 2;
+u = DATA(:,8);
 u = (-u(1:idx_end)) + u(1);
 
 save measmotorx2 t u y
@@ -88,7 +88,7 @@ t = linspace(0,t(idx_end), idx_end);
 
 y = DATA(:,4) * 34.8 - 4.0;
 y = y(1:idx_end);
-u = DATA(:,8) * 2;
+u = DATA(:,8);
 u = (-u(1:idx_end)) + u(1);
 
 save measmotorx3 t u y
@@ -124,7 +124,7 @@ t = linspace(0,t(idx_end), idx_end);
 
 y = DATA(:,4) * 34.8 - 4.0;
 y = y(1:idx_end);
-u = DATA(:,8) * 2;
+u = DATA(:,8);
 u = (-u(1:idx_end)) + u(1);
 
 save measmotorx4 t u y
@@ -160,7 +160,7 @@ t = linspace(0,t(idx_end), idx_end);
 
 y = DATA(:,4) * 34.8 - 4.0;
 y = y(1:idx_end);
-u = DATA(:,8) * 2;
+u = DATA(:,8);
 u = (-u(1:idx_end)) + u(1);
 
 save measmotorx5 t u y
