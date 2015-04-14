@@ -21,6 +21,7 @@ void *sampler(void *args)
     while (1) {
         if (step) {
             run_motorx(step_size);
+	    step = 0;	    
         }
 
         /*GRAB TIMESTAMP*/
@@ -42,7 +43,6 @@ void *sampler(void *args)
 
         if (sample_nr == 3000) {
             run_motorx(0);
-            step = 0;
         }
 
         usleep(1000);
