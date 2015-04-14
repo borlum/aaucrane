@@ -1,5 +1,4 @@
-par = [0.0065 0.002;
-       .0028 .0013;
+par = [.0028 .0013;
        .0015 .0012;
        .0011 .0011];
 
@@ -11,7 +10,7 @@ ra = 0.43;
 Gr = 7/144;
 rr = 0.08;
 
-for i = 1:4
+for i = 1:3
   bm = par(i, 1);
   I = par(i, 2);
   M = (kt/ra)/(kt^2/ra + bm + I*s);
@@ -19,3 +18,8 @@ for i = 1:4
   bode(X(i));hold on
   grid on;
 end
+
+meanbm = mean(par(:,1))
+meanI = mean(par(:,2))
+
+meanX = (kt/ra)/(kt^2/ra + meanbm + meanI*s) * Gr * rr * 1/s;
