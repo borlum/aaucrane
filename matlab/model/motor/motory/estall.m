@@ -8,6 +8,7 @@ for i = 2:10
   parb(i) = pare(1);
   parI(i) = pare(2);
   erry = errn;
+  par0 = pare;
 end
 
 meanb = mean(parb);
