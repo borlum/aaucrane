@@ -19,6 +19,9 @@ u = u(1:idx_end) - u(1);
 y = DATA(:,3);
 y = 0.7367 * y(1:idx_end) - 1.361;
 
+%y = DATA(:,2);
+%y = -1.25*(y(1:idx_end) - y(1)-.018);
+
 save measang5 t u y
 
 delete(TMP_FILE);
