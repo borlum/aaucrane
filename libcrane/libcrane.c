@@ -117,7 +117,7 @@ int run_motor(int voltage, int axis)
     }
     #endif
 
-    return new_val;
+    return output;
 }
 
 /**
