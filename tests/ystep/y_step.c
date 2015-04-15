@@ -8,6 +8,8 @@
 pthread_t thread_sampler;
 FILE * fp;
 
+double step = 7.740;
+
 void *sampler(void *args)
 {
     int step;
@@ -18,7 +20,8 @@ void *sampler(void *args)
     step = 1;
     while (1) {
         if (step) {
-            run_motory(7);
+            run_motory(step);
+	    step = 0;		
         }
 
         /*GRAB TIMESTAMP*/
@@ -40,7 +43,6 @@ void *sampler(void *args)
 
         if (sample_nr == 3000) {
             run_motory(0);
-            step = 0;
         }
 
         usleep(1000);
