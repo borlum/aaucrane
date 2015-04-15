@@ -65,9 +65,11 @@ int run_motory(int voltage)
  */
 int run_motor(int voltage, int axis)
 {
-    int old_val, new_val;
-    int old_range, new_range, old_max, old_min, new_max, new_min;
+    /* int old_val, new_val; */
+    /* int old_range, new_range, old_max, old_min, new_max, new_min; */
 
+  int output;
+  
     if (voltage > MAX_MOTOR_OUTPUT) {
         voltage = MAX_MOTOR_OUTPUT;
     }
@@ -84,7 +86,7 @@ int run_motor(int voltage, int axis)
       voltage = MIN_MOTOR_OUTPUT;
     }
 
-    voltage = 157.7542 * voltage + 2188.7;
+    output = (int) (157.7542 * voltage + 2188.7);
 
     /* old_val = voltage; */
 
@@ -110,7 +112,7 @@ int run_motor(int voltage, int axis)
         return -1;
     }
 
-    if (comedi_data_write(NI_card, AOUT_SUBDEV, axis, 0, AREF_GROUND, new_val) == -1) {
+    if (comedi_data_write(NI_card, AOUT_SUBDEV, axis, 0, AREF_GROUND, output) == -1) {
         return -1;
     }
     #endif
