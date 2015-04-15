@@ -20,7 +20,7 @@ void *sampler(void *args)
     step = 1;
     while (1) {
         if (step) {
-            run_motory(step);
+	  printf("Comedi: %d\n", run_motory(step));
 	    step = 0;		
         }
 
