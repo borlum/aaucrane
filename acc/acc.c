@@ -136,7 +136,7 @@ int main(int argc,char* argv[]){
   stack_loc_t source, dest;
   crane_cmd_t cmd;
 
-  cmd.carry_height = CONTAINER_HEIGHT * 7;
+  cmd.carry_height = Y_OFF_SET - (CONTAINER_HEIGHT * 7);
   
   while(1) {
     printf ("Enter a crane command <row,col row,col>:\n");
