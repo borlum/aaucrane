@@ -81,9 +81,9 @@ int main(int argc,char* argv[]){
   if( init() == -1)
     exit(-1);
   
-  mqd_t to_x, to_y;
+  mqd_t to_x, from_x;
   to_x = mq_open(Q_TO_X, O_WRONLY);
-  to_y = mq_open(Q_TO_X, O_RDONLY);
+  from_x = mq_open(Q_FROM_X, O_RDONLY);
 
   double x;
   double y = 0.223;
@@ -100,6 +100,7 @@ int main(int argc,char* argv[]){
     pthread_create(&t_logger, NULL, logger, NULL);
 
     mq_send(to_x, (char *) &x, sizeof(x), 0);
-    mq_send(to_y, (char *) &y, sizeof(y), 0);
+    mq_receive(from_x, NULL, sizeof(double), 0);
+    //mq_send(to_y, (char *) &y, sizeof(y), 0);
   } 
 }
