@@ -20,7 +20,7 @@ void *sampler(void *args)
     step = 1;
     while (1) {
         if (step) {
-            run_motorx(step_size);
+	    printf("Comedi out %d\n", run_motorx(step_size);
 	    step = 0;	    
         }
 
