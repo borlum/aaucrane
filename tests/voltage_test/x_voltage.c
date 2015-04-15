@@ -61,7 +61,7 @@ int main(){
 
   while(1){
     scanf("Comedi value:%d", &tmp);
-    comedi_data_write(NI_card, AOUT_SUBDEV, 0, 0, AREF_GROUND, output);
+    comedi_data_write(NI_card, AOUT_SUBDEV, 0, 0, AREF_GROUND, tmp);
     usleep(1000);
     printf("%d,%f\n", output, (get_sensor_raw(CHAN_XIN_IN) * 2));
   }
