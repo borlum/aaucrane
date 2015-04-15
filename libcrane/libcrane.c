@@ -86,7 +86,7 @@ int run_motor(int voltage, int axis)
       voltage = MIN_MOTOR_OUTPUT;
     }
 
-    output = (int) (157.7542 * voltage + 2188.7);
+    output = (int) (157.5 * voltage + 2024);
 
     /* old_val = voltage; */
 
