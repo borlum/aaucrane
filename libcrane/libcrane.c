@@ -8,6 +8,7 @@ int *NI_card;
 
 static const double MAX_MOTOR_OUTPUT = 12.5;
 static const double MIN_MOTOR_OUTPUT = 0;
+static const double epsilon = 0.5;
 static double ZERO_ANGLE_RAD;
 
 /**
@@ -44,11 +45,11 @@ int initialize_crane()
  */
 int run_motorx(double voltage)
 {
-    if (voltage > -4 && voltage < 0) {
+    if (voltage > -4 && voltage < 0 - epsilon) {
         voltage = -4;
     }
 
-    if (voltage < 4 && voltage > 0) {
+    if (voltage < 4 && voltage > 0 + epsilon) {
         voltage = 4;
     }
 
@@ -62,11 +63,11 @@ int run_motorx(double voltage)
  */
 int run_motory(double voltage)
 {
-    if (voltage > -5.5 && voltage < 0) {
+    if (voltage > -5.5 && voltage < 0 - epsilon) {
         voltage = -5.5;
     }
 
-    if (voltage < 3 && voltage > 0) {
+    if (voltage < 3 && voltage > 0 + epsilon) {
         voltage = 3;
     }
     
