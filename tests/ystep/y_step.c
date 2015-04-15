@@ -8,7 +8,7 @@
 pthread_t thread_sampler;
 FILE * fp;
 
-double step = 7.740;
+double step_size = 7.740;
 
 void *sampler(void *args)
 {
@@ -19,7 +19,7 @@ void *sampler(void *args)
     t_0 = get_time_micros();
     step = 1;
     while (1) {
-        if (step) {
+        if (step_size) {
 	  printf("Comedi: %d\n", run_motory(step));
 	    step = 0;		
         }
