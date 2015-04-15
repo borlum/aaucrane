@@ -228,7 +228,7 @@ double get_motory_velocity_raw()
  */
 double get_motorx_voltage()
 {
-    return get_sensor_raw(CHAN_XIN_IN) * 2;
+    return get_sensor_raw(CHAN_XIN_IN) * 2 * 0.984 - 0.2230;
 }
 
 /**
@@ -237,7 +237,7 @@ double get_motorx_voltage()
  */
 double get_motory_voltage()
 {
-    return get_sensor_raw(CHAN_YIN_IN) * 2;
+    return get_sensor_raw(CHAN_YIN_IN) * 2 * 0.984 - 0.2230;
 }
 
 /**
