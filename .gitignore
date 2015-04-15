@@ -30,3 +30,8 @@
 
 # MATLAB DATA
 *.mat
+
+#Lasse Linux
+*~
+\#*\#
+.*.*
