@@ -7,7 +7,7 @@ int *NI_card;
 #endif
 
 static const double MAX_MOTOR_OUTPUT = 13;
-static const double MIN_MOTOR_OUTPUT = 4;
+static const double MIN_MOTOR_OUTPUT = 4.5;
 static double ZERO_ANGLE_RAD;
 
 /**
@@ -84,18 +84,20 @@ int run_motor(int voltage, int axis)
       voltage = MIN_MOTOR_OUTPUT;
     }
 
-    old_val = voltage;
+    voltage = 157.7542 * voltage + 2188.7;
 
-    old_max =  MAX_MOTOR_OUTPUT; new_max  = 4400;
-    old_min = -MAX_MOTOR_OUTPUT; new_min  =    0;
+    /* old_val = voltage; */
 
-    old_range = old_max - old_min;
-    new_range = new_max - new_min;
+    /* old_max =  MAX_MOTOR_OUTPUT; new_max  = 4400; */
+    /* old_min = -MAX_MOTOR_OUTPUT; new_min  =    0; */
 
-    /* SEE:
-    http://stackoverflow.com/questions/929103/convert-a-number-range-to-another-range-maintaining-ratio
-     */
-    new_val = (((old_val - old_min) * new_range) / old_range) + new_min;
+    /* old_range = old_max - old_min; */
+    /* new_range = new_max - new_min; */
+
+    /* /\* SEE: */
+    /* http://stackoverflow.com/questions/929103/convert-a-number-range-to-another-range-maintaining-ratio */
+    /*  *\/ */
+    /* new_val = (((old_val - old_min) * new_range) / old_range) + new_min; */
 
     #ifndef TESTING
 
