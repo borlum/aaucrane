@@ -63,7 +63,7 @@ int main(){
     scanf("Comedi value:%d", &tmp);
     comedi_data_write(NI_card, AOUT_SUBDEV, 0, 0, AREF_GROUND, tmp);
     usleep(1000);
-    printf("%d,%f\n", output, (get_sensor_raw(CHAN_XIN_IN) * 2));
+    printf("%d,%f\n", tmp, (get_sensor_raw(CHAN_XIN_IN) * 2));
   }
   
   for(int output = 0; output <= 4200; output += 200){
