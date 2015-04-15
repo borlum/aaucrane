@@ -52,16 +52,23 @@ double get_sensor_raw(int channel)
 }
 
 int main(){
+  int tmp;
   NI_card = comedi_open(DEVICE);
   /*Global config*/
   comedi_set_global_oor_behavior(COMEDI_OOR_NUMBER);
   comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, COMEDI_OUTPUT);
   comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, COMEDI_INPUT);
 
+  while(1){
+    scanf("Comedi value:%d", &tmp);
+    comedi_data_write(NI_card, AOUT_SUBDEV, 0, 0, AREF_GROUND, output);
+    usleep(1000);
+    printf("%d,%f\n", output, (get_sensor_raw(CHAN_XIN_IN) * 2));
+  }
+  
   for(int output = 0; output <= 4200; output += 200){
     comedi_data_write(NI_card, AOUT_SUBDEV, 0, 0, AREF_GROUND, output);
     usleep(1000);
     printf("%d,%f\n", output, (get_sensor_raw(CHAN_XIN_IN) * 2));
-    scanf("");
   }
 }
