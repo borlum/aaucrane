@@ -7,7 +7,7 @@ int *NI_card;
 #endif
 
 static const double MAX_MOTOR_OUTPUT = 12.5;
-static const double MIN_MOTOR_OUTPUT = 5.5;
+static const double MIN_MOTOR_OUTPUT = 0;
 static double ZERO_ANGLE_RAD;
 
 /**
@@ -42,7 +42,7 @@ int initialize_crane()
  * @param   voltage Voltage supplied to the motor
  * @return  Input value for comedi driver, or -1 if fail
  */
-int run_motorx(int voltage)
+int run_motorx(double voltage)
 {
     return run_motor(-voltage, 0); /* Change X motor direction */
 }
@@ -52,7 +52,7 @@ int run_motorx(int voltage)
  * @param   voltage Voltage supplied to the motor
  * @return Input value for comedi driver, or -1 if fail
  */
-int run_motory(int voltage)
+int run_motory(double voltage)
 {
     return run_motor(voltage, 1);
 }
@@ -63,7 +63,7 @@ int run_motory(int voltage)
  * @param    axis The axis to control (0 = X, 1 = Y)
  * @return Input value for comedi driver, or -1 if fail
  */
-int run_motor(int voltage, int axis)
+int run_motor(double voltage, int axis)
 {
     /* int old_val, new_val; */
     /* int old_range, new_range, old_max, old_min, new_max, new_min; */

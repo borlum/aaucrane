@@ -36,9 +36,9 @@
 
 int initialize_crane();
 
-int run_motorx(int voltage);
-int run_motory(int voltage);
-int run_motor(int voltage, int axis);
+int run_motorx(double voltage);
+int run_motory(double voltage);
+int run_motor(double voltage, int axis);
 
 double get_angle();
 double get_angle_raw();
