@@ -6,8 +6,8 @@ comedi_t *NI_card;
 int *NI_card;
 #endif
 
-static const double MAX_MOTOR_OUTPUT = 13;
-static const double MIN_MOTOR_OUTPUT = 4;
+static const double MAX_MOTOR_OUTPUT = 12.5;
+static const double MIN_MOTOR_OUTPUT = 5.5;
 static double ZERO_ANGLE_RAD;
 
 /**
@@ -65,9 +65,11 @@ int run_motory(int voltage)
  */
 int run_motor(int voltage, int axis)
 {
-    int old_val, new_val;
-    int old_range, new_range, old_max, old_min, new_max, new_min;
+    /* int old_val, new_val; */
+    /* int old_range, new_range, old_max, old_min, new_max, new_min; */
 
+  int output;
+  
     if (voltage > MAX_MOTOR_OUTPUT) {
         voltage = MAX_MOTOR_OUTPUT;
     }
@@ -84,18 +86,20 @@ int run_motor(int voltage, int axis)
       voltage = MIN_MOTOR_OUTPUT;
     }
 
-    old_val = voltage;
+    output = (int) (157.5 * voltage + 2024);
 
-    old_max =  MAX_MOTOR_OUTPUT; new_max  = 4400;
-    old_min = -MAX_MOTOR_OUTPUT; new_min  =    0;
+    /* old_val = voltage; */
 
-    old_range = old_max - old_min;
-    new_range = new_max - new_min;
+    /* old_max =  MAX_MOTOR_OUTPUT; new_max  = 4400; */
+    /* old_min = -MAX_MOTOR_OUTPUT; new_min  =    0; */
 
-    /* SEE:
-    http://stackoverflow.com/questions/929103/convert-a-number-range-to-another-range-maintaining-ratio
-     */
-    new_val = (((old_val - old_min) * new_range) / old_range) + new_min;
+    /* old_range = old_max - old_min; */
+    /* new_range = new_max - new_min; */
+
+    /* /\* SEE: */
+    /* http://stackoverflow.com/questions/929103/convert-a-number-range-to-another-range-maintaining-ratio */
+    /*  *\/ */
+    /* new_val = (((old_val - old_min) * new_range) / old_range) + new_min; */
 
     #ifndef TESTING
 
@@ -108,12 +112,12 @@ int run_motor(int voltage, int axis)
         return -1;
     }
 
-    if (comedi_data_write(NI_card, AOUT_SUBDEV, axis, 0, AREF_GROUND, new_val) == -1) {
+    if (comedi_data_write(NI_card, AOUT_SUBDEV, axis, 0, AREF_GROUND, output) == -1) {
         return -1;
     }
     #endif
 
-    return new_val;
+    return output;
 }
 
 /**
@@ -224,7 +228,7 @@ double get_motory_velocity_raw()
  */
 double get_motorx_voltage()
 {
-    return get_sensor_raw(CHAN_XIN_IN) * 2;
+    return get_sensor_raw(CHAN_XIN_IN) * 2 * 0.984 - 0.2230;
 }
 
 /**
@@ -233,7 +237,7 @@ double get_motorx_voltage()
  */
 double get_motory_voltage()
 {
-    return get_sensor_raw(CHAN_YIN_IN) * 2;
+    return get_sensor_raw(CHAN_YIN_IN) * 2 * 0.984 - 0.2230;
 }
 
 /**
