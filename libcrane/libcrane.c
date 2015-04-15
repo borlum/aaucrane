@@ -44,6 +44,14 @@ int initialize_crane()
  */
 int run_motorx(double voltage)
 {
+    if (voltage > -4 && voltage < 0) {
+        voltage = -4;
+    }
+
+    if (voltage < 4 && voltage > 0) {
+        voltage = 4;
+    }
+
     return run_motor(-voltage, 0); /* Change X motor direction */
 }
 
@@ -54,6 +62,14 @@ int run_motorx(double voltage)
  */
 int run_motory(double voltage)
 {
+    if (voltage > -5.5 && voltage < 0) {
+        voltage = -5.5;
+    }
+
+    if (voltage < 3 && voltage > 0) {
+        voltage = 3;
+    }
+    
     return run_motor(voltage, 1);
 }
 
@@ -68,22 +84,14 @@ int run_motor(double voltage, int axis)
     /* int old_val, new_val; */
     /* int old_range, new_range, old_max, old_min, new_max, new_min; */
 
-  int output;
-  
+    int output;
+
     if (voltage > MAX_MOTOR_OUTPUT) {
         voltage = MAX_MOTOR_OUTPUT;
     }
 
     if (voltage < -MAX_MOTOR_OUTPUT) {
         voltage = -MAX_MOTOR_OUTPUT;
-    }
-
-    if (voltage > -MIN_MOTOR_OUTPUT && voltage < 0) {
-      voltage = -MIN_MOTOR_OUTPUT;
-    }
-
-    if (voltage < MIN_MOTOR_OUTPUT && voltage > 0) {
-      voltage = MIN_MOTOR_OUTPUT;
     }
 
     output = (int) (157.5 * voltage + 2024);
