@@ -10,3 +10,6 @@ step(4*cref);
 %tau = 3;
 
 %cref = 1/(tau*s+1)
+
+C1 = 7.5;
+C2 = 7.5;
