@@ -42,17 +42,18 @@ void *task_x_axies_controller(void * argc)
   output = mq_open(Q_FROM_X, O_WRONLY);
   
 #ifdef RTAI
-  RTIME period = nano2count(1000); /* really fast! */
+  RTIME period = nano2count(1000 * 1000 * 10); /* really fast! */
   if(!(rt_x_axies_controller = rt_task_init_schmod(nam2num("rt_x_axies_controller"), 1, 0, 0, SCHED_FIFO, 0))){
     printf("Could not start rt_task\n");
     exit(42);
   }
   rt_task_make_periodic(rt_x_axies_controller, rt_get_time() + period, period);
   rt_make_hard_real_time();
-  printf("Started rt_x_axies_controller");
+  printf("Started rt_x_axies_controller\n");
 #endif /* RTIA */
   
   while (1) {
+    printf("[X]");
     if (mq_receive(input, input_buffer, BUFFER_SIZE, 0) > 0) {
       memcpy(&x_ref, input_buffer, sizeof(double));
       printf("[X] New x_ref = %.3f\n", x_ref);
@@ -108,14 +109,14 @@ void *task_y_axies_controller(void * argc)
   output = mq_open(Q_FROM_Y, O_WRONLY);
   
 #ifdef RTAI
-  RTIME period = nano2count(1000 * 1000); /* Not as fast as X */
+  RTIME period = nano2count(1000 * 1000 * 100); /* Not as fast as X */
   if(!(rt_y_axies_controller = rt_task_init_schmod(nam2num("rt_y_axies_controller"), 1, 0, 0, SCHED_FIFO, 0))){
     printf("Could not start rt_task\n");
     exit(42);
   }
   rt_task_make_periodic(rt_y_axies_controller, rt_get_time() + period, period);
   rt_make_hard_real_time();
-  printf("Started rt_y_axies_controller");
+  printf("Started rt_y_axies_controller\n");
 #endif /* RTAI */
   
   while (1) {
