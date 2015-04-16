@@ -74,7 +74,7 @@ int init(){
   else{
     printf("Starting timer \n");
     rt_set_oneshot_mode(); /* ONE SHOT! */
-    start_rt_timer();
+    start_rt_timer(0);
   }
 #endif /* RTAI */
 #ifndef TEST
