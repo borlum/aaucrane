@@ -42,7 +42,7 @@ void *task_x_axies_controller(void * argc)
   output = mq_open(Q_FROM_X, O_WRONLY);
   
 #ifdef RTAI
-  RTIME period = nano2count(1000 * 1000 * 500); /* really fast! */
+  RTIME period = nano2count(1000 * 1000 * 1); /* really fast! */
   if(!(rt_x_axies_controller = rt_task_init_schmod(nam2num("rt_x_axies_controller"), 1, 0, 0, SCHED_FIFO, 0))){
     printf("Could not start rt_task\n");
     exit(42);
@@ -80,7 +80,6 @@ void *task_x_axies_controller(void * argc)
 #ifdef RTAI
     rt_task_wait_period();
 #endif /* RTAI */
-    printf("[X] output: %f \n", out);
     out = position_controller_x(x_err);
     run_motorx(out);
 #else /* TEST */
@@ -109,7 +108,7 @@ void *task_y_axies_controller(void * argc)
   output = mq_open(Q_FROM_Y, O_WRONLY);
   
 #ifdef RTAI
-  RTIME period = nano2count(1000 * 1000 * 1000); /* Not as fast as X */
+  RTIME period = nano2count(1000 * 1000 * 10); /* Not as fast as X */
   if(!(rt_y_axies_controller = rt_task_init_schmod(nam2num("rt_y_axies_controller"), 2, 0, 0, SCHED_FIFO, 0))){
     printf("Could not start rt_task\n");
     exit(42);
