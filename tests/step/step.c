@@ -50,7 +50,6 @@ void* logger(void* args){
     /*GRAB TIMESTAMP*/
     t_sample = get_time_micros();
     printf("Time is: %ld\n", (t_sample - t_0));
-    printf("RT_GET_TIME: %lf", (double) rt_get_time_ns() / 1E9);
     fprintf(fp, "%ld,",  (t_sample - t_0));
     
     /*SAMPLE SENSORS*/
