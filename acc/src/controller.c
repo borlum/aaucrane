@@ -20,6 +20,10 @@
 #include "controller.h"
 #include "filter.h"
 
+#ifdef RTAI
+RT_TASK rt_x_axies_controller;
+RT_TASK rt_y_axies_controller;
+#endif
 
 void *task_x_axies_controller(void * argc)
 {
