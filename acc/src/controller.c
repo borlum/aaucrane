@@ -77,7 +77,6 @@ void *task_x_axies_controller(void * argc)
 #endif /* RTAI */
     out = position_controller_x(x_err);
     run_motorx(out);
-#ifdef /* RTAI */
 #else /* TEST */
     if(new_ref){
       new_ref = 0;
