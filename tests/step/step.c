@@ -76,11 +76,11 @@ int init(){
   if(rt_is_hard_timer_running() == 1){
     printf("Timer is running");
   }
-  else{
-    printf("Starting timer \n");
-    rt_set_oneshot_mode(); /* ONE SHOT! */
-    start_rt_timer(0);
-  }
+  //else{
+  //  printf("Starting timer \n");
+  //  rt_set_oneshot_mode(); /* ONE SHOT! */
+  //  start_rt_timer(0);
+  //}
 #endif /* RTAI */
 #ifndef TEST
   initialize_crane();  
