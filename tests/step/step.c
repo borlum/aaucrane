@@ -32,7 +32,10 @@ void* logger(void* args){
   unsigned long t_0, t_sample;
 
 #ifdef RTAI
-  rt_logger = rt_task_init(nam2num("logger"), 3, 128, 0);
+  if( (rt_logger = rt_task_init(nam2num("logger"), 3, 128, 0)) != 0){
+    printf("Could not start rt_task");
+    exit(42);
+  }
   rt_task_make_periodic(rt_logger, 0, period);
   rt_make_hard_real_time();
 #endif
