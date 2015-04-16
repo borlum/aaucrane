@@ -5,8 +5,8 @@ INC += -I/usr/local/lib
 INC += -I$(CRANELIB_PATH)
 INC += -I../../acc/include/
 
-RTAI_LIB += /usr/realtime/include/
-RTAI_LIB += /usr/realtime/bin/
+RTAI_LIB += -I/usr/realtime/include/
+RTAI_LIB += -I/usr/realtime/bin/
 
 GCC=gcc -std=gnu11
 LIBS=-lm -lpthread -lrt -lcomedi
@@ -20,7 +20,7 @@ all: $(TARGET)
 
 $(TARGET): $(TARGET).c
 	cd $(CRANELIB_PATH) && make
-	$(GCC) $(SOURCE) -DRTAI $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o $(TARGET)
+	$(GCC) $(SOURCE) -DRTAI $(RTAI_LIB) $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o $(TARGET)
 
 test: $(TARGET).c
 	$(GCC) $(SOURCE) -DTEST -I/usr/local/lib -Iinclude/ -lpthread -lrt -o $(TARGET)
