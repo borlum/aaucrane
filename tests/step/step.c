@@ -49,6 +49,7 @@ void* logger(void* args){
   while(1){
     /*GRAB TIMESTAMP*/
     t_sample = get_time_micros();
+    printf("Time is: %ld", (t_sample - t_0));
     fprintf(fp, "%ld,",  (t_sample - t_0));
     
     /*SAMPLE SENSORS*/
