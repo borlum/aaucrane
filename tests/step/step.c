@@ -28,10 +28,10 @@ static RT_TASK *rt_xcontroller, *rt_ycontroller, *rt_logger;
 
 void* logger(void* args){
   FILE* fp;
-  RTIME period = nano2count(1000 * 1000 * 10); /* We think 10 milli */
   unsigned long t_0, t_sample;
 
 #ifdef RTAI
+  RTIME period = nano2count(1000 * 1000 * 1000); /* We think 10 milli */
   if(!(rt_logger = rt_task_init(nam2num("logger"), 3, 128, 0))){
     printf("Could not start rt_task\n");
     exit(42);
@@ -49,7 +49,7 @@ void* logger(void* args){
   while(1){
     /*GRAB TIMESTAMP*/
     t_sample = get_time_micros();
-    printf("Time is: %ld", (t_sample - t_0));
+    printf("Time is: %ld\n", (t_sample - t_0));
     fprintf(fp, "%ld,",  (t_sample - t_0));
     
     /*SAMPLE SENSORS*/
