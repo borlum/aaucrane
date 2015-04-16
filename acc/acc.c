@@ -9,6 +9,10 @@
 #include <string.h>
 #include <stdio.h>
 
+#ifdef RTAI
+#include <rtai_lxrt.h>
+#endif
+
 #include <libcrane.h>
 #include "acc.h"
 #include "include/controller.h"
