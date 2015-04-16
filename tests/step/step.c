@@ -32,7 +32,7 @@ void* logger(void* args){
 
 #ifdef RTAI
   RTIME period = nano2count(1000 * 1000 * 1000); /* We think 10 milli */
-  if(!(rt_logger = rt_task_init(nam2num("logger"), 3, 128, 0))){
+  if(!(rt_logger = rt_task_init_schmod(nam2num("logger"), 1, 0, 0, SCHED_FIFO, 0))){
     printf("Could not start rt_task\n");
     exit(42);
   }
