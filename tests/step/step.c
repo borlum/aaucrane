@@ -33,7 +33,7 @@ void* logger(void* args){
 
 #ifdef RTAI
   if(!(rt_logger = rt_task_init(nam2num("logger"), 3, 128, 0))){
-    printf("Could not start rt_task");
+    printf("Could not start rt_task\n");
     exit(42);
   }
   rt_task_make_periodic(rt_logger, 0, period);
