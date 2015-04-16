@@ -23,7 +23,7 @@
 pthread_t t_xcontroller, t_ycontroller, t_logger;
 
 #ifdef RTAI
-static RT_TASK* rt_xcontroller, rt_ycontroller, rt_logger;
+static RT_TASK *rt_xcontroller, *rt_ycontroller, *rt_logger;
 #endif
 
 void* logger(void* args){
@@ -74,7 +74,7 @@ int init(){
   else{
     printf("Starting timer \n");
     rt_set_oneshot_mode(); /* ONE SHOT! */
-    rt_start_timer();
+    start_rt_timer();
   }
 #endif /* RTAI */
 #ifndef TEST
