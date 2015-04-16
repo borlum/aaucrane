@@ -32,7 +32,7 @@ void* logger(void* args){
   unsigned long t_0, t_sample;
 
 #ifdef RTAI
-  if( (rt_logger = rt_task_init(nam2num("logger"), 3, 128, 0)) != 0){
+  if(!(rt_logger = rt_task_init(nam2num("logger"), 3, 128, 0))){
     printf("Could not start rt_task");
     exit(42);
   }
