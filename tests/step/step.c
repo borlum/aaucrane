@@ -50,7 +50,7 @@ void* logger(void* args){
     /*GRAB TIMESTAMP*/
     t_sample = get_time_micros();
     printf("Time is: %ld\n", (t_sample - t_0));
-    printf("RT_GET_TIME: %ld", (double) rt_get_time_ns() / 1E9);
+    printf("RT_GET_TIME: %lf", (double) rt_get_time_ns() / 1E9);
     fprintf(fp, "%ld,",  (t_sample - t_0));
     
     /*SAMPLE SENSORS*/
@@ -76,11 +76,11 @@ int init(){
   if(rt_is_hard_timer_running() == 1){
     printf("Timer is running");
   }
-  //else{
-  //  printf("Starting timer \n");
-  //  rt_set_oneshot_mode(); /* ONE SHOT! */
-  //  start_rt_timer(0);
-  //}
+  else{
+    printf("Starting timer \n");
+    //rt_set_oneshot_mode(); /* ONE SHOT! */
+    start_rt_timer(0);
+  }
 #endif /* RTAI */
 #ifndef TEST
   initialize_crane();  
