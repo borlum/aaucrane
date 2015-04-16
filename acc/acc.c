@@ -189,6 +189,6 @@ int main(int argc,char* argv[]){
     mq_send(to_c, (char *) &cmd, sizeof(cmd), 0);
     update_status(source_row, source_col, STACK_FREE);
     mq_receive(from_c, NULL, BUFFER_SIZE, 0);
-    update_status(dest_row, dest_col, OCCUPIED);
+    update_status(dest_row, dest_col, STACK_OCCUPIED);
   } 
 }
