@@ -1,11 +1,13 @@
 #include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
 
 #include <pthread.h>
 #include <mqueue.h>
 #include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
+
+#include <rtai_lxrt.h>
 
 #include <comedilib.h>
 #include <libcrane.h>
