@@ -49,6 +49,7 @@ void *task_x_axies_controller(void * argc)
   }
   rt_task_make_periodic(rt_x_axies_controller, rt_get_time() + period, period);
   rt_make_hard_real_time();
+  printf("Started rt_x_axies_controller");
 #endif /* RTIA */
   
   while (1) {
@@ -114,6 +115,7 @@ void *task_y_axies_controller(void * argc)
   }
   rt_task_make_periodic(rt_y_axies_controller, rt_get_time() + period, period);
   rt_make_hard_real_time();
+  printf("Started rt_y_axies_controller");
 #endif /* RTAI */
   
   while (1) {
