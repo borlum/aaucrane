@@ -92,7 +92,7 @@ void *controller(void * args)
 }
 
 int init(){
-#ifdef TEST
+#ifndef TEST
   initialize_crane();  
   run_motorx(0);
   run_motory(0);
