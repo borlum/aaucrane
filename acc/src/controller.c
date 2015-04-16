@@ -53,7 +53,6 @@ void *task_x_axies_controller(void * argc)
 #endif /* RTIA */
   
   while (1) {
-    printf("[X]");
     if (mq_receive(input, input_buffer, BUFFER_SIZE, 0) > 0) {
       memcpy(&x_ref, input_buffer, sizeof(double));
       printf("[X] New x_ref = %.3f\n", x_ref);
@@ -81,6 +80,7 @@ void *task_x_axies_controller(void * argc)
 #ifdef RTAI
     rt_task_wait_period();
 #endif /* RTAI */
+    printf("[X] output: %f", out);
     out = position_controller_x(x_err);
     run_motorx(out);
 #else /* TEST */
