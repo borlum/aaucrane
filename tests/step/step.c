@@ -36,7 +36,7 @@ void* logger(void* args){
     printf("Could not start rt_task\n");
     exit(42);
   }
-  rt_task_make_periodic(rt_logger, 0, period);
+  rt_task_make_periodic(rt_logger, rt_get_time() + period, period);
   rt_make_hard_real_time();
 #endif
   
