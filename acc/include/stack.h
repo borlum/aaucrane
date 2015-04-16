@@ -15,7 +15,7 @@
 
 
 typedef struct stack_loc_s stack_loc_t;
-typedef enum {FREE = 0, OCCUPIED = 1} loc_status_t;
+typedef enum {STACK_FREE = 0, STACK_OCCUPIED = 1} loc_status_t;
 
 struct stack_loc_s{
   loc_status_t status;

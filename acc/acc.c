@@ -135,7 +135,7 @@ int init(){
 
 void place_containers(){
   for(int i = 1; i <=3 ; i++)
-    update_status(i, 0, OCCUPIED);
+    update_status(i, 0, STACK_OCCUPIED);
 }
 
 int main(int argc,char* argv[]){  
@@ -160,15 +160,15 @@ int main(int argc,char* argv[]){
   while(1) {
     printf ("Enter a crane command <row,col row,col>:\n");
     scanf("%d,%d %d,%d", &source_row, &source_col, &dest_row, &dest_col);
-    if(get_status(source_row, source_col) == FREE){
+    if(get_status(source_row, source_col) == STACK_FREE){
       printf("No container found at location %d,%d\n", source_row, source_col);
       continue;
     }
-    if(get_status(dest_row, dest_col) == OCCUPIED){
+    if(get_status(dest_row, dest_col) == STACK_OCCUPIED){
       printf("Destination is occupied (%d,%d)\n", dest_row, dest_col);
       continue;
     }
-    if(get_status(source_row, source_col + 1) == OCCUPIED){
+    if(get_status(source_row, source_col + 1) == STACK_OCCUPIED){
       printf("Sorry, a container is ontop of source (%d,%d)\n", source_row, source_col);
       continue;
     }
@@ -187,7 +187,7 @@ int main(int argc,char* argv[]){
     cmd.dest_point = dest.loc;
     
     mq_send(to_c, (char *) &cmd, sizeof(cmd), 0);
-    update_status(source_row, source_col, FREE);
+    update_status(source_row, source_col, STACK_FREE);
     mq_receive(from_c, NULL, BUFFER_SIZE, 0);
     update_status(dest_row, dest_col, OCCUPIED);
   } 
