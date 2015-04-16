@@ -80,7 +80,7 @@ void *task_x_axies_controller(void * argc)
 #ifdef RTAI
     rt_task_wait_period();
 #endif /* RTAI */
-    printf("[X] output: %f", out);
+    printf("[X] output: %f \n", out);
     out = position_controller_x(x_err);
     run_motorx(out);
 #else /* TEST */
