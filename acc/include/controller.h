@@ -7,7 +7,12 @@
 #define C2 26.3
 #define C3 80
 
-void* rt_x_axies_controller(void *);
-void* rt_y_axies_controller(void *);
+#ifdef RTAI
+extern RT_TASK *rt_x_axies_controller;
+extern RT_TASK *rt_y_axies_controller;
+#endif 
+
+void* task_x_axies_controller(void *);
+void* task_y_axies_controller(void *);
 
 #endif

@@ -88,9 +88,24 @@ void *controller(void * args)
 }
 
 int init(){
+#ifdef TEST
   initialize_crane();  
   run_motorx(0);
   run_motory(0);
+#endif /* TEST */
+#ifdef RTAI
+  if(rt_is_hard_timer_running() == 1){
+    printf("Timer is running");
+  }
+  else{
+    printf("Starting timer \n");
+    //rt_set_oneshot_mode(); /* ONE SHOT! */
+    rt_set_periodic_mode();
+    start_rt_timer(0);
+  }
+#endif /* RTAI */
+
+  
   struct mq_attr attr;  
   attr.mq_flags = 0;  
   attr.mq_maxmsg = 10;  
@@ -108,8 +123,8 @@ int init(){
       return -1;
   }
   
-  pthread_create(&thread_xcontroller, NULL, rt_x_axies_controller, NULL);
-  pthread_create(&thread_ycontroller, NULL, rt_y_axies_controller, NULL);
+  pthread_create(&thread_xcontroller, NULL, task_x_axies_controller, NULL);
+  pthread_create(&thread_ycontroller, NULL, tak_y_axies_controller, NULL);
   pthread_create(&thread_controller, NULL, controller, NULL);
   return 0;
 }
