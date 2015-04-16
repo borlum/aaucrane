@@ -128,7 +128,7 @@ int init(){
   }
   
   pthread_create(&thread_xcontroller, NULL, task_x_axies_controller, NULL);
-  pthread_create(&thread_ycontroller, NULL, tak_y_axies_controller, NULL);
+  pthread_create(&thread_ycontroller, NULL, task_y_axies_controller, NULL);
   pthread_create(&thread_controller, NULL, controller, NULL);
   return 0;
 }
