@@ -20,10 +20,20 @@
 
 pthread_t t_xcontroller, t_ycontroller, t_logger;
 
+#ifdef RTAI
+static RT_TASK* rt_xcontroller, rt_ycontroller, rt_logger;
+#endif
+
 void* logger(void* args){
   FILE* fp;
-
+  RTIME period = nano2count(1000 * 1000 * 10); /* We think 10 milli */
   unsigned long t_0, t_sample;
+
+#ifdef RTAI
+  rt_logger = rt_task_init(nam2num("logger"), 3, 128, 0);
+  rt_task_make_periodic(rt_logger, 0, period);
+  rt_make_hard_real_time();
+#endif
   
   char tmp[160];
   sprintf(tmp, "%s/%d.csv", DATA_PATH, (int)time(NULL));
@@ -46,12 +56,25 @@ void* logger(void* args){
     fprintf(fp, "%f,", get_motorx_voltage());
     fprintf(fp, "%f", get_motory_voltage());
     fprintf(fp, "\n");
-    
-    usleep(1000 * 1); /* Log every 1 ms */
+#ifdef RTAI
+    rt_task_wait_period();
+#else
+    usleep(1000);
+#endif
   }
 }
 
 int init(){
+#ifdef RTAI
+  if(rt_is_hard_timer_running() == 1){
+    printf("Timer is running");
+  }
+  else{
+    printf("Starting timer \n");
+    rt_set_oneshot_mode(); /* ONE SHOT! */
+    rt_start_timer();
+  }
+#endif /* RTAI */
 #ifndef TEST
   initialize_crane();  
   run_motorx(0);
