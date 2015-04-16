@@ -9,7 +9,9 @@
 #include <fcntl.h>
 #include <mqueue.h>
 
+#ifdef RTAI
 #include <rtai_lxrt.h>
+#endif
 
 #ifndef TEST
 #include <libcrane.h>

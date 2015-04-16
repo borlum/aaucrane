@@ -10,18 +10,22 @@ INC += -Iinclude/
 LIBS      = -lm -lpthread -lrt -lcomedi
 LIBS_TEST = -lm -lpthread -lrt
 
+RTAI_LIB += -I/usr/realtime/include/
+RTAI_LIB += -I/usr/realtime/bin/
+
 SOURCE += $(TARGET).c
 SOURCE += src/controller.c
 SOURCE += src/filter.c
 SOURCE += src/stack.c
 
 TESTING = -D TESTING
+RTAI = -DRTAI $(RTAI_LIB)
 
 all: $(TARGET)
 
 $(TARGET): $(TARGET).c
 	cd $(CRANELIB_PATH) && make
-	$(GCC) $(SOURCE) $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o $(TARGET)
+	$(GCC) $(SOURCE) $(RTAI) $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o $(TARGET)
 
 test: $(TARGET).c
 	cd $(CRANELIB_PATH) && make testing
