@@ -3,15 +3,18 @@
 double x[3] = { 0 };
 double y[3] = { 0 };
 int n;
+int x_old;
 
 double angle_controller(double error){
-  double k_p = 0;
+  double k_p = 1;
   return error * k_p;
 }
 
 double position_controller_x(double error){
   double k_p = 100;
-  return error * k_p;
+  double k_i = 0.5;
+  x_old += error;
+  return error * k_p + x_old*ki;
 }
 
 double position_controller_y(double error){
