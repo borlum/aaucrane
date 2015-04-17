@@ -19,7 +19,7 @@ double position_controller_y(double error){
   return error * k_p;
 }
 
-void velocity_controller_x(double error){
+double velocity_controller_x(double error){
   double k_p = 100;
   return error * k_p;
 }
