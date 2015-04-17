@@ -5,7 +5,7 @@ double y[3] = { 0 };
 int n;
 
 double angle_controller(double error){
-  double k_p = 0.5;
+  double k_p = 0;
   return error * k_p;
 }
 
