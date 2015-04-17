@@ -9,6 +9,10 @@
 #include <string.h>
 #include <stdio.h>
 
+#ifdef RTAI
+#include <rtai_lxrt.h>
+#endif
+
 #include <libcrane.h>
 #include "acc.h"
 #include "include/controller.h"
@@ -88,9 +92,24 @@ void *controller(void * args)
 }
 
 int init(){
+#ifndef TEST
   initialize_crane();  
   run_motorx(0);
   run_motory(0);
+#endif /* TEST */
+#ifdef RTAI
+  if(rt_is_hard_timer_running() == 1){
+    printf("Timer is running");
+  }
+  else{
+    printf("Starting timer \n");
+    //rt_set_oneshot_mode(); /* ONE SHOT! */
+    rt_set_periodic_mode();
+    start_rt_timer(0);
+  }
+#endif /* RTAI */
+
+  
   struct mq_attr attr;  
   attr.mq_flags = 0;  
   attr.mq_maxmsg = 10;  
@@ -108,15 +127,15 @@ int init(){
       return -1;
   }
   
-  pthread_create(&thread_xcontroller, NULL, rt_x_axies_controller, NULL);
-  pthread_create(&thread_ycontroller, NULL, rt_y_axies_controller, NULL);
+  pthread_create(&thread_xcontroller, NULL, task_x_axies_controller, NULL);
+  pthread_create(&thread_ycontroller, NULL, task_y_axies_controller, NULL);
   pthread_create(&thread_controller, NULL, controller, NULL);
   return 0;
 }
 
 void place_containers(){
   for(int i = 1; i <=3 ; i++)
-    update_status(i, 0, OCCUPIED);
+    update_status(i, 0, STACK_OCCUPIED);
 }
 
 int main(int argc,char* argv[]){  
@@ -141,15 +160,15 @@ int main(int argc,char* argv[]){
   while(1) {
     printf ("Enter a crane command <row,col row,col>:\n");
     scanf("%d,%d %d,%d", &source_row, &source_col, &dest_row, &dest_col);
-    if(get_status(source_row, source_col) == FREE){
+    if(get_status(source_row, source_col) == STACK_FREE){
       printf("No container found at location %d,%d\n", source_row, source_col);
       continue;
     }
-    if(get_status(dest_row, dest_col) == OCCUPIED){
+    if(get_status(dest_row, dest_col) == STACK_OCCUPIED){
       printf("Destination is occupied (%d,%d)\n", dest_row, dest_col);
       continue;
     }
-    if(get_status(source_row, source_col + 1) == OCCUPIED){
+    if(get_status(source_row, source_col + 1) == STACK_OCCUPIED){
       printf("Sorry, a container is ontop of source (%d,%d)\n", source_row, source_col);
       continue;
     }
@@ -168,8 +187,8 @@ int main(int argc,char* argv[]){
     cmd.dest_point = dest.loc;
     
     mq_send(to_c, (char *) &cmd, sizeof(cmd), 0);
-    update_status(source_row, source_col, FREE);
+    update_status(source_row, source_col, STACK_FREE);
     mq_receive(from_c, NULL, BUFFER_SIZE, 0);
-    update_status(dest_row, dest_col, OCCUPIED);
+    update_status(dest_row, dest_col, STACK_OCCUPIED);
   } 
 }

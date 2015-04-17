@@ -9,7 +9,7 @@ void init_stack(){
       double y = Y_OFF_SET - (j * CONTAINER_HEIGHT);
       stack[i][j].loc.x = x;
       stack[i][j].loc.y = y;
-      stack[i][j].status = FREE;
+      stack[i][j].status = STACK_FREE;
     }
   }
 }

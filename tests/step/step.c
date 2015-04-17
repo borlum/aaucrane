@@ -1,11 +1,13 @@
 #include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
 
 #include <pthread.h>
 #include <mqueue.h>
 #include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
+
+#include <rtai_lxrt.h>
 
 #include <comedilib.h>
 #include <libcrane.h>
@@ -20,10 +22,23 @@
 
 pthread_t t_xcontroller, t_ycontroller, t_logger;
 
+#ifdef RTAI
+static RT_TASK *rt_xcontroller, *rt_ycontroller, *rt_logger;
+#endif
+
 void* logger(void* args){
   FILE* fp;
-
   unsigned long t_0, t_sample;
+
+#ifdef RTAI
+  RTIME period = nano2count(1000 * 1000 * 1); /* We think 10 milli */
+  if(!(rt_logger = rt_task_init_schmod(nam2num("logger"), 1, 0, 0, SCHED_FIFO, 0))){
+    printf("Could not start rt_task\n");
+    exit(42);
+  }
+  rt_task_make_periodic(rt_logger, rt_get_time() + period, period);
+  rt_make_hard_real_time();
+#endif
   
   char tmp[160];
   sprintf(tmp, "%s/%d.csv", DATA_PATH, (int)time(NULL));
@@ -46,12 +61,26 @@ void* logger(void* args){
     fprintf(fp, "%f,", get_motorx_voltage());
     fprintf(fp, "%f", get_motory_voltage());
     fprintf(fp, "\n");
-    
-    usleep(1000 * 1); /* Log every 1 ms */
+#ifdef RTAI
+    rt_task_wait_period();
+#else
+    usleep(1000);
+#endif
   }
 }
 
 int init(){
+#ifdef RTAI
+  if(rt_is_hard_timer_running() == 1){
+    printf("Timer is running");
+  }
+  else{
+    printf("Starting timer \n");
+    //rt_set_oneshot_mode(); /* ONE SHOT! */
+    rt_set_periodic_mode();
+    start_rt_timer(0);
+  }
+#endif /* RTAI */
 #ifndef TEST
   initialize_crane();  
   run_motorx(0);
