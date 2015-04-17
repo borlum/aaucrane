@@ -6,7 +6,7 @@ int n;
 int x_old;
 
 double angle_controller(double error){
-  double k_p = 1;
+  double k_p = 0.5;
   return error * k_p;
 }
 
