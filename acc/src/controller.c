@@ -32,7 +32,7 @@ void *task_x_axies_controller(void * argc)
 
   double x_ref = 0, x_pos = 0, x_err = 0;
   double angle_ref = 0, angle_pos = 0, angle_err = 0;
-  double velocity_err = ;
+  double velocity_err = 0;
 
   double out = 0;
 
@@ -82,7 +82,7 @@ void *task_x_axies_controller(void * argc)
 #endif /* RTAI */
     out = position_controller_x(x_err);
     velocity_err = out - get_motorx_velocity();
-    out = velocity_controller(velocity_err);
+    out = velocity_controller_x(velocity_err);
     run_motorx(out);
 #else /* TEST */
     if(new_ref){
