@@ -14,7 +14,7 @@ double position_controller_x(double error){
   double k_p = 100;
   double k_i = 0.5;
   x_old += error;
-  return error * k_p + x_old*ki;
+  return error * k_p + x_old*k_i;
 }
 
 double position_controller_y(double error){
