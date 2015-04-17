@@ -5,7 +5,7 @@ double y[3] = { 0 };
 int n;
 
 double angle_controller(double error){
-  double k_p = 5;
+  double k_p = 1;
   return error * k_p;
 }
 
@@ -20,7 +20,7 @@ double position_controller_y(double error){
 }
 
 double velocity_controller_x(double error){
-  double k_p = 50;
+  double k_p = 1000;
   return error * k_p;
 }
 
