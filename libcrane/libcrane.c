@@ -200,7 +200,7 @@ double get_ypos_raw()
  */
 double get_motorx_velocity()
 {
-    return (get_motorx_velocity_raw() * 34.18);
+    return (get_motorx_velocity_raw() * 34.18 );
 }
 
 /**

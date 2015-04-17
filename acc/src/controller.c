@@ -71,6 +71,7 @@ void *task_x_axies_controller(void * argc)
     printf("[X_err] out: %lf\n", x_err);
     out = position_controller_x(x_err);
     velocity_err = out - get_motorx_velocity();
+    printf("[velocity_ref] out: %lf\n", out);
     out = velocity_controller_x(velocity_err);
     printf("[velocity_err] out: %lf\n", out);
         if ( (fabs(x_err) < X_ERR_BAND)) {
