@@ -129,10 +129,10 @@ int run_motor(double voltage, int axis)
  * @return Current angle in radians
  */
 double get_angle()
-{   
-    double ang = 0.7367*get_angle_raw() - 1.3211;
+{
+    double ang = 0.7367*get_angle_raw() - 1.3835;
 
-    if (fabs(ang) < 0.02)
+    if (fabs(ang) < 0.025)
         return 0;
 
     return ang;
@@ -193,6 +193,16 @@ double get_ypos_raw()
 {
     return get_sensor_raw(CHAN_YPOS_IN);
 }
+
+/**
+ * Samples current trolley x velocity
+ * @return Current velocity in m/s
+ */
+double get_x_velocity()
+{
+    return (get_motorx_velocity()) * .0039;
+}
+
 
 /**
  * Samples current motor(x) velocity (shaft)
