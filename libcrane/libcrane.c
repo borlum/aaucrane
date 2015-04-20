@@ -8,8 +8,7 @@ int *NI_card;
 
 static const double MAX_MOTOR_OUTPUT = 12.5;
 static const double MIN_MOTOR_OUTPUT = 0;
-static const double epsilon = 0.5;
-static double ZERO_ANGLE_RAD;
+static const double epsilon = 0;
 
 /**
  * Open comedi driver for interfacing w. crane
@@ -31,10 +30,6 @@ int initialize_crane()
         return 0;
     }
 
-    // Find zero degree angle voltage
-    ZERO_ANGLE_RAD = 0.7367*get_angle_raw() - 1.3211;
-//    printf("%lf\n", get_angle());
-
     return 1;
 }
 
@@ -45,12 +40,12 @@ int initialize_crane()
  */
 int run_motorx(double voltage)
 {
-    if (voltage > -4 && voltage < 0 - epsilon) {
-        voltage = -4;
+    if (voltage > -4.5 && voltage < 0 - epsilon) {
+        voltage = -4.5;
     }
 
-    if (voltage < 4 && voltage > 0 + epsilon) {
-        voltage = 4;
+    if (voltage < 4.5 && voltage > 0 + epsilon) {
+        voltage = 4.5;
     }
 
     return run_motor(-voltage, 0); /* Change X motor direction */
@@ -134,8 +129,13 @@ int run_motor(double voltage, int axis)
  * @return Current angle in radians
  */
 double get_angle()
-{
-    return (0.7367*get_angle_raw() - 1.3211) - ZERO_ANGLE_RAD;
+{   
+    double ang = 0.7367*get_angle_raw() - 1.3211;
+
+    if (fabs(ang) < 0.02)
+        return 0;
+
+    return ang;
 }
 
 /**
