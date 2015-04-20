@@ -30,11 +30,11 @@ void *task_x_axies_controller(void * argc)
   int hit_count = 0;
   int new_ref = 0;
 
-  double x_ref = 0, x_pos = 0, x_err = 0;
+  double x_ref = 0, x_pos = 0, x_err = 0, x_err_int = 0;
   double angle_ref = 0, angle_pos = 0, angle_err = 0;
   double velocity_err = 0;
   double x_velocity = 0;
-
+  int pI = .001;
   double out = 0;
 
   mqd_t input, output;
@@ -69,7 +69,7 @@ void *task_x_axies_controller(void * argc)
     angle_pos = get_angle();
     angle_err = angle_ref - angle_pos;
     printf("[angle_err] out: %lf\n", angle_err);
-    x_err = x_ref - x_pos - angle_controller(angle_err);
+    x_err = x_ref - x_pos - angle_controller(angle_err) + pI * x_err_int;
     printf("[X_err] out: %lf\n", x_err);
     out = position_controller_x(x_err);
     velocity_err = out - get_motorx_velocity();
@@ -77,6 +77,7 @@ void *task_x_axies_controller(void * argc)
     out = velocity_controller_x(velocity_err);
     printf("[velocity_err] out: %lf\n", velocity_err);
     printf("[motorxVoltage] : %.3lf\n", get_motorx_voltage());
+    x_err_int += x_err;
 /*    x_err = x_ref - x_pos;
     velocity_err = x_err - x_velocity + 25 * angle_pos;
     out = 7.5 * velocity_err;
