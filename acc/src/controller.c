@@ -70,9 +70,9 @@ void *task_x_axies_controller(void * argc)
     x_pos = get_xpos();
     x_velocity = get_x_velocity();
     angle_pos = get_angle();
-    //velocity = get_motorx_velocity();
+    velocity = get_motorx_velocity();
 
-    velocity = (x_pos - old_x_pos) * 1/0.0039 * 1/1000;
+    //velocity = (x_pos - old_x_pos) * 1/0.0039 * 1/1000;
 
     angle_err = angle_ref - angle_pos;
     printf("[angle_err] out: %lf\n", angle_err);
