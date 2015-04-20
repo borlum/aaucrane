@@ -79,7 +79,7 @@ void *task_x_axies_controller(void * argc)
     x_err = x_ref - x_pos - angle_controller(angle_err);
     printf("[X_err] out: %lf\n", x_err);
     out = position_controller_x(x_err) - pI * x_err_int;
-    velocity_err = out - get_motorx_velocity();
+    velocity_err = out - velocity;//get_motorx_velocity();
     printf("[velocity] out: %lf\n", velocity);
     out = velocity_controller_x(velocity_err);
     //printf("[velocity_err] out: %lf\n", velocity_err);
