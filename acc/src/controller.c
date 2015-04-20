@@ -73,21 +73,21 @@ void *task_x_axies_controller(void * argc)
     printf("[angle_err] out: %lf\n", angle_err);
     x_err = x_pos - angle_controller(angle_err);
     printf("[X_err] out: %lf\n", x_err);
-    out = position_controller_x(x_err) - pI * x_err_int;
-    velocity_err = out - get_motorx_velocity();
+    out = position_controller_x(x_err); // - pI * x_err_int;
+    velocity_err = out - get_motorx_velocity() + get_ctrlpad_x();
     printf("[velocity_ref] out: %lf\n", out);
     out = velocity_controller_x(velocity_err);
     printf("[velocity_err] out: %lf\n", velocity_err);
     printf("[output] : %.3lf\n", out);
     x_err_int += x_err;
     printf("[integrator value]: %lf\n\n", x_err_int);
-    x_err = x_ref - x_pos;
+/*    x_err = x_ref - x_pos;
     velocity_err = x_err - x_velocity + 25 * angle_pos;
     out = 7.5 * velocity_err;
     printf("[Angle]: %.3lf\n", angle_pos);
     printf("[Xerr]: %.3lf\n", x_err);
     printf("[Xvelo_err]: %.3lf\n", velocity_err);
-    printf("[Angle_voltage]: %.3lf\n\n", get_angle_raw());
+    printf("[Angle_voltage]: %.3lf\n\n", get_angle_raw());*/
 
         if ( (fabs(x_err) < X_ERR_BAND)) {
       /*Settled*/
