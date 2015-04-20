@@ -8,7 +8,7 @@ int *NI_card;
 
 static const double MAX_MOTOR_OUTPUT = 12.5;
 static const double MIN_MOTOR_OUTPUT = 0;
-static const double epsilon = 0.5;
+static const double epsilon = 0;
 static double ZERO_ANGLE_RAD;
 
 /**
