@@ -195,6 +195,16 @@ double get_ypos_raw()
 }
 
 /**
+ * Samples current trolley x velocity
+ * @return Current velocity in m/s
+ */
+double get_x_velocity()
+{
+    return (get_motorx_velocity()) * .0039;
+}
+
+
+/**
  * Samples current motor(x) velocity (shaft)
  * @return Current velocity in rad/s
  */
