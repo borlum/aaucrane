@@ -88,7 +88,7 @@ void *task_x_axies_controller(void * argc)
         if ( (fabs(x_err) < X_ERR_BAND)) {
       /*Settled*/
       hit_count++;
-      if(hit_count >= 1000 && new_ref){
+      if(hit_count >= 10000 && new_ref){
         run_motorx(0);
         new_ref = 0;
         hit_count = 0;
