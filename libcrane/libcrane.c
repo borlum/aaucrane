@@ -219,7 +219,7 @@ double get_motorx_velocity()
  */
 double get_motorx_velocity_raw()
 {
-    return get_sensor_raw(CHAN_XVEL_IN);
+    return get_sensor_raw(CHAN_XVEL_IN)-.115;
 }
 
 /**
