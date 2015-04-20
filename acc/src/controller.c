@@ -34,7 +34,7 @@ void *task_x_axies_controller(void * argc)
   double angle_ref = 0, angle_pos = 0, angle_err = 0;
   double velocity_err = 0, velocity = 0;
   double x_velocity = 0;
-  int pI = .2;
+  int pI = .5;
   double out = 0;
 
 
@@ -90,10 +90,10 @@ void *task_x_axies_controller(void * argc)
       hit_count++;
       if(hit_count >= 1000 && new_ref){
         run_motorx(0);
-    /*    new_ref = 0;
+        new_ref = 0;
         hit_count = 0;
         int msg = 1;
-        mq_send(output, (char *)&msg, sizeof(int), 0);*/
+        mq_send(output, (char *)&msg, sizeof(int), 0);
       }
     } else {
       run_motorx(out);
