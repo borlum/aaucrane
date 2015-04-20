@@ -2,7 +2,7 @@
 
 
 double angle_controller(double error){
-  double k_p = 5;
+  double k_p = 2.5;
   return error * k_p;
 }
 
