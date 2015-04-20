@@ -71,8 +71,8 @@ void *task_x_axies_controller(void * argc)
     velocity = (x_pos - get_xpos()) * 100;
 
     out = x_ref - x_pos;
-    out = (out+angle_pos * 7.5 - velocity);
-    //out = 5 * out;
+    out = (out+angle_pos * 5 - velocity);
+    out = 5 * out;
 
     printf("[Angle]: %.3lf\n", angle_pos);
     printf("[Xpos]: %.3lf\n", x_pos);
