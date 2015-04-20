@@ -72,7 +72,7 @@ void *task_x_axies_controller(void * argc)
 
     out = x_ref - x_pos;
     out = (out+angle_pos * 7.5 - velocity);
-    out = 7.5 * out;
+    //out = 5 * out;
 
     printf("[Angle]: %.3lf\n", angle_pos);
     printf("[Xpos]: %.3lf\n", x_pos);
