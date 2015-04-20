@@ -44,8 +44,8 @@ int run_motorx(double voltage)
         voltage = -4.5;
     }
 
-    if (voltage < 4.5 && voltage > 0 + epsilon) {
-        voltage = 4.5;
+    if (voltage < 5 && voltage > 0 + epsilon) {
+        voltage = 5;
     }
 
     return run_motor(-voltage, 0); /* Change X motor direction */
