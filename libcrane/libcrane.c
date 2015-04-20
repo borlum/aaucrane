@@ -134,8 +134,13 @@ int run_motor(double voltage, int axis)
  * @return Current angle in radians
  */
 double get_angle()
-{
-    return (0.7367*get_angle_raw() - 1.3211) - ZERO_ANGLE_RAD;
+{   
+    double ang = (0.7367*get_angle_raw() - 1.3211) - ZERO_ANGLE_RAD;
+
+    if (fabs(ang) < 0.01)
+        return 0;
+
+    return ang;
 }
 
 /**
