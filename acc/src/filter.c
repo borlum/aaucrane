@@ -17,6 +17,6 @@ double position_controller_y(double error){
 }
 
 double velocity_controller_x(double error){
-  double k_p = 0.1;
+  double k_p = 1;
   return k_p * error;
 }
