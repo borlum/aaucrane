@@ -69,6 +69,8 @@ void *task_x_axies_controller(void * argc)
     angle_pos = get_angle();
     velocity = get_motorx_velocity();
 
+    if(velocity < 5) velocity = 0;
+
     out = (0-angle_pos) * 15;
     out = (x_ref - x_pos - out) * 125;
     out = out - velocity;
