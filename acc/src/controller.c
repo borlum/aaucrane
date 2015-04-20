@@ -34,7 +34,7 @@ void *task_x_axies_controller(void * argc)
   double angle_ref = 0, angle_pos = 0, angle_err = 0;
   double velocity_err = 0, velocity = 0;
   double x_velocity = 0;
-  double pI = .5;
+  double pI = .1;
   double out = 0;
 
 
