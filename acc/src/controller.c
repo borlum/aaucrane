@@ -34,7 +34,7 @@ void *task_x_axies_controller(void * argc)
   double angle_ref = 0, angle_pos = 0, angle_err = 0;
   double velocity_err = 0;
   double x_velocity = 0;
-  int pI = .1;
+  int pI = .2;
   double out = 0;
 
   mqd_t input, output;
