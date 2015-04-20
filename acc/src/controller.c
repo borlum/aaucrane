@@ -76,6 +76,7 @@ void *task_x_axies_controller(void * argc)
     printf("[velocity_ref] out: %lf\n", out);
     out = velocity_controller_x(velocity_err);
     printf("[velocity_err] out: %lf\n", out);
+    printf("[motorxVoltage] : %.3lf\n", get_motorx_voltage());
 /*    x_err = x_ref - x_pos;
     velocity_err = x_err - x_velocity + 25 * angle_pos;
     out = 7.5 * velocity_err;
