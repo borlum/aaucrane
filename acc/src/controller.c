@@ -80,9 +80,9 @@ void *task_x_axies_controller(void * argc)
     printf("[X_err] out: %lf\n", x_err);
     out = position_controller_x(x_err) - pI * x_err_int;
     velocity_err = out - get_motorx_velocity();
-    printf("[velocity_ref] out: %lf\n", out);
+    printf("[velocity] out: %lf\n", velocity);
     out = velocity_controller_x(velocity_err);
-    printf("[velocity_err] out: %lf\n", velocity_err);
+    //printf("[velocity_err] out: %lf\n", velocity_err);
     printf("[output] : %.3lf\n", out);
     x_err_int += x_err;
     printf("[integrator value]: %lf\n\n", x_err_int);
