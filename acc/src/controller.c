@@ -76,7 +76,7 @@ void *task_x_axies_controller(void * argc)
     printf("[velocity_ref] out: %lf\n", out);
     out = velocity_controller_x(velocity_err);
     printf("[velocity_err] out: %lf\n", out);*/
-    x_err = x_ref-xpos;
+    x_err = x_ref-x_pos;
     velocity_err = x_err + x_velocity - 25 * angle_pos;
     out = 7.5 * velocity_err;
     printf("[Angle]: %.3lf\n", angle_pos);
