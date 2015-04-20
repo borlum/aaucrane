@@ -81,7 +81,7 @@ void *task_x_axies_controller(void * argc)
     out = 7.5 * velocity_err;
     printf("[Angle]: %.3lf\n", angle_pos);
     printf("[Xpos]: %.3lf\n", x_pos);
-    printf("[Xvelo]: %.3lf\n\n", x_velocity);
+    printf("[Xvelo_err]: %.3lf\n\n", velocity_err);
         if ( (fabs(x_err) < X_ERR_BAND)) {
       /*Settled*/
       hit_count++;
