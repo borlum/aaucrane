@@ -95,17 +95,19 @@ void *task_x_axies_controller(void * argc)
     printf("[Xvelo_err]: %.3lf\n", velocity_err);
     printf("[Angle_voltage]: %.3lf\n\n", get_angle_raw());
 */
-      /*  if ( (fabs(x_err) < X_ERR_BAND)) {
+        if ( (fabs(x_err) < X_ERR_BAND)) {
       /*Settled*/
-      /*hit_count++;
-      if(hit_count >= 10000 && new_ref){
-        new_ref = 0;
+      hit_count++;
+      if(hit_count >= 1000 && new_ref){
+        run_motorx(0);
+    /*    new_ref = 0;
         hit_count = 0;
         int msg = 1;
-        mq_send(output, (char *)&msg, sizeof(int), 0);
+        mq_send(output, (char *)&msg, sizeof(int), 0);*/
       }
-    }*/
-    run_motorx(out);
+    } else {
+      run_motorx(out);
+    }
 #ifdef RTAI
     rt_task_wait_period();
 #endif /* RTAI */
