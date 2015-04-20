@@ -36,7 +36,6 @@ void *task_x_axies_controller(void * argc)
   double x_velocity = 0;
   int pI = .2;
   double out = 0;
-  double old_x_pos;
 
 
   mqd_t input, output;
@@ -66,7 +65,6 @@ void *task_x_axies_controller(void * argc)
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
 #ifndef TEST
-    old_x_pos = x_pos;
     x_pos = get_xpos();
     x_velocity = get_x_velocity();
     angle_pos = get_angle();
@@ -78,7 +76,8 @@ void *task_x_axies_controller(void * argc)
     printf("[angle_err] out: %lf\n", angle_err);
     x_err = x_ref - x_pos - angle_controller(angle_err);
     printf("[X_err] out: %lf\n", x_err);
-    out = position_controller_x(x_err);// - pI * x_err_int;
+    printf("[X_err] out: %lf\n", x_err);
+    out = position_controller_x(x_err)- pI * x_err_int;
     velocity_err = out - velocity;//get_motorx_velocity();
     printf("[velocity] out: %lf\n", velocity);
     out = velocity_controller_x(velocity_err);
@@ -87,14 +86,7 @@ void *task_x_axies_controller(void * argc)
     printf("[xvelo_rw]: %.3lf\n", get_motorx_velocity_raw());
     x_err_int += x_err;
     printf("[integrator value]: %lf\n\n", x_err_int);
-/*    x_err = x_ref - x_pos;
-    velocity_err = x_err - x_velocity + 25 * angle_pos;
-    out = 7.5 * velocity_err;
-    printf("[Angle]: %.3lf\n", angle_pos);
-    printf("[Xerr]: %.3lf\n", x_err);
-    printf("[Xvelo_err]: %.3lf\n", velocity_err);
-    printf("[Angle_voltage]: %.3lf\n\n", get_angle_raw());
-*/
+
         if ( (fabs(x_err) < X_ERR_BAND)) {
       /*Settled*/
       hit_count++;
