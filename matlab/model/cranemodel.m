@@ -30,8 +30,8 @@ Mx = (Mx.kt/Mx.ra)/(Mx.kt^2/Mx.ra + Mx.b + Mx.I*s);
 
 Grx = 7/144;
 rrx = 0.08;
-
-X = Mx * Grx * rrx * 1/s;
+gear = Grx*rrx;
+X = Mx * gear * 1/s;
 
 %------------------------------------------------------------------------------
 % W(s): Wire (X [m] -> Phi [rad])
