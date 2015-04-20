@@ -40,8 +40,8 @@ int initialize_crane()
  */
 int run_motorx(double voltage)
 {
-    if (voltage > -5 && voltage < 0 - epsilon) {
-        voltage = -5;
+    if (voltage > -6 && voltage < 0 - epsilon) {
+        voltage = -6;
     }
 
     if (voltage < 4.5 && voltage > 0 + epsilon) {
