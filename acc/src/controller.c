@@ -33,6 +33,7 @@ void *task_x_axies_controller(void * argc)
   double x_ref = 0, x_pos = 0, x_err = 0;
   double angle_ref = 0, angle_pos = 0, angle_err = 0;
   double velocity_err = 0;
+  double x_velocity = 0;
 
   double out = 0;
 
@@ -64,8 +65,9 @@ void *task_x_axies_controller(void * argc)
     }
 #ifndef TEST
     x_pos = get_xpos();
+    x_velocity = get_x_velocity();
     angle_pos = get_angle();
-    angle_err = angle_ref - angle_pos;
+/*    angle_err = angle_ref - angle_pos;
     printf("[angle_err] out: %lf\n", angle_err);
     x_err = x_ref - x_pos - angle_controller(angle_err);
     printf("[X_err] out: %lf\n", x_err);
@@ -73,7 +75,13 @@ void *task_x_axies_controller(void * argc)
     velocity_err = out - get_motorx_velocity();
     printf("[velocity_ref] out: %lf\n", out);
     out = velocity_controller_x(velocity_err);
-    printf("[velocity_err] out: %lf\n", out);
+    printf("[velocity_err] out: %lf\n", out);*/
+    x_err = x_ref-xpos;
+    velocity_err = x_err + x_velocity - 25 * angle_pos;
+    out = 7.5 * velocity_err;
+    printf("[Angle]: %.3lf\n", angle_pos);
+    printf("[Xpos]: %.3lf\n", x_pos);
+    printf("[Xvelo]: %.3lf\n\n", x_velocity);
         if ( (fabs(x_err) < X_ERR_BAND)) {
       /*Settled*/
       hit_count++;
