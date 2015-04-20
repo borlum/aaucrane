@@ -36,6 +36,8 @@ void *task_x_axies_controller(void * argc)
   double x_velocity = 0;
   int pI = .2;
   double out = 0;
+  double old_x_pos;
+
 
   mqd_t input, output;
   char * input_buffer = (char *)malloc(BUFFER_SIZE);
@@ -64,10 +66,13 @@ void *task_x_axies_controller(void * argc)
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
 #ifndef TEST
+    old_x_pos = x_pos;
     x_pos = get_xpos();
     x_velocity = get_x_velocity();
     angle_pos = get_angle();
-    velocity = get_motorx_velocity();
+    //velocity = get_motorx_velocity();
+
+    velocity = (x_pos - old_x_pos) * 1/0.0039;
 
     angle_err = angle_ref - angle_pos;
     printf("[angle_err] out: %lf\n", angle_err);
