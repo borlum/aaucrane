@@ -124,7 +124,7 @@ int main(int argc,char* argv[]){
     printf("Resetting ... .. .\n");
     pthread_create(&t_xcontroller, NULL, task_x_axies_controller, NULL);
     /*pthread_create(&t_ycontroller, NULL, rt_y_axies_controller, NULL);*/
-    usleep(1000 * 1000);
+    //usleep(1000 * 1000);
     printf("starting logger\n");
     pthread_create(&t_logger, NULL, logger, NULL);
 

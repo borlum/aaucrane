@@ -40,13 +40,13 @@ int initialize_crane()
  */
 int run_motorx(double voltage)
 {
-/*    if (voltage > -2.5 && voltage < 0 - epsilon) {
-        voltage = -2.5;
+    if (voltage > -1.5 && voltage < 0 - epsilon) {
+        voltage = -1.5;
     }
 
-    if (voltage < 2.5 && voltage > 0 + epsilon) {
-        voltage = 2.5;
-    }*/
+    if (voltage < 1.5 && voltage > 0 + epsilon) {
+        voltage = 1.5;
+    }
 
     return run_motor(-voltage, 0); /* Change X motor direction */
 }
