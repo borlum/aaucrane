@@ -18,9 +18,9 @@ double angle_controller(double error){
   error_sum += error;
   old_error = error;
 
-  printf("PID OUT: %lf\n", out);
+  printf("PID OUT: %lf\n", -out);
   
-  return out;
+  return -out;
 }
 
 double position_controller_x(double error){
