@@ -79,7 +79,7 @@ void *task_x_axies_controller(void * argc)
     printf("[X_err] out: %lf\n", x_err);
     out = position_controller_x(x_err);
     velocity_err = out - velocity;
-    //printf("[velocity] out: %lf\n", velocity);
+    printf("[velocity] out: %lf\n", velocity);
     out = velocity_controller_x(velocity_err);
     printf("[output] : %.3lf\n", out);
     printf("[Integrator value] : %.2lf\n\n", x_err_int);
