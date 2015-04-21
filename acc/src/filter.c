@@ -3,13 +3,14 @@
 #include "../include/filter.h"
 const static double TS = 1/1000;
 
+static double error_sum = 0;
+static double old_error = 0; 
+
 double angle_controller(double error){
   const static double k_p = 45.8;
   const static double k_i = 1;
   const static double k_d = 10;
 
-  static double error_sum = 0;
-  static double old_error = 0;
   
   double out;
 
