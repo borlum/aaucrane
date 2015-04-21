@@ -1,4 +1,4 @@
-#include <stdlib.h>
+#include<stdio.h>
 
 #include "../include/filter.h"
 const static double TS = 1/1000;
@@ -8,8 +8,8 @@ double angle_controller(double error){
   const static double k_i = 1;
   const static double k_d = 10;
 
-  static error_sum = 0;
-  static old_error = 0;
+  static double error_sum = 0;
+  static double old_error = 0;
   
   double out;
 
