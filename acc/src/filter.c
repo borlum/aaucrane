@@ -13,14 +13,18 @@ double angle_controller(double error){
   
   double out;
 
-  out = k_p * error + k_i * error_sum + k_d * (error - old_error);
+  out = k_p * error + k_i * error_sum + k_d * (error - old_error) * TS;
 
-  error_sum += error;
+  error_sum += error * TS;
   old_error = error;
 
-  printf("PID OUT: %lf\n", -out);
+  printf("#### PID ####\n");
+  printf("P: %lf\n", k_p * error);
+  printf("I: %lf\n", k_p * error_sum);
+  printf("D: %lf\n", k_p * k_d * (error - old_error) * TS);
+  printf("PID: %lf\n", k_p * out);
   
-  return -out;
+  return out;
 }
 
 double position_controller_x(double error){
