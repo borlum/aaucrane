@@ -14,9 +14,9 @@ double angle_controller(double error){
   
   double out;
 
-  out = k_p * error + k_i * error_sum + k_d * (error - old_error) * TS;
+  out = k_p * error + k_i * error_sum + k_d * (error - old_error);
 
-  error_sum += error * TS;
+  error_sum += error;
   old_error = error;
 
   printf("#### PID ####\n");
