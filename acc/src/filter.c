@@ -23,8 +23,8 @@ double angle_controller(double error){
   printf("Error %lf\n", error);
   printf("Error sum %lf\n", error_sum);
   printf("P: %lf\n", k_p * error);
-  printf("I: %lf\n", k_p * error_sum);
-  printf("D: %lf\n", k_p * k_d * (error - old_error) * TS);
+  printf("I: %lf\n", k_p * error_sum * TS);
+  printf("D: %lf\n", k_p * k_d * (error - old_error) / TS);
   printf("PID: %lf\n", -out);
   
   return -out;
