@@ -216,7 +216,7 @@ double get_motorx_velocity()
 
 /*    if(D< 0.001){
       D = 0;
-    }/*
+    }*/
 
     return D;
 }
