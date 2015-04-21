@@ -12,7 +12,7 @@ double angle_controller(double error){
   const double k_d = 0;
 
 
-  double out;
+/*  double out;
 
   out = k_p * error + k_i * error_sum * TS + k_d * (error - old_error) / TS;
 
@@ -27,8 +27,8 @@ double angle_controller(double error){
   printf("I: %lf\n", k_i * error_sum * TS);
   printf("D: %lf\n", k_d * (error - old_error) / TS);
   printf("PID: %lf\n", out);
-
-  return out;
+*/
+  return (error * k_p);
 }
 
 double position_controller_x(double error){
