@@ -26,9 +26,9 @@ double angle_controller(double error){
   printf("P: %lf\n", k_p * error);
   printf("I: %lf\n", k_i * error_sum * TS);
   printf("D: %lf\n", k_d * (error - old_error) / TS);
-  printf("PID: %lf\n", -out);
+  printf("PID: %lf\n", out);
   
-  return -out;
+  return out;
 }
 
 double position_controller_x(double error){
