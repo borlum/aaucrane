@@ -1,14 +1,23 @@
 #include "../include/filter.h"
-double error_sum = 0, error_old = 0;
+const static double TS = 1/1000;
 
 double angle_controller(double error){
-  double k_p = 45.8;
-  double k_i = 1, k_d = 10;
-   double out;
+  const static double k_p = 45.8;
+  const static double k_i = 1;
+  const static double k_d = 10;
 
-  out = error * (k_p + k_d * (error-error_old)  + k_i * error_sum);
+  static error_sum = 0;
+  static old_error = 0;
+  
+  double out;
+
+  out = k_p * error + k_i * error_sum + k_d * (error - old_error) * TS;
+
+  error_sum += error * TS;
   error_old = error;
-  error_sum += error;
+
+  printf("PID OUT: %lf\n", out);
+  
   return out;
 }
 
