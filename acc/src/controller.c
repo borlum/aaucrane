@@ -34,7 +34,7 @@ void *task_x_axies_controller(void * argc)
   double angle_ref = 0, angle_pos = 0, angle_err = 0;
   double velocity_err = 0, velocity = 0;
   double x_velocity = 0;
-  double pI = 10;
+  double pI = 15;
   double out = 0;
 
 
@@ -86,8 +86,8 @@ void *task_x_axies_controller(void * argc)
 
     x_err_int += x_err;
 
-    if(fabs(x_err_int) >= 2500 ){
-      x_err_int = (x_err_int > 0 ? 2500 : -2500);
+    if(fabs(x_err_int) >= 3000 ){
+      x_err_int = (x_err_int > 0 ? 3000 : -3000);
 
     }
 
