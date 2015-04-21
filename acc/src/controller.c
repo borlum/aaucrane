@@ -86,8 +86,8 @@ void *task_x_axies_controller(void * argc)
 
     x_err_int += 10*x_err;
 
-    if(fabs(x_err_int) >= 2000 ){
-      x_err_int = (x_err_int > 0 ? 2000 : -2000);
+    if(fabs(x_err_int) >= 2500 ){
+      x_err_int = (x_err_int > 0 ? 2500 : -2500);
 
     }
 
