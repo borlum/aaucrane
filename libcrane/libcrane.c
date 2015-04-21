@@ -70,7 +70,7 @@ int run_motory(double voltage)
     if (voltage < 3 && voltage > 0 + epsilon) {
         voltage = 3;
     }
-    
+
     return run_motor(voltage, 1);
 }
 
@@ -200,7 +200,7 @@ double get_ypos_raw()
  */
 double get_motorx_velocity()
 {
-    return (get_motorx_velocity_raw() * 34.8) - 4.0;
+    return (get_motorx_velocity_raw() * 34.18 );
 }
 
 /**

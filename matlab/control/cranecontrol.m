@@ -5,25 +5,32 @@
 run('../model/cranemodel.m');
 
 %------------------------------------------------------------------------------
+% X'(s) Control
+%------------------------------------------------------------------------------
+% rlocus(Mx) => 10 ?
+C1 = 50;
+loop1 = feedback(C1*Mx, 1);
+
+%------------------------------------------------------------------------------
 % X(s) Control
 %------------------------------------------------------------------------------
-%rlocus(Mx) => No overshoot Max gain = 0.5
-C3 = 20;
-%Close the loop
-innerLoop1 = feedback(C3*Mx, 1);
-% rlocus(innerLoop1*gear*(1/s)) => No overshoot + Max gain => inf
-C1 = 60;
 % Close the loop
-innerLoop = feedback(C1*(innerLoop1*gear*(1/s)), 1);
+
+% rlocus(loop1 * gear * 1/s) => 10 < Gain
+C2 = 60;
+loop2 = feedback(C2 * loop1 * gear * (1/s), 1);
 
 %------------------------------------------------------------------------------
 % W(s) Control
 %------------------------------------------------------------------------------
-% rlocus(-innerLoop*W) => No overshoot Max gain = 23.2
-C2 = 60;
+C3 = 50;
+% rlocus(-loop2*W) 
+% Gain can be between (19.7 <= Gain <= 45.8)
+% Shows that proportional control is not good enough!
 
 %------------------------------------------------------------------------------
 % Y(s) Control
 %------------------------------------------------------------------------------
 % rlocus(Y) => No overshoot + Max gain => 49.3
 C4 = 100;
+

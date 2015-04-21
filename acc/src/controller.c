@@ -32,15 +32,16 @@ void *task_x_axies_controller(void * argc)
 
   double x_ref = 0, x_pos = 0, x_err = 0;
   double angle_ref = 0, angle_pos = 0, angle_err = 0;
+  double velocity_err = 0;
 
   double out = 0;
 
-  mqd_t input, output;  
+  mqd_t input, output;
   char * input_buffer = (char *)malloc(BUFFER_SIZE);
 
   input = mq_open(Q_TO_X, O_RDONLY | O_NONBLOCK);
   output = mq_open(Q_FROM_X, O_WRONLY);
-  
+
 #ifdef RTAI
   RTIME period = nano2count(1000 * 1000 * 1); /* really fast! */
   if(!(rt_x_axies_controller = rt_task_init_schmod(nam2num("rt_x_axies_controller"), 1, 0, 0, SCHED_FIFO, 0))){
@@ -51,7 +52,7 @@ void *task_x_axies_controller(void * argc)
   rt_make_hard_real_time();
   printf("Started rt_x_axies_controller\n");
 #endif /* RTIA */
-  
+
   while (1) {
     if (mq_receive(input, input_buffer, BUFFER_SIZE, 0) > 0) {
       memcpy(&x_ref, input_buffer, sizeof(double));
@@ -65,9 +66,15 @@ void *task_x_axies_controller(void * argc)
     x_pos = get_xpos();
     angle_pos = get_angle();
     angle_err = angle_ref - angle_pos;
+    printf("[angle_err] out: %lf\n", angle_err);
     x_err = x_ref - x_pos - angle_controller(angle_err);
-    
-    if ( (fabs(x_err) < X_ERR_BAND)) {
+    printf("[X_err] out: %lf\n", x_err);
+    out = position_controller_x(x_err);
+    velocity_err = out - get_motorx_velocity();
+    printf("[velocity_ref] out: %lf\n", out);
+    out = velocity_controller_x(velocity_err);
+    printf("[velocity_err] out: %lf\n", out);
+        if ( (fabs(x_err) < X_ERR_BAND)) {
       /*Settled*/
       hit_count++;
       if(hit_count >= 10000 && new_ref){
@@ -77,11 +84,10 @@ void *task_x_axies_controller(void * argc)
         mq_send(output, (char *)&msg, sizeof(int), 0);
       }
     }
+    run_motorx(out);
 #ifdef RTAI
     rt_task_wait_period();
 #endif /* RTAI */
-    out = position_controller_x(x_err);
-    run_motorx(out);
 #else /* TEST */
     if(new_ref){
       new_ref = 0;
@@ -95,7 +101,7 @@ void *task_x_axies_controller(void * argc)
 void *task_y_axies_controller(void * argc)
 {
   int hit_count = 0;
-  int new_ref = 0;  
+  int new_ref = 0;
   double y_ref = 0, y_pos = 0, y_err = 0;
 
   double out = 0;
@@ -103,10 +109,10 @@ void *task_y_axies_controller(void * argc)
   mqd_t input;
   mqd_t output;
   char* input_buffer = (char*) malloc(BUFFER_SIZE);
-  
+
   input = mq_open(Q_TO_Y, O_RDONLY | O_NONBLOCK);
   output = mq_open(Q_FROM_Y, O_WRONLY);
-  
+
 #ifdef RTAI
   RTIME period = nano2count(1000 * 1000 * 10); /* Not as fast as X */
   if(!(rt_y_axies_controller = rt_task_init_schmod(nam2num("rt_y_axies_controller"), 2, 0, 0, SCHED_FIFO, 0))){
@@ -117,7 +123,7 @@ void *task_y_axies_controller(void * argc)
   rt_make_hard_real_time();
   printf("Started rt_y_axies_controller\n");
 #endif /* RTAI */
-  
+
   while (1) {
     if (mq_receive(input, input_buffer, BUFFER_SIZE, 0) > 0) {
       memcpy(&y_ref, input_buffer, sizeof(double));
@@ -142,7 +148,7 @@ void *task_y_axies_controller(void * argc)
       }
     }
 
-    out = position_controller_y(y_err);  
+    out = position_controller_y(y_err);
     run_motory(out);
 #ifdef RTAI
     rt_task_wait_period();

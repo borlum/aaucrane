@@ -39,18 +39,18 @@ void* logger(void* args){
   rt_task_make_periodic(rt_logger, rt_get_time() + period, period);
   rt_make_hard_real_time();
 #endif
-  
+
   char tmp[160];
   sprintf(tmp, "%s/%d.csv", DATA_PATH, (int)time(NULL));
   fp = fopen(tmp, "w");
-  fprintf(fp, DATA_HEADER);  
-  
+  fprintf(fp, DATA_HEADER);
+
   t_0 = get_time_micros();
   while(1){
     /*GRAB TIMESTAMP*/
     t_sample = get_time_micros();
     fprintf(fp, "%ld,",  (t_sample - t_0));
-    
+
     /*SAMPLE SENSORS*/
     fprintf(fp, "%f,", get_old_angle_raw());
     fprintf(fp, "%f,", get_angle_raw());
@@ -82,15 +82,15 @@ int init(){
   }
 #endif /* RTAI */
 #ifndef TEST
-  initialize_crane();  
+  initialize_crane();
   run_motorx(0);
   run_motory(0);
 #endif
-  struct mq_attr attr;  
-  attr.mq_flags = 0;  
-  attr.mq_maxmsg = 10;  
-  attr.mq_msgsize = BUFFER_SIZE;  
-  attr.mq_curmsgs = 0;  
+  struct mq_attr attr;
+  attr.mq_flags = 0;
+  attr.mq_maxmsg = 10;
+  attr.mq_msgsize = BUFFER_SIZE;
+  attr.mq_curmsgs = 0;
 
   if ( mq_open(Q_TO_X, O_RDONLY | O_CREAT, 0664, &attr) == -1 ||
        mq_open(Q_TO_Y, O_WRONLY | O_CREAT, 0664, &attr) == -1 ||
@@ -106,23 +106,23 @@ int init(){
 }
 
 
-int main(int argc,char* argv[]){  
+int main(int argc,char* argv[]){
   if( init() == -1)
     exit(-1);
-  
+
   mqd_t to_x, from_x;
   to_x = mq_open(Q_TO_X, O_WRONLY);
   from_x = mq_open(Q_FROM_X, O_RDONLY);
 
   double x;
   double y = 0.223;
-    
+
   while(1) {
     printf ("Enter a step size: <x>:\n");
     scanf("%lf", &x);
 
     printf("Resetting ... .. .\n");
-    pthread_create(&t_xcontroller, NULL, rt_x_axies_controller, NULL);
+    pthread_create(&t_xcontroller, NULL, task_x_axies_controller, NULL);
     /*pthread_create(&t_ycontroller, NULL, rt_y_axies_controller, NULL);*/
     usleep(1000 * 1000);
     printf("starting logger\n");
@@ -131,5 +131,5 @@ int main(int argc,char* argv[]){
     mq_send(to_x, (char *) &x, sizeof(x), 0);
     mq_receive(from_x, NULL, sizeof(double), 0);
     //mq_send(to_y, (char *) &y, sizeof(y), 0);
-  } 
+  }
 }
