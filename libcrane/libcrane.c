@@ -214,9 +214,9 @@ double get_motorx_velocity()
 
     D = (get_motorx_velocity_raw() * 34.18 ) + 0.007721;
 
-/*    if(D< 0.001){
+    if(D< 0.33){
       D = 0;
-    }*/
+    }
 
     return D;
 }
