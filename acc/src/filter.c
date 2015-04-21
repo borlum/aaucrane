@@ -1,15 +1,15 @@
 #include<stdio.h>
 
 #include "../include/filter.h"
-const static double TS = 1/1000;
+const static double TS = 0.001;
 
-static double error_sum = 0;
-static double old_error = 0; 
+double error_sum = 0;
+double old_error = 0; 
 
 double angle_controller(double error){
-  const static double k_p = 45.8;
-  const static double k_i = 1;
-  const static double k_d = 10;
+  const double k_p = 45.8;
+  const double k_i = 1;
+  const double k_d = 10;
 
   
   double out;
