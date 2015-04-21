@@ -30,11 +30,13 @@ void *task_x_axies_controller(void * argc)
   int hit_count = 0;
   int new_ref = 0;
 
-  double x_ref = 0, x_pos = 0, x_err = 0;
+  double x_ref = 0, x_pos = 0, x_err = 0, x_err_int = 0;
   double angle_ref = 0, angle_pos = 0, angle_err = 0;
-  double velocity_err = 0;
-
+  double velocity_err = 0, velocity = 0;
+  double x_velocity = 0;
+  double pI = 0;
   double out = 0;
+
 
   mqd_t input, output;
   char * input_buffer = (char *)malloc(BUFFER_SIZE);
@@ -64,27 +66,40 @@ void *task_x_axies_controller(void * argc)
     }
 #ifndef TEST
     x_pos = get_xpos();
+    x_velocity = get_x_velocity();
     angle_pos = get_angle();
+    velocity = get_motorx_velocity();
+
+    //velocity = (x_pos - old_x_pos) * 1/0.0039 * 1/1000;
+
     angle_err = angle_ref - angle_pos;
-    printf("[angle_err] out: %lf\n", angle_err);
-    x_err = x_ref - x_pos - angle_controller(angle_err);
+    printf("[angle] out: %.2lf\n", angle_err);
+    x_err = x_ref - x_pos - angle_controller(angle_err) ;
+    printf("[X_pos] out: %.2lf\n", x_pos);
     printf("[X_err] out: %lf\n", x_err);
-    out = position_controller_x(x_err);
-    velocity_err = out - get_motorx_velocity();
-    printf("[velocity_ref] out: %lf\n", out);
+    out = position_controller_x(x_err) + pI * x_err_int;
+    velocity_err = out - velocity;
+    //printf("[velocity] out: %lf\n", velocity);
     out = velocity_controller_x(velocity_err);
-    printf("[velocity_err] out: %lf\n", out);
+    printf("[output] : %.3lf\n", out);
+    printf("[Integrator value] : %.2lf\n\n", x_err_int);
+
+    x_err_int += x_err;
+
         if ( (fabs(x_err) < X_ERR_BAND)) {
       /*Settled*/
       hit_count++;
       if(hit_count >= 10000 && new_ref){
+        run_motorx(0);
+        break;
         new_ref = 0;
         hit_count = 0;
         int msg = 1;
         mq_send(output, (char *)&msg, sizeof(int), 0);
       }
+    } else {
+      run_motorx(out);
     }
-    run_motorx(out);
 #ifdef RTAI
     rt_task_wait_period();
 #endif /* RTAI */

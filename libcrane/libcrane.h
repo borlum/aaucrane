@@ -54,6 +54,8 @@ double get_ypos_raw();
 double get_motorx_velocity();
 double get_motorx_velocity_raw();
 
+double get_x_velocity();
+
 double get_motory_velocity();
 double get_motory_velocity_raw();
 
