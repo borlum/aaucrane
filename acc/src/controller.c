@@ -34,7 +34,7 @@ void *task_x_axies_controller(void * argc)
   double angle_ref = 0, angle_pos = 0, angle_err = 0;
   double velocity_err = 0, velocity = 0;
   double x_velocity = 0;
-  double pI = 0;
+  double pI = 0.1;
   double out = 0;
 
 
@@ -77,7 +77,7 @@ void *task_x_axies_controller(void * argc)
     x_err = x_ref - x_pos;
     printf("[X_pos] out: %.2lf\n", x_pos);
     printf("[X_err] out: %lf\n", x_err);
-    out = position_controller_x(x_err);
+    out = position_controller_x(x_err) + pI * x_err_int;
     /*velocity_err = out - velocity;
     printf("[velocity] out: %lf\n", velocity);
     out = velocity_controller_x(velocity_err);*/
