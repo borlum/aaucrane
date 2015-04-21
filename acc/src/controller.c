@@ -86,6 +86,8 @@ void *task_x_axies_controller(void * argc)
 
     x_err_int += x_err;
 
+    if(fabs(x_err_int) >= 2 )  x_err_int = sign(x_err_int) * 2;
+
         if ( (fabs(x_err) < X_ERR_BAND)) {
       /*Settled*/
       hit_count++;
