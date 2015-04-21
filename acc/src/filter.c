@@ -3,7 +3,7 @@ double error_sum = 0, error_old = 0;
 
 double angle_controller(double error){
   double k_p = 45.8;
-  double k_i = 1; k_d = 10;
+  double k_i = 1, k_d = 10;
    double out;
 
   out = error * (k_p + k_d * (error-error_old)*1/1000 + k_i * error_sum);
