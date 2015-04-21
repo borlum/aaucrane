@@ -84,10 +84,10 @@ void *task_x_axies_controller(void * argc)
     printf("[output] : %.3lf\n", out);
     printf("[Integrator value] : %.2lf\n\n", x_err_int);
 
-    x_err_int += x_err;
+    x_err_int += 10*x_err;
 
-    if(fabs(x_err_int) >= 1000 ){
-      x_err_int = (x_err_int > 0 ? 1000 : -1000);
+    if(fabs(x_err_int) >= 2000 ){
+      x_err_int = (x_err_int > 0 ? 2000 : -2000);
 
     }
 
