@@ -6,7 +6,7 @@ double angle_controller(double error){
   double k_i = 1, k_d = 10;
    double out;
 
-  out = error * (k_p + k_d * (error-error_old)*1/1000 + k_i * error_sum);
+  out = error * (k_p + k_d * (error-error_old) / (0.001) + k_i * error_sum);
   error_old = error;
   error_sum += error;
   return out;
