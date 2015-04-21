@@ -220,7 +220,7 @@ double get_motorx_velocity()
 double get_motorx_velocity_raw()
 {
     double D;
-    D = get_sensor_raw(CHAN_XVEL_IN)-.115+.0077
+    D = get_sensor_raw(CHAN_XVEL_IN)-.115+.0077;
     if (D < 0.001){
       D = 0;
     }
