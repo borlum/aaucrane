@@ -214,9 +214,9 @@ double get_motorx_velocity()
 
     D = (get_motorx_velocity_raw() * 34.18 );
 
-    if(D< 0.001){
+    /*if(D< 0.001){
       D = 0;
-    }
+    }*/
 
     return D;
 }
@@ -227,7 +227,7 @@ double get_motorx_velocity()
  */
 double get_motorx_velocity_raw()
 {
-    return get_sensor_raw(CHAN_XVEL_IN)-.115+.007721;
+    return get_sensor_raw(CHAN_XVEL_IN)-.115;
 }
 
 /**
