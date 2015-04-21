@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "../include/filter.h"
 const static double TS = 1/1000;
 
@@ -14,7 +16,7 @@ double angle_controller(double error){
   out = k_p * error + k_i * error_sum + k_d * (error - old_error) * TS;
 
   error_sum += error * TS;
-  error_old = error;
+  old_error = error;
 
   printf("PID OUT: %lf\n", out);
   
