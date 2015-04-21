@@ -29,7 +29,9 @@ void *task_x_axies_controller(void * argc)
 {
   int hit_count = 0;
   int new_ref = 0;
+  int i;
 
+  double x_ref_buf;
   double x_ref = 0, x_pos = 0, x_err = 0, x_err_int = 0;
   double angle_ref = 0, angle_pos = 0, angle_err = 0;
   double velocity_err = 0, velocity = 0;
@@ -55,15 +57,24 @@ void *task_x_axies_controller(void * argc)
   printf("Started rt_x_axies_controller\n");
 #endif /* RTIA */
 
+
   while (1) {
+
     if (mq_receive(input, input_buffer, BUFFER_SIZE, 0) > 0) {
       memcpy(&x_ref, input_buffer, sizeof(double));
       printf("[X] New x_ref = %.3f\n", x_ref);
       new_ref = 1;
+      x_ref_buf = x_ref;
     }
     else if (errno != EAGAIN){ /* Ingen ting i køen */
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
+
+    x_ref = .0005 * i;
+    i++;
+    if(x_ref > x_ref_buf) x_ref = x_ref_buf;
+
+
 #ifndef TEST
     x_pos = get_xpos();
     x_velocity = get_x_velocity();
