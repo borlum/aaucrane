@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<libcrane.h>
+include<math.h>
 
 #include "../include/filter.h"
 const static double TS = 0.001;
