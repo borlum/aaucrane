@@ -77,7 +77,7 @@ void *task_x_axies_controller(void * argc)
 #ifndef TEST
     angle_pos = get_angle();
     out = angle_controller(angle_pos);
-    if(current_index < nr_of_index){
+    if(current_index < nr_of_ref){
       out += position_controller_x(ref_arr[current_index] - get_xpos());
       current_index++;
     }
