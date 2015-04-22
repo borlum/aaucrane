@@ -127,7 +127,7 @@ void *task_y_axies_controller(void * argc)
 {
   int hit_count = 0;
   int new_ref = 0;
-  double y_ref = 20, y_pos = 0, y_err = 0;
+  double y_ref = 0.2, y_pos = 0, y_err = 0;
 
   double out = 0;
 
