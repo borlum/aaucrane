@@ -76,9 +76,7 @@ void *task_x_axies_controller(void * argc)
     else if (errno != EAGAIN){ /* Ingen ting i køen */
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
-    printf("Before NDEF\n");
 #ifndef TEST
-  printf("AFter NDEF\n");
     angle_pos = get_angle();
     out = angle_controller(angle_pos);
   /*  if(current_index < nr_of_ref){
@@ -89,7 +87,7 @@ void *task_x_axies_controller(void * argc)
       current_index++;
     }*/
 
-    out += (ref_arr[current_index] - get_xpos()) * 5;
+    out += (ref_arr[current_index] - get_xpos()) * 10;
   //  printf("Ramp: %lf \n", ref_arr[current_index]);
     if(current_index < nr_of_ref) {
       current_index++;
