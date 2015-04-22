@@ -12,21 +12,25 @@ double angle_controller(double error){
   const double k_d = 1;
 
 
-  double out;
+  double p = 0, i = 0, d = 0, out = 0;
 
-  out = (k_p * error) + (k_d * (error - old_error) / TS);
-
-  error_sum += error;
-  old_error = error;
+  p = k_p * error;
+  i = 0;
+  d = (k_d * (error - old_error)) / TS;
+  
+  
+  out = p + d;
 
   printf("#### PD ####\n");
   printf("Error %lf\n", error);
   printf("Old error: %lf\n", old_error);
-  printf("P: %lf\n", k_p * error);
-  printf("D: %lf\n", k_d * (error - old_error) / TS);
+  printf("P: %lf\n", p);
+  printf("D: %lf\n", d);
   printf("PD: %lf\n", out);
   printf("############\n");
 
+  old_error = error;
+  
   return out;
 }
 
