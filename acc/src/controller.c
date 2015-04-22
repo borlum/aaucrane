@@ -88,8 +88,8 @@ void *task_x_axies_controller(void * argc)
       current_index++;
     }*/
 
-    out += (ref_arr[current_index] - get_xpos) * 5;
-    
+    out += (ref_arr[current_index] - get_xpos()) * 5;
+
     if(current_index < nr_of_ref) {
       current_index++;
     }
