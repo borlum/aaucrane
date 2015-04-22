@@ -9,7 +9,7 @@ double old_error = 0;
 double angle_controller(double error){
   const double k_p = 50;
   const double k_i = 0;
-  const double k_d = .1;
+  const double k_d = .2;
 
 
   double p = 0, i = 0, d = 0, out = 0;
