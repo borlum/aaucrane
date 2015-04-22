@@ -70,15 +70,15 @@ void *task_x_axies_controller(void * argc)
       nr_of_ref = ramp_maker(step, ref_arr);
       /*if ((nr_of_ref = ref_controller(new_ref-get_xpos(), ref_arr, ref_arr_sz)) == -1) {
         printf("ERROR!");
-        exit(2);
       }*/
       current_index = 0;
     }
     else if (errno != EAGAIN){ /* Ingen ting i køen */
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
-
+    printf("Before NDEF\n");
 #ifndef TEST
+  printf("AFter NDEF\n");
     angle_pos = get_angle();
     out = angle_controller(angle_pos);
   /*  if(current_index < nr_of_ref){
@@ -97,7 +97,7 @@ void *task_x_axies_controller(void * argc)
     //printf("Angle out: %lf\n", out);
     manual = 1 * get_ctrlpad_x();
 
-  //  printf("Out: %lf \n", out);
+    printf("Out: %lf \n", out);
 
     run_motorx(out);
 
