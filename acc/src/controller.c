@@ -79,9 +79,10 @@ void *task_x_axies_controller(void * argc)
     out = angle_controller(angle_pos);
     if(current_index < nr_of_ref){
       out += position_controller_x(ref_arr[current_index] - get_xpos());
+      printf("Ramp val: %lf \nd", ref_arr[current_index]);
       current_index++;
     }
-    printf("Angle out: %lf\n", out);
+    //printf("Angle out: %lf\n", out);
     manual = 1 * get_ctrlpad_x();
 
 

@@ -21,15 +21,6 @@ double angle_controller(double error){
 
 
   out = p + d;
-
-  printf("#### PD ####\n");
-  printf("Error %lf\n", error);
-  printf("Old error: %lf\n", old_error);
-  printf("P: %lf\n", p);
-  printf("D: %lf\n", d);
-  printf("PD: %lf\n", out);
-  printf("############\n");
-
   old_error = error;
 
   return out;
