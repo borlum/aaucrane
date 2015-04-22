@@ -69,7 +69,9 @@ void *task_x_axies_controller(void * argc)
     angle_pos = get_angle();
     out = angle_controller(angle_pos);
     printf("Angle out: %lf\n", out);
-    manual = .5 * get_ctrlpad_x();
+    manual = 1 * get_ctrlpad_x();
+
+    if(fabs(manual) < 2) manual = 0;
     
     run_motorx(out+manual);
     
