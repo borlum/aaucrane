@@ -66,6 +66,7 @@ void *task_x_axies_controller(void * argc)
       printf("[X] New x_ref = %.3f\n", x_ref);
       new_ref = 1;
       step = x_ref-get_xpos();
+      printf("step: %lf \n" , step);
       nr_of_ref = ramp_maker(step, ref_arr);
       /*if ((nr_of_ref = ref_controller(new_ref-get_xpos(), ref_arr, ref_arr_sz)) == -1) {
         printf("ERROR!");
@@ -89,14 +90,14 @@ void *task_x_axies_controller(void * argc)
     }*/
 
     out += (ref_arr[current_index] - get_xpos()) * 5;
-    printf("Ramp: %lf \n", ref_arr[current_index]);
+  //  printf("Ramp: %lf \n", ref_arr[current_index]);
     if(current_index < nr_of_ref) {
       current_index++;
     }
     //printf("Angle out: %lf\n", out);
     manual = 1 * get_ctrlpad_x();
 
-    printf("Out: %lf \n", out);
+  //  printf("Out: %lf \n", out);
 
     run_motorx(out);
 
