@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
     if( fabs((manual_x = get_ctrlpad_x())) < 2 )
       manual_x = 0;
 
-    if( fabs((manual_y = get_ctrlpad_x())) < 2 )
+    if( fabs((manual_y = get_ctrlpad_y())) < 2 )
       manual_y = 0;
     
     run_motorx(manual_x + angle);
