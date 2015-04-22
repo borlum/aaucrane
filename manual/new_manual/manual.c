@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <filter.h>
+#include "filter.h"
 
 #define DATA_PATH "/var/www/html/data/crane/manual/"
 #define DATA_HEADER "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n"
