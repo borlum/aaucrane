@@ -66,7 +66,6 @@ void *task_x_axies_controller(void * argc)
     }
 #ifndef TEST
     angle_pos = get_angle();
-    printf("Angle: %lf\n", angle_pos);
     out = angle_controller(angle_pos);
     printf("Angle out: %lf\n", out);
     run_motorx(out);

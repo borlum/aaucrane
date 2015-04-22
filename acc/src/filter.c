@@ -9,7 +9,7 @@ double old_error = 0;
 double angle_controller(double error){
   const double k_p = 10;
   const double k_i = 0;
-  const double k_d = 0;
+  const double k_d = 10;
 
 
   double out;
@@ -19,14 +19,13 @@ double angle_controller(double error){
   error_sum += error;
   old_error = error;
 
-  /* printf("#### PID ####\n"); */
-  /* printf("Error %lf\n", error); */
-  /* printf("Error sum %lf\n", error_sum); */
-  /* printf("Old error: %lf\n", old_error); */
-  /* printf("P: %lf\n", k_p * error); */
-  /* printf("I: %lf\n", k_i * error_sum * TS); */
-  /* printf("D: %lf\n", k_d * (error - old_error) / TS); */
-  /* printf("PID: %lf\n", out); */
+  printf("#### PD ####\n");
+  printf("Error %lf\n", error);
+  printf("Old error: %lf\n", old_error);
+  printf("P: %lf\n", k_p * error);
+  printf("D: %lf\n", k_d * (error - old_error) / TS);
+  printf("PD: %lf\n", out);
+  printf("############\n");
 
   return out;
 }
