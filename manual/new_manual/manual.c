@@ -11,7 +11,7 @@ FILE * fp;
 
 int main(int argc, char* argv[])
 {
-  double manual_x0;
+  double manual_x;
   double angle;
   initialize_crane();
 
