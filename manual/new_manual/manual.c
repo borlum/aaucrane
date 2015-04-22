@@ -62,6 +62,6 @@ int main(int argc, char* argv[])
     fprintf(fp, "\n");
 
 
-    usleep(1000 * 100);
+    usleep(1000 * 1);
   }
 }
