@@ -16,11 +16,11 @@ all: $(TARGET)
 
 $(TARGET): $(TARGET).c
 	cd $(CRANELIB_PATH) && make
-	$(GCC) $(TARGET).c $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o $(TARGET)
+	$(GCC) $(SOURCE).c $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o $(TARGET)
 
 ANGLE: $(TARGET).c
 	cd $(CRANELIB_PATH) && make
-	$(GCC) $(TARGET).c $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -DANGLE -o $(TARGET)
+	$(GCC) $(SOURCE).c $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -DANGLE -o $(TARGET)
 
 clean:
 	rm xpos_controller
