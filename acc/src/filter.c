@@ -42,6 +42,19 @@ double velocity_controller_x(double error){
 }
 
 int ref_controller(double error, double* output, size_t out_len){
+    double ref_step = 0.0005;
+    double i;
+    for(i = 0; 0<4; i+=ref_step ){
+      output[j] = i;
+      if(fabs(output[j]) > fabs(error)) output[j] = error;
+      j++
+    }
+  out_len = 8000;
+
+  return out_len
+}
+
+/*int ref_controller(double error, double* output, size_t out_len){
   double velocity = 0.5;
   double i = 0;
   double current_pos = get_xpos();
@@ -63,4 +76,4 @@ int ref_controller(double error, double* output, size_t out_len){
     }
   }
   return j;
-}
+}*/
