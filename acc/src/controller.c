@@ -37,8 +37,11 @@ void *task_x_axies_controller(void * argc)
   double pI = 0;
   double out = 0;
 
+  size_t ref_arr_sz = 8000, nr_of_ref;
+  double ref_arr[ref_arr_sz];
+  int current_index = 0;
   double manual;
-  
+
   mqd_t input, output;
   char * input_buffer = (char *)malloc(BUFFER_SIZE);
 
@@ -61,20 +64,30 @@ void *task_x_axies_controller(void * argc)
       memcpy(&x_ref, input_buffer, sizeof(double));
       printf("[X] New x_ref = %.3f\n", x_ref);
       new_ref = 1;
+      if ((nr_of_ref = ref_controller(new_ref-get_xpos(), ref_arr, ref_arr_sz)) == -1) {
+        printf("ERROR!");
+        exit(2);
+      }
+      current_index = 0;
     }
     else if (errno != EAGAIN){ /* Ingen ting i køen */
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
+
 #ifndef TEST
     angle_pos = get_angle();
     out = angle_controller(angle_pos);
+    if(current_index < nr_of_index){
+      out += position_controller_x(ref_arr[current_index] - get_xpos());
+      current_index++;
+    }
     printf("Angle out: %lf\n", out);
     manual = 1 * get_ctrlpad_x();
 
-    if(fabs(manual) < 2) manual = 0;
-    
+
+
     run_motorx(out+manual);
-    
+
     /* x_pos = get_xpos(); */
     /* x_velocity = get_x_velocity(); */
     /* angle_pos = get_angle(); */

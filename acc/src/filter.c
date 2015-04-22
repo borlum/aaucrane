@@ -17,8 +17,8 @@ double angle_controller(double error){
   p = k_p * error;
   i = 0;
   d = (k_d * (error - old_error)) / TS;
-  
-  
+
+
   out = p + d;
 
   printf("#### PD ####\n");
@@ -30,12 +30,12 @@ double angle_controller(double error){
   printf("############\n");
 
   old_error = error;
-  
+
   return out;
 }
 
 double position_controller_x(double error){
-  double k_p = 25;
+  double k_p = 5;
   return error * k_p;
 }
 
@@ -47,4 +47,28 @@ double position_controller_y(double error){
 double velocity_controller_x(double error){
   double k_p = 50;
   return k_p * error;
+}
+
+int ref_controller(double error, double* output, size_t out_len){
+  double velocity = 0.5;
+  double i = 0;
+  double current_pos = get_xpos();
+  int j = 0;
+
+  if (error > 0){
+    while(i < error){
+      output[j] = current_pos + i;
+      i += velocity * TS;
+      if(++j > out_len)
+        return -1;
+    }
+  } else if (error < 0){
+    while(i > error){
+      output[j] = current_pos + i;
+      i -= velocity * TS;
+      if(++j > out_len)
+        return -1;
+    }
+  }
+  return j;
 }
