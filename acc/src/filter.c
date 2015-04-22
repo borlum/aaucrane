@@ -47,7 +47,7 @@ int ref_controller(double error, double* output, size_t out_len){
     for(i = 0; 0<4; i+=ref_step ){
       output[j] = i;
       if(fabs(output[j]) > fabs(error)) output[j] = error;
-      j++
+      j++;
     }
   out_len = 8000;
 
