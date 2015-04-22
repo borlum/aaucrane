@@ -65,31 +65,36 @@ void *task_x_axies_controller(void * argc)
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
 #ifndef TEST
-    x_pos = get_xpos();
-    x_velocity = get_x_velocity();
     angle_pos = get_angle();
-    velocity = get_motorx_velocity();
+    printf("Angle: %lf\n", angle_pos);
+    out = angle_controller(angle_ref - angle_pos);
+    printf("Angle out: %lf", out);
+    
+    /* x_pos = get_xpos(); */
+    /* x_velocity = get_x_velocity(); */
+    /* angle_pos = get_angle(); */
+    /* velocity = get_motorx_velocity(); */
 
-    //velocity = (x_pos - old_x_pos) * 1/0.0039 * 1/1000;
+    /* //velocity = (x_pos - old_x_pos) * 1/0.0039 * 1/1000; */
 
-    angle_err = angle_ref - angle_pos;
-    printf("[angle] out: %.2lf\n", angle_err);
-    x_err = x_ref - x_pos;
-    printf("[X_pos] out: %.2lf\n", x_pos);
-    printf("[X_err] out: %lf\n", x_err);
-    out = position_controller_x(x_err) + pI * x_err_int * .001;
-    /*velocity_err = out - velocity;
-    printf("[velocity] out: %lf\n", velocity);
-    out = velocity_controller_x(velocity_err);*/
-    printf("[output] : %.3lf\n", out);
-    printf("[Integrator value] : %.2lf\n\n", x_err_int);
+    /* angle_err = angle_ref - angle_pos; */
+    /* printf("[angle] out: %.2lf\n", angle_err); */
+    /* x_err = x_ref - x_pos; */
+    /* printf("[X_pos] out: %.2lf\n", x_pos); */
+    /* printf("[X_err] out: %lf\n", x_err); */
+    /* out = position_controller_x(x_err) + pI * x_err_int * .001; */
+    /* /\*velocity_err = out - velocity; */
+    /* printf("[velocity] out: %lf\n", velocity); */
+    /* out = velocity_controller_x(velocity_err);*\/ */
+    /* printf("[output] : %.3lf\n", out); */
+    /* printf("[Integrator value] : %.2lf\n\n", x_err_int); */
 
-    x_err_int += x_err;
+    /* x_err_int += x_err; */
 
-    if(fabs(x_err_int) >= 2500 ){
-      x_err_int = (x_err_int > 0 ? 2500 : -2500);
+    /* if(fabs(x_err_int) >= 2500 ){ */
+    /*   x_err_int = (x_err_int > 0 ? 2500 : -2500); */
 
-    }
+    /* } */
 
         if ( (fabs(x_err) < X_ERR_BAND)) {
       /*Settled*/
