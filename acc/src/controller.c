@@ -37,7 +37,8 @@ void *task_x_axies_controller(void * argc)
   double pI = 0;
   double out = 0;
 
-
+  double manual;
+  
   mqd_t input, output;
   char * input_buffer = (char *)malloc(BUFFER_SIZE);
 
@@ -68,7 +69,9 @@ void *task_x_axies_controller(void * argc)
     angle_pos = get_angle();
     out = angle_controller(angle_pos);
     printf("Angle out: %lf\n", out);
-    run_motorx(out);
+    manual = .5 * get_ctrlpad_x();
+    
+    run_motorx(out+manual);
     
     /* x_pos = get_xpos(); */
     /* x_velocity = get_x_velocity(); */
