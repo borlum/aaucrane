@@ -70,8 +70,8 @@ void *task_x_axies_controller(void * argc)
       /*if ((nr_of_ref = ref_controller(new_ref-get_xpos(), ref_arr, ref_arr_sz)) == -1) {
         printf("ERROR!");
         exit(2);
-      }
-      current_index = 0;*/
+      }*/
+      current_index = 0;
     }
     else if (errno != EAGAIN){ /* Ingen ting i køen */
       printf("[X]: error %d, %s\n", errno, strerror(errno));
@@ -89,7 +89,7 @@ void *task_x_axies_controller(void * argc)
     }*/
 
     out += (ref_arr[current_index] - get_xpos()) * 5;
-
+    printf("Ramp: %lf \n", ref_arr[current_index]);
     if(current_index < nr_of_ref) {
       current_index++;
     }
