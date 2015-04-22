@@ -3,9 +3,14 @@ CRANELIB_PATH = ../../libcrane
 
 INC += -I/usr/local/lib
 INC += -I../../libcrane
+INC += -I../../acc/include/
 
 GCC=gcc -std=gnu11
 LIBS=-lm -lpthread -lcomedi
+
+SOURCE += $(TARGET).c
+SOURCE += ../../acc/src/filter.c
+
 
 all: $(TARGET)
 
