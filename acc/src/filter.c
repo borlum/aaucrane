@@ -9,12 +9,12 @@ double old_error = 0;
 double angle_controller(double error){
   const double k_p = 10;
   const double k_i = 0;
-  const double k_d = 10;
+  const double k_d = 1;
 
 
   double out;
 
-  out = k_p * error + k_d * (error - old_error) / TS;
+  out = (k_p * error) + (k_d * (error - old_error) / TS);
 
   error_sum += error;
   old_error = error;
