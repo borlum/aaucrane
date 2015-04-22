@@ -1,6 +1,7 @@
 #include <libcrane.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "filter.h"
 
