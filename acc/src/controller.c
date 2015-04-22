@@ -69,6 +69,7 @@ void *task_x_axies_controller(void * argc)
     printf("Angle: %lf\n", angle_pos);
     out = angle_controller(angle_ref - angle_pos);
     printf("Angle out: %lf\n", out);
+    run_motorx(out);
     
     /* x_pos = get_xpos(); */
     /* x_velocity = get_x_velocity(); */
@@ -96,20 +97,20 @@ void *task_x_axies_controller(void * argc)
 
     /* } */
 
-        if ( (fabs(x_err) < X_ERR_BAND)) {
-      /*Settled*/
-      hit_count++;
-      if(hit_count >= 10000 && new_ref){
-        run_motorx(0);
-        break;
-        new_ref = 0;
-        hit_count = 0;
-        int msg = 1;
-        mq_send(output, (char *)&msg, sizeof(int), 0);
-      }
-    } else {
-      run_motorx(out);
-    }
+    /* if ( (fabs(x_err) < X_ERR_BAND)) { */
+    /*   /\*Settled*\/ */
+    /*   hit_count++; */
+    /*   if(hit_count >= 10000 && new_ref){ */
+    /*     run_motorx(0); */
+    /*     break; */
+    /*     new_ref = 0; */
+    /*     hit_count = 0; */
+    /*     int msg = 1; */
+    /*     mq_send(output, (char *)&msg, sizeof(int), 0); */
+    /*   } */
+    /* } else { */
+    /*   run_motorx(out); */
+    /* } */
 #ifdef RTAI
     rt_task_wait_period();
 #endif /* RTAI */
