@@ -27,7 +27,7 @@ double angle_controller(double error){
 }
 
 double position_controller_x(double error){
-  double k_p = 25;
+  double k_p = 5;
   return error * k_p;
 }
 
@@ -44,19 +44,19 @@ double velocity_controller_x(double error){
 int ref_controller(double error, double* output, size_t out_len){
   double velocity = 0.5;
   double i = 0;
-  double current_pos = get_xpos();
+
   int j = 0;
 
   if (error > 0){
     while(i < error){
-      output[j] = current_pos + i;
+      output[j] = i;
       i += velocity * TS;
       if(++j > out_len)
         return -1;
     }
   } else if (error < 0){
     while(i > error){
-      output[j] = current_pos + i;
+      output[j] =  i;
       i -= velocity * TS;
       if(++j > out_len)
         return -1;

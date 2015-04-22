@@ -78,7 +78,7 @@ void *task_x_axies_controller(void * argc)
     angle_pos = get_angle();
     out = angle_controller(angle_pos);
     if(current_index < nr_of_ref){
-      out += position_controller_x(ref_arr[current_index] - get_xpos());
+      out += position_controller_x(ref_arr[current_index] + get_xpos());
 
       printf("Ramp val: %lf \n", ref_arr[current_index]);
       printf("Error: %lf \n", position_controller_x(ref_arr[current_index] - get_xpos()));
