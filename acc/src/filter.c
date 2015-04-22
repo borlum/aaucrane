@@ -57,6 +57,7 @@ int j;
     }
   }
 
+  printf("J: %d\n", j);
   return j;
 
 }
