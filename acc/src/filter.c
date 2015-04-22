@@ -52,6 +52,7 @@ int j;
     }
   } else if(step < 0){
     for(i = 0; i>step; i -= speed){
+      printf("J = %d\n", j);
       ramp_arr[j] = i;
       j++;
     }
