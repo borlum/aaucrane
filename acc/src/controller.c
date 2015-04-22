@@ -87,7 +87,7 @@ void *task_x_axies_controller(void * argc)
     //printf("Angle out: %lf\n", out);
     manual = 1 * get_ctrlpad_x();
 
-
+    printf("Out: lf \n", out);
 
     run_motorx(out+manual);
 
