@@ -88,6 +88,8 @@ void *task_x_axies_controller(void * argc)
     }*/
 
     out += (ref_arr[current_index] - get_xpos()) * 10;
+    printf("Pos_err %d \n", ref_arr[current_index] - get_xpos()) * 10);
+
   //  printf("Ramp: %lf \n", ref_arr[current_index]);
     if(current_index < nr_of_ref) {
       current_index++;
@@ -95,7 +97,7 @@ void *task_x_axies_controller(void * argc)
     //printf("Angle out: %lf\n", out);
     manual = 1 * get_ctrlpad_x();
 
-    printf("Out: %lf \n", out);
+    //printf("Out: %lf \n", out);
 
     run_motorx(out);
 
