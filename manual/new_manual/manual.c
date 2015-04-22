@@ -12,7 +12,7 @@ FILE * fp;
 
 int main(int argc, char* argv[])
 {
-  double manual_x;
+  double manual_x, manual_y;
   double angle;
   initialize_crane();
 
@@ -35,9 +35,12 @@ int main(int argc, char* argv[])
     angle = angle_controller(get_angle());
     if( fabs((manual_x = get_ctrlpad_x())) < 2 )
       manual_x = 0;
-	
+
+    if( fabs((manual_y = get_ctrlpad_x())) < 2 )
+      manual_y = 0;
+    
     run_motorx(manual_x + angle);
-    run_motory(get_ctrlpad_y());
+    run_motory(manual_y);
 
     if (get_ctrlpad_magnet_switch()) {
         enable_magnet();
