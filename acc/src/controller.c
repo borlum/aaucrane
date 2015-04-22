@@ -68,8 +68,8 @@ void *task_x_axies_controller(void * argc)
     angle_pos = get_angle();
     printf("Angle: %lf\n", angle_pos);
     out = angle_controller(angle_pos);
-    printf("Angle out: %lf\n", -out);
-    run_motorx(-out);
+    printf("Angle out: %lf\n", out);
+    run_motorx(out);
     
     /* x_pos = get_xpos(); */
     /* x_velocity = get_x_velocity(); */
