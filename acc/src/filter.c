@@ -43,7 +43,7 @@ double velocity_controller_x(double error){
 
 int ramp_maker(double step, double *ramp_arr){
 double i,  speed = .0005;
-int j;
+int j = 0;
 
   if(step>0){
     for(i = 0; i<step; i += speed){
