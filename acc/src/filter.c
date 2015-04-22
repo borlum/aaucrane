@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<libcrane.h>
-include<math.h>
 
 #include "../include/filter.h"
 const static double TS = 0.001;
@@ -42,17 +41,24 @@ double velocity_controller_x(double error){
   return k_p * error;
 }
 
-int ref_controller(double error, double* output, size_t out_len){
-    double ref_step = 0.0005;
-    double i;
-    for(i = 0; 0<4; i+=ref_step ){
-      output[j] = i;
-      if(fabs(output[j]) > fabs(error)) output[j] = error;
+int ramp_maker(double step, double *ramp_arr){
+double i,  speed = .0005;
+int j;
+
+  if(step>0){
+    for(i = 0; i<step; i += speed){
+      ramp_arr[j] = i;
       j++;
     }
-  out_len = 8000;
+  } else if(step < 0){
+    for(i = 0; i>step; i -= speed){
+      ramp_arr[j] = i;
+      j++;
+    }
+  }
 
-  return out_len
+  return j;
+
 }
 
 /*int ref_controller(double error, double* output, size_t out_len){

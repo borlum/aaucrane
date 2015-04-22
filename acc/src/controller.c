@@ -39,6 +39,7 @@ void *task_x_axies_controller(void * argc)
 
   size_t ref_arr_sz = 8000, nr_of_ref;
   double ref_arr[ref_arr_sz];
+  double step, speed = 0.0005;
   int current_index = 0;
   double manual;
 
@@ -64,11 +65,13 @@ void *task_x_axies_controller(void * argc)
       memcpy(&x_ref, input_buffer, sizeof(double));
       printf("[X] New x_ref = %.3f\n", x_ref);
       new_ref = 1;
-      if ((nr_of_ref = ref_controller(new_ref-get_xpos(), ref_arr, ref_arr_sz)) == -1) {
+      step = x_ref-get_xpos();
+      nr_of_ref = ramp_maker(step, ref_arr);
+      /*if ((nr_of_ref = ref_controller(new_ref-get_xpos(), ref_arr, ref_arr_sz)) == -1) {
         printf("ERROR!");
         exit(2);
       }
-      current_index = 0;
+      current_index = 0;*/
     }
     else if (errno != EAGAIN){ /* Ingen ting i køen */
       printf("[X]: error %d, %s\n", errno, strerror(errno));
@@ -86,8 +89,10 @@ void *task_x_axies_controller(void * argc)
     }*/
 
     out += (ref_arr[current_index] - get_xpos) * 5;
-
-    current_index++;
+    
+    if(current_index < nr_of_ref) {
+      current_index++;
+    }
     //printf("Angle out: %lf\n", out);
     manual = 1 * get_ctrlpad_x();
 
