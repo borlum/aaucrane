@@ -16,9 +16,10 @@
 #ifndef TEST
 #include <libcrane.h>
 #endif
-#include "acc.h"
-#include "controller.h"
-#include "filter.h"
+#include <acc.h>
+#include <controller.h>
+#include <filter.h>
+#include <PD_angle_control.h>
 
 #ifdef RTAI
 RT_TASK *rt_x_axies_controller;
