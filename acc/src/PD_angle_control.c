@@ -47,7 +47,7 @@ double pid_get_controller_output(){
 
   out += C2 * (ref_arr[current_index] - get_xpos());
 
-  out += pos_integrate;
+  out += pos_integrate*.5;
 
   pos_integrate += (ref_arr[current_index] - get_xpos()) * TS;
 
