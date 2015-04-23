@@ -62,8 +62,12 @@ void *task_x_axies_controller(void * argc)
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
 #ifndef TEST
+    /* Mortens PD */
+    //out = pd_get_controller_output();
 
-    out = pd_get_controller_output();
+    /* Steffans PID */
+      out = pid_get_controller_output();
+
     if ( (fabs(x_ref-get_xpos()) < X_ERR_BAND) && (get_motorx_velocity() == 0) && (get_angle() == 0) ) {
       printf("X-POS: %lf\n", get_xpos());
       if( (hit_count++) == 1000 ){

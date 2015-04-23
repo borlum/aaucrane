@@ -3,5 +3,6 @@
 
 void pd_init_controller(double x_ref);
 double pd_get_controller_output();
+double pid_get_controller_output();
 
 #endif
