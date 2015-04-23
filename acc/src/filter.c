@@ -8,7 +8,7 @@ double error_sum = 0;
 double old_error = 0;
 
 double angle_controller(double error){
-  const double k_p = 50;
+  const double k_p = 50; /* 5 times larger then simulated */
   const double k_i = 0;
   const double k_d = .2;
 
@@ -27,7 +27,7 @@ double angle_controller(double error){
 }
 
 double position_controller_x(double error){
-  double k_p = 10;
+  double k_p = 5 * 5; /* Angle P is 5 times larger then simulaed */
   return error * k_p;
 }
 
