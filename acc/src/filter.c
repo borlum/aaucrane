@@ -27,7 +27,7 @@ double angle_controller(double error){
 }
 
 double position_controller_x(double error){
-  double k_p = 5 * 5; /* Angle P is 5 times larger then simulaed */
+  double k_p = 5 * 10; /* Angle P is 5 times larger then simulaed */
   return error * k_p;
 }
 
