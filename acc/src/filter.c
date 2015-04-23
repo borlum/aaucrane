@@ -4,30 +4,26 @@
 #include "../include/filter.h"
 const static double TS = 0.001;
 
-double error_sum = 0;
-double old_error = 0;
-
-double angle_controller(double error){
-  const double k_p = 50; /* 5 times larger then simulated */
-  const double k_i = 0;
-  const double k_d = .2;
+double angle_integrate = 0, angle_prev = 0;
 
 
-  double p = 0, i = 0, d = 0, out = 0;
+double angle_controller(double angle_pos){
+  double angle_pos = 0, out, TS = .001, windup_val = 12.5, angle_windup_val = 1, k = 38, tp = .1, td = .5, ti = 4;
 
-  p = k_p * error;
-  i = 0;
-  d = (k_d * (error - old_error)) / TS;
+  out = angle_pos*(k*tp + k * ti * (angle_integrate) * TS + k) + k * td * (angle_prev-angle_pos);
 
+  angle_integrate += angle_pos;
 
-  out = p + d;
-  old_error = error;
+  if(angle_integrate < -angle_windup_val) angle_integrate = -angle_windup_val;
+  else if(angle_integrate > angle_windup_val) angle_integrate = angle_windup_val;
+
+  angle_prev = angle_pos;
 
   return out;
 }
 
 double position_controller_x(double error){
-  double k_p = 35; /* Angle P is 5 times larger then simulaed */
+  double k_p = 30;
   return error * k_p;
 }
 
