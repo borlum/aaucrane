@@ -79,19 +79,22 @@ void *task_x_axies_controller(void * argc)
 #ifndef TEST
     angle_pos = get_angle();
     out = angle_controller(angle_pos);
+  /*  if(current_index < nr_of_ref){
+      out += position_controller_x(ref_arr[current_index] - get_xpos());
 
-    if(current_index < nr_of_ref) {
-      printf("Feedforward: %lf\n", position_controller_x(ref_arr[current_index]));
-      out += position_controller_x(ref_arr[current_index]);
+      printf("Ramp val: %lf \n", ref_arr[current_index]);
+      printf("Error: %lf \n", position_controller_x(ref_arr[current_index] - get_xpos()));
       current_index++;
-    }
-    else{
-      printf("Feeback\n");
-      out += position_controller_x(x_ref - get_xpos());
-    }
-    
+    }*/
+
+    out += (ref_arr[current_index] - get_xpos()) * 10;
     printf("Pos_err %lf \n", ref_arr[current_index] - get_xpos() * 10);
 
+  //  printf("Ramp: %lf \n", ref_arr[current_index]);
+    if(current_index < nr_of_ref) {
+      current_index++;
+    }
+    //printf("Angle out: %lf\n", out);
     manual = 1 * get_ctrlpad_x();
 
     //printf("Out: %lf \n", out);
