@@ -77,6 +77,7 @@ void *task_x_axies_controller(void * argc)
 	printf("DONE @ %lf\n", get_xpos());
 	if (mq_send(output, (char *)&msg, sizeof(int), 0) == -1)
 	  printf("%s\n", strerror(errno));
+	printf("After if\n");
       }
     } else {
       hit_count = 0;
