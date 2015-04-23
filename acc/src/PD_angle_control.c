@@ -26,5 +26,5 @@ double pd_get_controller_output(){
     current_index++;
   }
 
-  return(out);
+  return out;
 }

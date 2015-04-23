@@ -52,13 +52,11 @@ int ramp_maker(double step, double *ramp_arr){
     }
   } else if(step < 0){
     for(i = 0; i>step; i -= speed){
-      printf("J = %d\n", j);
       ramp_arr[j] = i + off_set;
       j++;
     }
   }
 
-  printf("J: %d\n", j);
   return j;
 
 }
