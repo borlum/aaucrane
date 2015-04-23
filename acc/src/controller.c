@@ -70,6 +70,7 @@ void *task_x_axies_controller(void * argc)
 
     if ( (fabs(x_ref-get_xpos()) < (X_ERR_BAND/2)) && (get_motorx_velocity() == 0) && (get_angle() == 0) ) {
       printf("X-POS: %lf\n", get_xpos());
+      run_motorx(0);
       if( (hit_count++) == 100 ){
 	run_motorx(0);
 	new_ref = 0;
