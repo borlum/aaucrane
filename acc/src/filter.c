@@ -42,7 +42,7 @@ double velocity_controller_x(double error){
 }
 
 int ramp_maker(double step, double *ramp_arr){
-  double i,  speed = .0005, off_set = get_xpos();
+  double i,  speed = .0005, off_set = get_xpos(); //speed is in m/ms
   int j = 0;
 
   if(step>0){
