@@ -71,7 +71,7 @@ void *task_x_axies_controller(void * argc)
       printf("tmp: %lf\n", tmp);
     if ( (fabs(tmp) < X_ERR_BAND) && (get_motorx_velocity() == 0) && (get_angle() == 0) ) {
       printf("X-POS: %lf\n", tmp);
-      if( (hit_count++) == 500 ){
+      if( (hit_count++) == 50 ){
 	       out = 0;
 	       new_ref = 0;
 	       hit_count = 0;
