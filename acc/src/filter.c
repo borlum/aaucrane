@@ -27,7 +27,7 @@ double angle_controller(double error){
 }
 
 double position_controller_x(double error){
-  double k_p = 5;
+  double k_p = 10;
   return error * k_p;
 }
 
