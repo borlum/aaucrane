@@ -92,7 +92,7 @@ void *task_x_axies_controller(void * argc)
 
   //  printf("Ramp: %lf \n", ref_arr[current_index]);
     if(current_index < (nr_of_ref-1)) {
-      printf("Ramp: %d \n", ref_arr[current_index]);
+      printf("Ramp: %lf \n", ref_arr[current_index]);
       current_index++;
     }
     //printf("Angle out: %lf\n", out);
