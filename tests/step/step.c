@@ -130,8 +130,11 @@ int main(int argc,char* argv[]){
       pthread_create(&t_logger, NULL, logger, NULL);
 
     }
-    
+    printf("Before send\n");
     mq_send(to_x, (char *) &x, sizeof(x), 0);
+    printf("After send\n");
     mq_receive(from_x, NULL, sizeof(double), 0);
+    printf("After receive\n");
+
   }
 }
