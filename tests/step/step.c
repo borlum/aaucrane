@@ -121,15 +121,6 @@ int main(int argc,char* argv[]){
   char stupid_buffer[2 * BUFFER_SIZE];
   double tmp;
 
-  while(1){
-    if(mq_receive(from_x, stupid_buffer, len, 0) == -1)
-      printf("ERROR: recv: %s\n", strerror(errno));
-    else{
-      memcpy(&tmp, stupid_buffer, sizeof(int));
-      printf("Read: %lf", tmp);
-    }
-  }
-  
   while(1) {
     printf ("Enter a step size: <x>:\n");
     scanf("%lf", &x);
