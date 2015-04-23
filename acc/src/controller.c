@@ -64,7 +64,7 @@ void *task_x_axies_controller(void * argc)
 #ifndef TEST
 
     out = pd_get_controller_output();
-
+    printf("X-POS: %lf\n", get_xpos());
      if ( (fabs(x_ref-get_xpos()) < X_ERR_BAND) && get_motorx_velocity() == 0) {
          run_motorx(0);
          new_ref = 0;

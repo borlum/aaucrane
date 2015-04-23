@@ -15,10 +15,6 @@ void pd_init_controller(double x_ref){
   double step;
   step = x_ref-get_xpos();
   nr_of_ref = ramp_maker(step, ref_arr);
-  for(int i = 0; i < nr_of_ref; i++){
-    printf("RAMP: %lf\n", ref_arr[i]);
-  }
-  printf("X_ref %lf, step, %lf\n", x_ref, step);
   current_index = 0;
 }
 
