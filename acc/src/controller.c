@@ -88,7 +88,7 @@ void *task_x_axies_controller(void * argc)
     }*/
 
     out += position_controller_x(ref_arr[current_index] - get_xpos());
-    printf("Out %lf \n", out);
+    //printf("Out %lf \n", out);
 
   //  printf("Ramp: %lf \n", ref_arr[current_index]);
     if(current_index < (nr_of_ref-1)) {
