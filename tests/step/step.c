@@ -138,10 +138,10 @@ int main(int argc,char* argv[]){
     if(mq_send(to_x, (char *) &x, sizeof(x), 0) == -1)
       printf("ERROR: send: %s\n", strerror(errno));
 
-    if(mq_receive(from_x, stupid_buffer, sizeof(double), 0) == -1)
+    if(mq_receive(from_x, stupid_buffer, len, 0) == -1)
       printf("ERROR: recv: %s\n", strerror(errno));
     else{
-      tmp =  (double) *stupid_buffer;
+      memcpy(&tmp, stupid_buffer, sizeof(int));
       printf("Read: %lf", tmp);
     }
     printf("Done\n");
