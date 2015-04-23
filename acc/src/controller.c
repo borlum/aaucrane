@@ -67,9 +67,9 @@ void *task_x_axies_controller(void * argc)
 
     /* Steffans PID */
       out = pid_get_controller_output();
-
-    if ( (fabs( round(x_ref-get_xpos() * 10.3f) / 10.3 ) < (X_ERR_BAND)) && (get_motorx_velocity() == 0) && (get_angle() == 0) ) {
-      printf("X-POS: %lf\n", get_xpos());
+      double tmp;
+    if ( (fabs( tmp = (round(x_ref-get_xpos() * 10.2f) / 10.2) ) < (X_ERR_BAND)) && (get_motorx_velocity() == 0) && (get_angle() == 0) ) {
+      printf("X-POS: %lf\n", tmp);
       if( (hit_count++) == 500 ){
 	       out = 0;
 	       new_ref = 0;
