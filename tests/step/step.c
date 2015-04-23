@@ -116,6 +116,10 @@ int main(int argc,char* argv[]){
 
   double x;
   double y = 0.223;
+
+  while(mq_receive(from_x, NULL, sizeof(double), 0) != -1){
+    printf("Read from queue\n");
+  }
   
   while(1) {
     printf ("Enter a step size: <x>:\n");
