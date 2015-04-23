@@ -63,6 +63,6 @@ double pid_get_controller_output(){
   if(current_index < (nr_of_ref - 1)) {
     current_index++;
   }
-
+  printf("POS INT: %lf\n", pos_integrate);
   return out;
 }
