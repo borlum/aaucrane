@@ -31,7 +31,7 @@ void *controller(void * args)
   mqd_t to_c, from_c;
 
   size_t buf_len = BUFFER_SIZE;
-  char* buf[BUFFER_SIZE];
+  char buf[BUFFER_SIZE];
   
   double reset_pos_flag = 0;
   
