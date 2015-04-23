@@ -119,6 +119,7 @@ int main(int argc,char* argv[]){
 
   size_t len = 2 * BUFFER_SIZE;
   char stupid_buffer[2 * BUFFER_SIZE];
+  double tmp;
   
   while(1) {
     printf ("Enter a step size: <x>:\n");
@@ -133,11 +134,16 @@ int main(int argc,char* argv[]){
       pthread_create(&t_logger, NULL, logger, NULL);
 
     }
-    printf("Before send\n");
+
     if(mq_send(to_x, (char *) &x, sizeof(x), 0) == -1)
       printf("%s", strerror(errno));
-    printf("After send\n");
+
     if(mq_receive(from_x, stupid_buffer, sizeof(double), 0) == -1)
       printf("%s", strerror(errno));
+    else{
+      tmp =  (double) *stupid_buffer;
+      printf("Read: %lf", tmp);
+    }
+      
   }
 }
