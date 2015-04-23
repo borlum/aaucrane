@@ -8,7 +8,7 @@ double angle_integrate = 0, angle_prev = 0;
 
 
 double angle_controller(double angle_pos){
-  double angle_pos = 0, out, TS = .001, windup_val = 12.5, angle_windup_val = 1, k = 38, tp = .1, td = .5, ti = 4;
+  double out, TS = .001, windup_val = 12.5, angle_windup_val = 1, k = 38, tp = .1, td = .5, ti = 4;
 
   out = angle_pos*(k*tp + k * ti * (angle_integrate) * TS + k) + k * td * (angle_prev-angle_pos);
 
