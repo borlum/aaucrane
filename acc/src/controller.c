@@ -69,7 +69,6 @@ void *task_x_axies_controller(void * argc)
     out = pid_get_controller_output();
     double tmp = (roundf( (x_ref-get_xpos()) * 10.3f) / 10.3f);
     if ( (fabs(tmp) < X_ERR_BAND) && (get_motorx_velocity() == 0) && (get_angle() == 0) ) {
-      printf("X_POS ERROR: %lf\n", tmp);
       if( ((hit_count++) >= 50) && new_ref ){
 	new_ref = 0;
 	hit_count = 0;
@@ -77,7 +76,6 @@ void *task_x_axies_controller(void * argc)
 	printf("DONE @ %lf\n", get_xpos());
 	if (mq_send(output, (char *)&msg, sizeof(int), 0) == -1)
 	  printf("%s\n", strerror(errno));
-	printf("After if\n");
       }
     } else {
       hit_count = 0;
