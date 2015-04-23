@@ -87,7 +87,7 @@ void *task_x_axies_controller(void * argc)
       current_index++;
     }*/
 
-    out = (ref_arr[current_index] - get_xpos());
+    out = (-ref_arr[current_index] + get_xpos());
     printf("Pos_err %lf \n", out);
 
   //  printf("Ramp: %lf \n", ref_arr[current_index]);
