@@ -11,7 +11,6 @@ LIBS=-lm -lpthread -lcomedi
 SOURCE += $(TARGET).c
 SOURCE += ../../acc/src/filter.c
 
-
 all: $(TARGET)
 
 $(TARGET): $(TARGET).c
