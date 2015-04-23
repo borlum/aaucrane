@@ -117,9 +117,8 @@ int main(int argc,char* argv[]){
   double x;
   double y = 0.223;
 
-  while(mq_receive(from_x, NULL, sizeof(double), 0) != -1){
-    printf("Read from queue\n");
-  }
+  size_t len = 2 * BUFFER_SIZE;
+  char stupid_buffer[2 * BUFFER_SIZE];
   
   while(1) {
     printf ("Enter a step size: <x>:\n");
@@ -135,10 +134,10 @@ int main(int argc,char* argv[]){
 
     }
     printf("Before send\n");
-    mq_send(to_x, (char *) &x, sizeof(x), 0);
+    if(mq_send(to_x, (char *) &x, sizeof(x), 0) == -1)
+      printf("%s", strerror(errno));
     printf("After send\n");
-    mq_receive(from_x, NULL, sizeof(double), 0);
-    printf("After receive\n");
-
+    if(mq_receive(from_x, stupid_buffer, sizeof(double), 0) == -1)
+      printf("%s", strerror(errno));
   }
 }
