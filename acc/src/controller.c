@@ -63,15 +63,15 @@ void *task_x_axies_controller(void * argc)
     }
 #ifndef TEST
     /* Mortens PD */
-    out = pd_get_controller_output();
+    //out = pd_get_controller_output();
 
     /* Steffans PID */
-//      out = pid_get_controller_output();
+      out = pid_get_controller_output();
 
     if ( (fabs(x_ref-get_xpos()) < (X_ERR_BAND/2)) && (get_motorx_velocity() == 0) && (get_angle() == 0) ) {
       printf("X-POS: %lf\n", get_xpos());
       run_motorx(0);
-      if( (hit_count++) == 100 ){
+      if( (hit_count++) == 10 ){
 	run_motorx(0);
 	new_ref = 0;
 	hit_count = 0;
