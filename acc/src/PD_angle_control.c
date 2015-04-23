@@ -51,8 +51,8 @@ double pid_get_controller_output(){
 
   pos_integrate += (ref_arr[current_index] - get_xpos()) * TS;
 
-  if(pos_integrate < -12.5) pos_integrate = -12.5;
-    else if(pos_integrate > 12.5) pos_integrate = 12.5;
+  if(pos_integrate < -5) pos_integrate = -5;
+    else if(pos_integrate > 5) pos_integrate = 5;
 
   if(current_index < (nr_of_ref - 1)) {
     current_index++;
