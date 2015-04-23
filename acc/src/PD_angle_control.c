@@ -8,7 +8,7 @@
 #define REF_ARR_SZ 8000
 
 
-double angle_integrate = 0, angle_prev = 0;
+double angle_integrate = 0, angle_prev = 0, pos_integrate = 0;
 
 
 size_t nr_of_ref;
@@ -46,6 +46,10 @@ double pid_get_controller_output(){
   angle_prev = angle_pos;
 
   out += C2 * (ref_arr[current_index] - get_xpos());
+
+  out += pos_integrate;
+
+  pos_integrate += (ref_arr[current_index] - get_xpos()) * TS;
 
   if(current_index < (nr_of_ref - 1)) {
     current_index++;
