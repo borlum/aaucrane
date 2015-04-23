@@ -25,7 +25,7 @@ void pd_init_controller(double x_ref){
 double pd_get_controller_output(){
   double angle_pos = 0, out;
   angle_pos = get_angle();
-  out = angle_controller(angle_pos);
+  out = 0; //angle_controller(angle_pos);
   out += position_controller_x(ref_arr[current_index] - get_xpos());
   if(current_index < (nr_of_ref - 1)) {
     current_index++;
