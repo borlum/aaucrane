@@ -91,7 +91,7 @@ void *task_x_axies_controller(void * argc)
     printf("Pos_err %lf \n", ref_arr[current_index] - get_xpos());
 
   //  printf("Ramp: %lf \n", ref_arr[current_index]);
-    if(current_index < nr_of_ref) {
+    if(current_index < (nr_of_ref-1)) {
       current_index++;
     }
     //printf("Angle out: %lf\n", out);
