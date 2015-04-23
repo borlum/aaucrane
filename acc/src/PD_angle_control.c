@@ -37,7 +37,7 @@ double pd_get_controller_output(){
 
 double pid_get_controller_output(){
   double angle_pos = 0, out, TS = .001, windup_val = 10, angle_windup_val = 1;
-  double C2 = 15, k = 38, tp = .1, td = .5, ti = 4;
+  double C2 = 35, k = 38, tp = .1, td = .5, ti = 4;
   angle_pos = get_angle();
 
   out = angle_pos*(k*tp + k * ti * (angle_integrate) * TS + k) + k * td * (angle_prev-angle_pos);
@@ -51,7 +51,7 @@ double pid_get_controller_output(){
 
   out += C2 * (ref_arr[current_index] - get_xpos());
 
-  out += pos_integrate*.1;
+  out += pos_integrate*0;
 
   pos_integrate += (ref_arr[current_index] - get_xpos()) * TS;
 
@@ -63,6 +63,5 @@ double pid_get_controller_output(){
   if(current_index < (nr_of_ref - 1)) {
     current_index++;
   }
-  printf("POS INT: %lf\n", pos_integrate);
   return out;
 }
