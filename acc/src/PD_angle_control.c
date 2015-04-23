@@ -23,7 +23,7 @@ double pd_get_controller_output(){
   angle_pos = get_angle();
   out = angle_controller(angle_pos);
   out += position_controller_x(ref_arr[current_index] - get_xpos());
-  if(current_index < (nr_of_ref)) {
+  if(current_index < (nr_of_ref - 1)) {
     current_index++;
   }
 
