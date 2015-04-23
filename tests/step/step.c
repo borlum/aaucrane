@@ -144,6 +144,6 @@ int main(int argc,char* argv[]){
       tmp =  (double) *stupid_buffer;
       printf("Read: %lf", tmp);
     }
-      
+    printf("Done\n");
   }
 }
