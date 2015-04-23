@@ -37,7 +37,7 @@ double pd_get_controller_output(){
 
 double pid_get_controller_output(){
   double angle_pos = 0, out, TS = .001;
-  double C2 = 15, k = 38, tp = .1, td = .1, ti = 4;
+  double C2 = 15, k = 38, tp = .1, td = .5, ti = 4;
   angle_pos = get_angle();
 
   out = angle_pos*(k*tp + k * ti * (angle_integrate) * TS + k) + k * td * (angle_prev-angle_pos);
@@ -47,7 +47,7 @@ double pid_get_controller_output(){
 
   out += C2 * (ref_arr[current_index] - get_xpos());
 
-  out += pos_integrate;
+  out += pos_integrate*.1;
 
   pos_integrate += (ref_arr[current_index] - get_xpos()) * TS;
 
