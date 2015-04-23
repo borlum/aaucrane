@@ -5,9 +5,10 @@
 
 #include <filter.h>
 
+#define REF_ARR_SZ 8000
 
-size_t ref_arr_sz = 8000, nr_of_ref;
-double ref_arr[ref_arr_sz];
+size_t nr_of_ref;
+double ref_arr[REF_ARR_SZ];
 int current_index = 0;
 
 void pd_init_controller(double x_ref){
