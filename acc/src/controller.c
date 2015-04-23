@@ -99,7 +99,7 @@ void *task_x_axies_controller(void * argc)
 
     //printf("Out: %lf \n", out);
 
-    run_motorx(out - get_xpos());
+    run_motorx((out - get_xpos()) * 5);
 
     /* x_pos = get_xpos(); */
     /* x_velocity = get_x_velocity(); */
