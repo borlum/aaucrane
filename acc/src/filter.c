@@ -42,18 +42,18 @@ double velocity_controller_x(double error){
 }
 
 int ramp_maker(double step, double *ramp_arr){
-double i,  speed = .0005;
-int j = 0;
+  double i,  speed = .0005, off_set = get_xpos();
+  int j = 0;
 
   if(step>0){
     for(i = 0; i<step; i += speed){
-      ramp_arr[j] = i;
+      ramp_arr[j] = i + off_set;
       j++;
     }
   } else if(step < 0){
     for(i = 0; i>step; i -= speed){
       printf("J = %d\n", j);
-      ramp_arr[j] = i;
+      ramp_arr[j] = i + off_set;
       j++;
     }
   }

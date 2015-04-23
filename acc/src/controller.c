@@ -87,7 +87,7 @@ void *task_x_axies_controller(void * argc)
       current_index++;
     }*/
 
-    out = (ref_arr[current_index] /*+ get_xpos()*/);
+    out = (ref_arr[current_index] - get_xpos());
     printf("Out %lf \n", out);
 
   //  printf("Ramp: %lf \n", ref_arr[current_index]);
@@ -99,7 +99,7 @@ void *task_x_axies_controller(void * argc)
 
     //printf("Out: %lf \n", out);
 
-    run_motorx((out/* - get_xpos()*/) * 5);
+    run_motorx((out) * 5);
 
     /* x_pos = get_xpos(); */
     /* x_velocity = get_x_velocity(); */
