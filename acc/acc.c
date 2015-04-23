@@ -30,8 +30,8 @@ void *controller(void * args)
   mqd_t to_y, from_y;
   mqd_t to_c, from_c;
 
-  size_t buf_len = BUFFER_LEN;
-  char* buf[BUFFER_LEN];
+  size_t buf_len = BUFFER_SIZE;
+  char* buf[BUFFER_SIZE];
   
   double reset_pos_flag = 0;
   
@@ -65,7 +65,7 @@ void *controller(void * args)
     printf("[C] Moved to x: %.3f\n", cmd->pickup_point.x);
     
     mq_send(to_y, (char *) &(cmd->pickup_point.y), sizeof(cmd->pickup_point.y), 0);
-    mq_receive(from_y, NULL, BUFFER_SIZE, 0);
+    mq_receive(from_y, buf, buf_len, 0);
     printf("[C] Moved to y: %.3f\n", cmd->pickup_point.y);
 
     enable_magnet();
