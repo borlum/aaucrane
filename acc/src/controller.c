@@ -65,7 +65,7 @@ void *task_x_axies_controller(void * argc)
 
     out = pd_get_controller_output();
 
-     if ( (fabs(x_ref-get_xpos())) < X_ERR_BAND) && get_motorx_velocity() == 0) {
+     if ( (fabs(x_ref-get_xpos()) < X_ERR_BAND) && get_motorx_velocity() == 0) {
          run_motorx(0);
          new_ref = 0;
          hit_count = 0;
