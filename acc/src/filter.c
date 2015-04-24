@@ -19,10 +19,10 @@ double angle_controller(double angle_pos){
     ti = 4;
   }
   else{
-    k = 0.183;
+    k = 0.185;
     tp = 0.1;
-    td = 0.045;
-    ti = 4.5;
+    td = 0.035;
+    ti = 4.545;
   }
   
   out = angle_pos*(k*tp + k * ti * (angle_integrate) * TS + k) + k * td * (angle_prev-angle_pos);
