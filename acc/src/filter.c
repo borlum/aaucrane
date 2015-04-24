@@ -43,8 +43,12 @@ double position_controller_x2(double error){
 }
 
 double position_controller_y(double error){
-  double k_p = 49.3;
-  return error * k_p;
+  double k_p = 49.3, comp = 10;
+
+  if(error > 0) comp *= -1;
+  else if(error < 0) comp *= -1;
+
+  return error * (k_p + comp);
 }
 
 double velocity_controller_x(double error){
