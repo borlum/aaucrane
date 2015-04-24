@@ -139,8 +139,6 @@ void *task_y_axies_controller(void * argc)
     y_pos = get_ypos();
     y_err = y_ref - y_pos;
 
-    printf("Pos: %lf \n", y_pos);
-
     if (fabs(y_err) < Y_ERR_BAND) {
       /*Settled*/
       hit_count++;
@@ -153,6 +151,9 @@ void *task_y_axies_controller(void * argc)
     }
 
     out = position_controller_y(y_err);
+
+    printf("out: %lf \n", out);
+
     run_motory(out);
 #ifdef RTAI
     rt_task_wait_period();
