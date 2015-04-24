@@ -34,15 +34,13 @@ int main(int argc, char* argv[])
 
     angle = angle_controller(get_angle());
     if( fabs((manual_x = get_ctrlpad_x())) < 2 )
-      manual_x = 0;
-    else
-      
+      manual_x = 0;      
 
     if( fabs((manual_y = get_ctrlpad_y())) < 2 )
       manual_y = 0;
     
-    //run_motorx(manual_x + angle);
-    //run_motory(manual_y);
+    run_motorx(manual_x + angle);
+    run_motory(manual_y);
 
     if (get_ctrlpad_magnet_switch()) {
         enable_magnet();
