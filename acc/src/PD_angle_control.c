@@ -37,7 +37,7 @@ double pd_get_controller_output(){
 
 double pid_get_controller_output(){
   double out;
-  
+
   out = angle_controller(get_angle());
   out += position_controller_x(ref_arr[current_index] - get_xpos());
 
