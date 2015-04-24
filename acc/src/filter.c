@@ -8,10 +8,24 @@ double angle_integrate = 0, angle_prev = 0;
 
 
 double angle_controller(double angle_pos){
-  double out, TS = .001, windup_val = 12.5, angle_windup_val = 1, k = 38, tp = .1, td = .5, ti = 4;
+  double out, TS = .001, angle_windup_val = 1;
+  double k, tp, td, ti;
 
+  /* Diffrent parameters depending of container */
+  if(get_ctrlpad_magnet_switch){
+    k = 38;
+    tp = 0.1;
+    td = 0.5;
+    ti = 4;
+  }
+  else{
+    k = 0.183;
+    tp = 0.1;
+    td = 0.045;
+    ti = 4.5;
+  }
+  
   out = angle_pos*(k*tp + k * ti * (angle_integrate) * TS + k) + k * td * (angle_prev-angle_pos);
-
   angle_integrate += angle_pos;
 
   if(angle_integrate < -angle_windup_val) angle_integrate = -angle_windup_val;
@@ -33,7 +47,13 @@ double angle_controller2(double angle_pos){
 }
 
 double position_controller_x(double error){
-  double k_p = 30;
+  double k_p;
+
+  if(get_ctrlpad_magnet_switch)
+    k_p = 30;
+  else
+    k_p = 20;
+
   return error * k_p;
 }
 
