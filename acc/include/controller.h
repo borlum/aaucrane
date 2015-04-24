@@ -1,7 +1,7 @@
 #ifndef _CONTROLLER_H_
 #define _CONTROLLER_H
 
-#define X_ERR_BAND 0.0075
+#define X_ERR_BAND 0.010
 #define Y_ERR_BAND 0.005
 #define C1 10
 #define C2 26.3
