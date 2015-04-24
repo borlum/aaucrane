@@ -22,8 +22,19 @@ double angle_controller(double angle_pos){
   return out;
 }
 
+double angle_controller2(double angle_pos){
+  double out, k_p = 4;
+
+  return angle_pos * k_p;
+}
+
 double position_controller_x(double error){
   double k_p = 30;
+  return error * k_p;
+}
+
+double position_controller_x2(double error){
+  double k_p = 25;
   return error * k_p;
 }
 

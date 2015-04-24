@@ -66,7 +66,12 @@ void *task_x_axies_controller(void * argc)
     //out = pd_get_controller_output();
 
     /* Steffans PID */
-    out = pid_get_controller_output();
+//    out = pid_get_controller_output();
+
+    /* P controller */
+      out = pid_get_controller_output();
+
+
     double tmp = (roundf( (x_ref-get_xpos()) * 10.3f) / 10.3f);
     if ( (fabs(tmp) < X_ERR_BAND) && (get_motorx_velocity() == 0) && (get_angle() == 0) ) {
       if( ((hit_count++) >= 50) && new_ref ){
