@@ -110,9 +110,12 @@ int main(int argc,char* argv[]){
   if( init() == -1)
     exit(-1);
 
-  mqd_t to_x, from_x;
+  mqd_t to_x, from_x, to_y, from_y;
   to_x = mq_open(Q_TO_X, O_WRONLY);
   from_x = mq_open(Q_FROM_X, O_RDONLY);
+
+  to_y = mq_open(Q_TO_Y, O_WRONLY);
+  from_y = mq_open(Q_TO_Y, O_RDONLY);
 
   double x;
   double y = 0.223;
@@ -122,23 +125,23 @@ int main(int argc,char* argv[]){
   double tmp;
 
   while(1) {
-    printf ("Enter a step size: <x>:\n");
+    printf ("Enter a step size: <y>:\n");
     scanf("%lf", &x);
 
     if(t_xcontroller == NULL && t_logger == NULL){
       printf("Resetting ... .. .\n");
-      pthread_create(&t_xcontroller, NULL, task_x_axies_controller, NULL);
-      /*pthread_create(&t_ycontroller, NULL, rt_y_axies_controller, NULL);*/
-      //usleep(1000 * 1000);
+      //pthread_create(&t_xcontroller, NULL, task_x_axies_controller, NULL);
+      pthread_create(&t_ycontroller, NULL, task_y_axies_controller, NULL);
+      usleep(1000 * 1000);
       printf("starting logger\n");
       pthread_create(&t_logger, NULL, logger, NULL);
 
     }
 
-    if(mq_send(to_x, (char *) &x, sizeof(x), 0) == -1)
+    if(mq_send(to_y, (char *) &x, sizeof(x), 0) == -1)
       printf("ERROR: send: %s\n", strerror(errno));
 
-    if(mq_receive(from_x, stupid_buffer, len, 0) == -1)
+    if(mq_receive(from_y, stupid_buffer, len, 0) == -1)
       printf("ERROR: recv: %s\n", strerror(errno));
     else{
       memcpy(&tmp, stupid_buffer, sizeof(int));
