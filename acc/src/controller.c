@@ -144,10 +144,10 @@ void *task_y_axies_controller(void * argc)
       /*Settled*/
       hit_count++;
       if(hit_count >= 10 && new_ref){
-         new_ref = 0;
-         hit_count = 0;
-         int msg = 2;
-         mq_send(output, (char *)&msg, sizeof(int), 0);
+	new_ref = 0;
+	hit_count = 0;
+	int msg = 2;
+	mq_send(output, (char *)&msg, sizeof(int), 0);
       }
     }
 
