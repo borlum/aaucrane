@@ -4,7 +4,7 @@
 #include "../include/filter.h"
 const static double TS = 0.001;
 
-//double angle_integrate = 0, angle_prev = 0;
+double angle_integrate = 0, angle_prev = 0;
 
 
 double angle_controller(double angle_pos){

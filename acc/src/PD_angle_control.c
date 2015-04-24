@@ -8,7 +8,7 @@
 #define REF_ARR_SZ 8000
 
 
-double angle_integrate = 0, angle_prev = 0, pos_integrate = 0;
+double pos_integrate = 0;
 
 
 size_t nr_of_ref;
