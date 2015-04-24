@@ -115,7 +115,7 @@ int main(int argc,char* argv[]){
   from_x = mq_open(Q_FROM_X, O_RDONLY);
 
   to_y = mq_open(Q_TO_Y, O_WRONLY);
-  from_y = mq_open(Q_TO_Y, O_RDONLY);
+  from_y = mq_open(Q_FROM_Y, O_RDONLY);
 
   double x;
   double y = 0.223;
