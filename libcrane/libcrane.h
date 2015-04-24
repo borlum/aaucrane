@@ -16,6 +16,8 @@
 #define CHAN_MAGNET_OUT 7
 #define CHAN_MAGNET_BTN 3
 
+#define CHAN_CTRL_BTN 2
+
 #define CHAN_XMOTOR_OUT 0
 #define CHAN_YMOTOR_OUT 1
 
@@ -66,6 +68,7 @@ double get_ctrlpad_x();
 double get_ctrlpad_y();
 
 int get_ctrlpad_magnet_switch();
+int get_ctrlpad_ctrl_switch();
 
 void enable_magnet();
 void disable_magnet();
