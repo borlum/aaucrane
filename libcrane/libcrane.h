@@ -16,6 +16,8 @@
 #define CHAN_MAGNET_OUT 7
 #define CHAN_MAGNET_BTN 3
 
+#define CHAN_CTRL_BTN 2
+
 #define CHAN_XMOTOR_OUT 0
 #define CHAN_YMOTOR_OUT 1
 
