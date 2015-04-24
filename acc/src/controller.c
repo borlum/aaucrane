@@ -70,7 +70,7 @@ void *task_x_axies_controller(void * argc)
 
     /* P controller */
       out = pid_get_controller_output();
-      printf("Out: %lf\n", out);
+      //printf("Out: %lf\n", out);
 
     double tmp = (roundf( (x_ref-get_xpos()) * 10.3f) / 10.3f);
     if ( (fabs(tmp) < X_ERR_BAND) && (get_motorx_velocity() == 0) && (get_angle() == 0) ) {
