@@ -27,7 +27,7 @@ double angle_controller2(double angle_pos){
 
   out = k_p * (1 + td * (angle_prev - angle_pos));
 
-  angle_prev = angle_pos
+  angle_prev = angle_pos;
 
   return out;
 }
