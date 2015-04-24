@@ -129,11 +129,8 @@ int main(int argc,char* argv[]){
     scanf("%lf", &x);
 
     if(t_xcontroller == NULL && t_logger == NULL){
-      printf("Resetting ... .. .\n");
       //pthread_create(&t_xcontroller, NULL, task_x_axies_controller, NULL);
       pthread_create(&t_ycontroller, NULL, task_y_axies_controller, NULL);
-      usleep(1000 * 1000);
-      printf("starting logger\n");
       pthread_create(&t_logger, NULL, logger, NULL);
 
     }
