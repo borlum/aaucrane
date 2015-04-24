@@ -8,6 +8,7 @@ double angle_integrate = 0, angle_prev = 0;
 
 
 double angle_controller(double angle_pos){
+  printf("ANGLE: %lf\n", angle_pos);
   double out, TS = .001, angle_windup_val = 1;
   double k, tp, td, ti;
 
