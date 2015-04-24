@@ -19,9 +19,6 @@ void pd_init_controller(double x_ref){
   double step;
   step = x_ref-get_xpos();
   nr_of_ref = ramp_maker(step, ref_arr);
-  for(int i = 0; i < nr_of_ref; i++){
-    printf("RAMP: %lf\n", ref_arr[i]);
-  }
   current_index = 0;
 }
 
@@ -42,8 +39,10 @@ double pid_get_controller_output(){
   double out;
 
   out = angle_controller(get_angle());
+  printf("ANGLE ERROR: %lf\n", out);
   out += position_controller_x(ref_arr[current_index] - get_xpos());
-
+  printf("ERROR ERROR: %lf\n", out);
+  
   if(current_index < (nr_of_ref - 1)) {
     current_index++;
   }
