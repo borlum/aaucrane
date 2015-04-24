@@ -18,7 +18,7 @@ y = y(1:idx_end) - y(1);
 u = DATA(:,8);
 u = (-u(1:idx_end)) + u(idx_end);
 
-save measmotorx2 t u y
+save measudenkontainer2 t u y
 
 process = 'udenkontainer2'
 
