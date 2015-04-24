@@ -45,8 +45,8 @@ double position_controller_x2(double error){
 double position_controller_y(double error){
   double k_p = 49.3, comp;
 
-  if(error > 0) comp = -5;
-  else if(error < 0) comp = 10;
+  if(error > 0) comp = 0;
+  else if(error < 0) comp = 0;
 
   return error * (k_p + comp);
 }
