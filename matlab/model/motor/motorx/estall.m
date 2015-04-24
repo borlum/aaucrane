@@ -1,8 +1,8 @@
 % Runs all motory files and estimates parameters using senstool
 
 
-for i = 3:5
-  str = sprintf('motorx%d', i);
+for i = 1:3
+  str = sprintf('udenkontainer%d', i);
   run(str)
   mainest
   parb(i-2) = pare(1);
