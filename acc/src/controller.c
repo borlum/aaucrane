@@ -69,7 +69,7 @@ void *task_x_axies_controller(void * argc)
 //    out = pid_get_controller_output();
 
     /* P controller */
-      out = -pid_get_controller_output();
+      out = pid_get_controller_output();
       printf("Out: %lf\n", out);
 
     double tmp = (roundf( (x_ref-get_xpos()) * 10.3f) / 10.3f);
