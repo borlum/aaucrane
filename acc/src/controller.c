@@ -151,6 +151,9 @@ void *task_y_axies_controller(void * argc)
     }
 
     out = position_controller_y(y_err);
+
+    printf("out: %lf \n", out);
+
     run_motory(out);
 #ifdef RTAI
     rt_task_wait_period();
