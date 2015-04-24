@@ -30,6 +30,8 @@
 
 # MATLAB DATA
 *.mat
+*.asv
+*.autosave
 
 #Lasse Linux
 *~
