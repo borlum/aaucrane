@@ -36,14 +36,14 @@ int main(int argc, char* argv[])
     if( fabs((manual_x = get_ctrlpad_x())) < 2 )
       manual_x = 0;
     else
-      run_motorx(manual_x + angle);
-    
+      
 
     if( fabs((manual_y = get_ctrlpad_y())) < 2 )
       manual_y = 0;
-    else
-      run_motory(manual_y);
     
+    //run_motorx(manual_x + angle);
+    //run_motory(manual_y);
+
     if (get_ctrlpad_magnet_switch()) {
         enable_magnet();
     } else {
