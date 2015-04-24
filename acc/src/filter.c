@@ -22,14 +22,33 @@ double angle_controller(double angle_pos){
   return out;
 }
 
+double angle_controller2(double angle_pos){
+  double out, k_p = 4, td = .06, TS = .001;
+
+  out = k_p * (1 + td * (angle_prev - angle_pos));
+
+  angle_prev = angle_pos;
+
+  return out;
+}
+
 double position_controller_x(double error){
   double k_p = 30;
   return error * k_p;
 }
 
-double position_controller_y(double error){
-  double k_p = 49.3;
+double position_controller_x2(double error){
+  double k_p = 25;
   return error * k_p;
+}
+
+double position_controller_y(double error){
+  double k_p = 49.3, comp = 10;
+
+  if(error > 0) comp *= -1;
+  else if(error < 0) comp *= -1;
+
+  return error * (k_p + comp);
 }
 
 double velocity_controller_x(double error){

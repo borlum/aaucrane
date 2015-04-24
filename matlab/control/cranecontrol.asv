@@ -33,8 +33,8 @@ loop2 = feedback(C2 *  Mx * gear * (1/s), 1);
 %------------------------------------------------------------------------------
 % PID = k * ( 1 + 1/(Ti*s) + Td*s );
 %
-Tp = 1;     %from formular
-Td = 0.06;  %step(loop2*4) time below 0.01 amplitude
+Tp = 1;   %from formular
+Td = 0.06;     %step(loop2*4) time below 0.01 amplitude
 Ti = 4;     %bode(loop2*-W) Ti = freq. at -45degrees
 k = 40;     %Trail and error
 
