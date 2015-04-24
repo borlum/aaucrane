@@ -154,10 +154,6 @@ void *task_y_axies_controller(void * argc)
     if(y_ref != -1)
       out = position_controller_y(y_err);
 
-    printf("out: %lf \n", out);
-    printf("pos: %lf \n", y_pos);
-
-
     run_motory(out);
 #ifdef RTAI
     rt_task_wait_period();
