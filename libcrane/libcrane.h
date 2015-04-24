@@ -68,6 +68,7 @@ double get_ctrlpad_x();
 double get_ctrlpad_y();
 
 int get_ctrlpad_magnet_switch();
+int get_ctrlpad_ctrl_switch();
 
 void enable_magnet();
 void disable_magnet();
