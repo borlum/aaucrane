@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 #ifdef ANGLE
     printf("Raw measurement: %f | Converted to rad: %f | Converted to deg: %f\n", get_angle_raw(), get_angle(), get_angle() * (180.0/3.14));
 #else
-    //printf("JOYPAD: (x,y) = (%3f, %3f)\n", get_ctrlpad_x(), get_ctrlpad_y());
+    printf("JOYPAD: (x,y) = (%3f, %3f)\n", get_ctrlpad_x(), get_ctrlpad_y());
     printf("X_pos: %3f @ %3f| Y_pos: %3f @ %3f | ANGLE: %3f\n", get_xpos(), get_xpos_raw(), get_ypos(), get_ypos_raw(), get_angle() * (180.0/3.14));
 
     angle = angle_controller(get_angle());
@@ -39,8 +39,8 @@ int main(int argc, char* argv[])
     if( fabs((manual_y = get_ctrlpad_y())) < 2 )
       manual_y = 0;
     
-    //run_motorx(manual_x + angle);
-    //run_motory(manual_y);
+    run_motorx(manual_x + angle);
+    run_motory(manual_y);
 
     if (get_ctrlpad_magnet_switch()) {
         enable_magnet();
