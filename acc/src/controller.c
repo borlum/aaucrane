@@ -16,9 +16,10 @@
 #ifndef TEST
 #include <libcrane.h>
 #endif
-#include "acc.h"
-#include "controller.h"
-#include "filter.h"
+#include <acc.h>
+#include <controller.h>
+#include <filter.h>
+#include <PD_angle_control.h>
 
 #ifdef RTAI
 RT_TASK *rt_x_axies_controller;
@@ -30,13 +31,8 @@ void *task_x_axies_controller(void * argc)
   int hit_count = 0;
   int new_ref = 0;
 
-  double x_ref = 0, x_pos = 0, x_err = 0, x_err_int = 0;
-  double angle_ref = 0, angle_pos = 0, angle_err = 0;
-  double velocity_err = 0, velocity = 0;
-  double x_velocity = 0;
-  double pI = 0;
+  double x_ref;
   double out = 0;
-
 
   mqd_t input, output;
   char * input_buffer = (char *)malloc(BUFFER_SIZE);
@@ -60,46 +56,37 @@ void *task_x_axies_controller(void * argc)
       memcpy(&x_ref, input_buffer, sizeof(double));
       printf("[X] New x_ref = %.3f\n", x_ref);
       new_ref = 1;
+      pd_init_controller(x_ref);
     }
     else if (errno != EAGAIN){ /* Ingen ting i køen */
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
 #ifndef TEST
-    x_pos = get_xpos();
-    x_velocity = get_x_velocity();
-    angle_pos = get_angle();
-    velocity = get_motorx_velocity();
+    /* Mortens PD */
+    //out = pd_get_controller_output();
 
-    //velocity = (x_pos - old_x_pos) * 1/0.0039 * 1/1000;
+    /* Steffans PID */
+//    out = pid_get_controller_output();
 
-    angle_err = angle_ref - angle_pos;
-    printf("[angle] out: %.2lf\n", angle_err);
-    x_err = x_ref - x_pos - angle_controller(angle_err) ;
-    printf("[X_pos] out: %.2lf\n", x_pos);
-    printf("[X_err] out: %lf\n", x_err);
-    out = position_controller_x(x_err) + pI * x_err_int;
-    velocity_err = out - velocity;
-    //printf("[velocity] out: %lf\n", velocity);
-    out = velocity_controller_x(velocity_err);
-    printf("[output] : %.3lf\n", out);
-    printf("[Integrator value] : %.2lf\n\n", x_err_int);
+    /* P controller */
+      out = pid_get_controller_output();
+      //printf("Out: %lf\n", out);
 
-    x_err_int += x_err;
-
-        if ( (fabs(x_err) < X_ERR_BAND)) {
-      /*Settled*/
-      hit_count++;
-      if(hit_count >= 10000 && new_ref){
-        run_motorx(0);
-        break;
-        new_ref = 0;
-        hit_count = 0;
-        int msg = 1;
-        mq_send(output, (char *)&msg, sizeof(int), 0);
+    double tmp = (roundf( (x_ref-get_xpos()) * 10.3f) / 10.3f);
+    if ( (fabs(tmp) < X_ERR_BAND) && (get_motorx_velocity() == 0) && (get_angle() == 0) ) {
+      if( ((hit_count++) >= 50) && new_ref ){
+	new_ref = 0;
+	hit_count = 0;
+	int msg = 1;
+	printf("DONE @ %lf\n", get_xpos());
+	if (mq_send(output, (char *)&msg, sizeof(int), 0) == -1)
+	  printf("%s\n", strerror(errno));
       }
     } else {
-      run_motorx(out);
+      hit_count = 0;
     }
+    run_motorx(out);
+
 #ifdef RTAI
     rt_task_wait_period();
 #endif /* RTAI */
@@ -117,7 +104,7 @@ void *task_y_axies_controller(void * argc)
 {
   int hit_count = 0;
   int new_ref = 0;
-  double y_ref = 0, y_pos = 0, y_err = 0;
+  double y_ref = 0.2, y_pos = 0, y_err = 0;
 
   double out = 0;
 

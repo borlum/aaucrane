@@ -14,6 +14,7 @@ LIBS=-lm -lpthread -lrt -lcomedi
 SOURCE += $(TARGET).c
 SOURCE += ../../acc/src/controller.c
 SOURCE += ../../acc/src/filter.c
+SOURCE += ../../acc/src/PD_angle_control.c
 
 
 all: $(TARGET)

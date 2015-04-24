@@ -8,7 +8,7 @@ int *NI_card;
 
 static const double MAX_MOTOR_OUTPUT = 12.5;
 static const double MIN_MOTOR_OUTPUT = 0;
-static const double epsilon = 0;
+static const double epsilon = 0.2;
 
 /**
  * Open comedi driver for interfacing w. crane
@@ -40,12 +40,12 @@ int initialize_crane()
  */
 int run_motorx(double voltage)
 {
-    if (voltage > -4.5 && voltage < 0 - epsilon) {
-        voltage = -4.5;
+    if (voltage > -4.2 && voltage < 0 - epsilon) {
+        voltage = -4.2;
     }
 
-    if (voltage < 4.5 && voltage > 0 + epsilon) {
-        voltage = 4.5;
+    if (voltage < 4.2 && voltage > 0 + epsilon) {
+        voltage = 4.2;
     }
 
     return run_motor(-voltage, 0); /* Change X motor direction */
@@ -132,7 +132,7 @@ double get_angle()
 {
     double ang = 0.7367*get_angle_raw() - 1.3835;
 
-    if (fabs(ang) < 0.025)
+    if (fabs(ang) < 0.03)
         return 0;
 
     return ang;
@@ -210,7 +210,15 @@ double get_x_velocity()
  */
 double get_motorx_velocity()
 {
-    return (get_motorx_velocity_raw() * 34.18 );
+    double D;
+
+    D = (get_motorx_velocity_raw() * 34.18 ) + 0.007721;
+
+    if(D< 0.33){
+      D = 0;
+    }
+
+    return D;
 }
 
 /**

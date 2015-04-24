@@ -30,6 +30,9 @@ void *controller(void * args)
   mqd_t to_y, from_y;
   mqd_t to_c, from_c;
 
+  size_t buf_len = BUFFER_SIZE;
+  char buf[BUFFER_SIZE];
+  
   double reset_pos_flag = 0;
   
   crane_cmd_t* cmd;
@@ -58,35 +61,35 @@ void *controller(void * args)
     
     
     mq_send(to_x, (char *) &(cmd->pickup_point.x), sizeof(cmd->pickup_point.x), 0);
-    mq_receive(from_x, NULL, BUFFER_SIZE, 0);
+    mq_receive(from_x, buf, buf_len, 0);
     printf("[C] Moved to x: %.3f\n", cmd->pickup_point.x);
     
     mq_send(to_y, (char *) &(cmd->pickup_point.y), sizeof(cmd->pickup_point.y), 0);
-    mq_receive(from_y, NULL, BUFFER_SIZE, 0);
+    mq_receive(from_y, buf, buf_len, 0);
     printf("[C] Moved to y: %.3f\n", cmd->pickup_point.y);
 
     enable_magnet();
     usleep(1000 * 100);
 
     mq_send(to_y, (char *) &(cmd->carry_height), sizeof(cmd->carry_height), 0);
-    mq_receive(from_y, NULL, BUFFER_SIZE, 0);
+    mq_receive(from_y, buf, buf_len, 0);
     printf("[C] Moved to y: %.3f\n", cmd->carry_height);
 
     mq_send(to_x, (char *) &(cmd->dest_point.x), sizeof(cmd->dest_point.x), 0);
-    mq_receive(from_x, NULL, BUFFER_SIZE, 0);
+    mq_receive(from_x, buf, buf_len, 0);
     printf("[C] Moved to x: %.3f\n", cmd->dest_point.x);
 
     mq_send(to_y, (char *) &(cmd->dest_point.y), sizeof(cmd->dest_point.y), 0);
-    mq_receive(from_y, NULL, BUFFER_SIZE, 0);
+    mq_receive(from_y, buf, buf_len, 0);
     printf("[C] Moved to y: %.3f\n", cmd->dest_point.y);
     
     disable_magnet();
 
     mq_send(to_y, (char *) &reset_pos_flag, sizeof(reset_pos_flag), 0);
-    mq_receive(from_y, NULL, BUFFER_SIZE, 0);
+    mq_receive(from_y, buf, buf_len, 0);
 
     mq_send(to_x, (char *) &reset_pos_flag, sizeof(reset_pos_flag), 0);
-    mq_receive(from_x, NULL, BUFFER_SIZE, 0);
+    mq_receive(from_x, buf, buf_len, 0);
     mq_send(from_c, (char *) &cmd, sizeof(cmd), 0);
   }
 }
@@ -142,6 +145,9 @@ int main(int argc,char* argv[]){
   if( init() == -1)
     exit(-1);
 
+  size_t buf_len = BUFFER_SIZE;
+  char buf[BUFFER_SIZE];
+
   init_stack();
   place_containers();
   
@@ -188,7 +194,7 @@ int main(int argc,char* argv[]){
     
     mq_send(to_c, (char *) &cmd, sizeof(cmd), 0);
     update_status(source_row, source_col, STACK_FREE);
-    mq_receive(from_c, NULL, BUFFER_SIZE, 0);
+    mq_receive(from_c, buf, buf_len, 0);
     update_status(dest_row, dest_col, STACK_OCCUPIED);
   } 
 }

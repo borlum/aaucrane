@@ -20,7 +20,7 @@
 
 
 
-pthread_t t_xcontroller, t_ycontroller, t_logger;
+pthread_t t_xcontroller = NULL, t_ycontroller = NULL, t_logger = NULL;
 
 #ifdef RTAI
 static RT_TASK *rt_xcontroller, *rt_ycontroller, *rt_logger;
@@ -117,19 +117,33 @@ int main(int argc,char* argv[]){
   double x;
   double y = 0.223;
 
+  size_t len = 2 * BUFFER_SIZE;
+  char stupid_buffer[2 * BUFFER_SIZE];
+  double tmp;
+
   while(1) {
     printf ("Enter a step size: <x>:\n");
     scanf("%lf", &x);
 
-    printf("Resetting ... .. .\n");
-    pthread_create(&t_xcontroller, NULL, task_x_axies_controller, NULL);
-    /*pthread_create(&t_ycontroller, NULL, rt_y_axies_controller, NULL);*/
-    usleep(1000 * 1000);
-    printf("starting logger\n");
-    pthread_create(&t_logger, NULL, logger, NULL);
+    if(t_xcontroller == NULL && t_logger == NULL){
+      printf("Resetting ... .. .\n");
+      pthread_create(&t_xcontroller, NULL, task_x_axies_controller, NULL);
+      /*pthread_create(&t_ycontroller, NULL, rt_y_axies_controller, NULL);*/
+      //usleep(1000 * 1000);
+      printf("starting logger\n");
+      pthread_create(&t_logger, NULL, logger, NULL);
 
-    mq_send(to_x, (char *) &x, sizeof(x), 0);
-    mq_receive(from_x, NULL, sizeof(double), 0);
-    //mq_send(to_y, (char *) &y, sizeof(y), 0);
+    }
+
+    if(mq_send(to_x, (char *) &x, sizeof(x), 0) == -1)
+      printf("ERROR: send: %s\n", strerror(errno));
+
+    if(mq_receive(from_x, stupid_buffer, len, 0) == -1)
+      printf("ERROR: recv: %s\n", strerror(errno));
+    else{
+      memcpy(&tmp, stupid_buffer, sizeof(int));
+      printf("Read: %lf", tmp);
+    }
+    printf("Done\n");
   }
 }

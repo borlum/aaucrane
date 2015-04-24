@@ -6,10 +6,11 @@ function [] = plotCraneStep(test)
         return;
     end
 
-    plotYStep(grabData(test))
+    grabData(test)
+    %plotYStep(grabData(test))
     %plotAngleAndX(grabData(test));
     %plotCraneMovement(grabData(test));
-    %plotAngleStep(grabData(test));
+    plotAngleStep(grabData(test));
     %plotXStep(grabData(test));
 
     function [] = plotXStep(stepData)
@@ -34,7 +35,7 @@ function [] = plotCraneStep(test)
       grid on;
     end
 
-    
+
     function [] = plotAngleStep(stepData)
         plot(stepData.t, stepData.phi);
         xlabel('Time [s]');
@@ -80,7 +81,7 @@ function [] = plotCraneStep(test)
       xlabel('[s]');
 
     end
-    
+
     function [data] = grabData(test)
         TMP_FILE  = 'tmp.csv';
         websave(TMP_FILE, test);
