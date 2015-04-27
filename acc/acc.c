@@ -119,6 +119,17 @@ int init(){
   attr.mq_msgsize = BUFFER_SIZE;  
   attr.mq_curmsgs = 0;  
 
+  if ( mq_unlink(Q_TO_X) == -1 ||
+       mq_unlink(Q_TO_Y) == -1 ||
+       mq_unlink(Q_TO_C) == -1 ||
+       mq_unlink(Q_FROM_X) == -1 ||
+       mq_unlink(Q_FROM_Y) == -1 ||
+       mq_unlink(Q_FROM_C) == -1
+       ){
+    printf("ERROR: %s\n", strerror(errno));
+    return -1;
+  }
+  
   if ( mq_open(Q_TO_X, O_RDONLY | O_CREAT, 0664, &attr) == -1 ||
        mq_open(Q_TO_Y, O_WRONLY | O_CREAT, 0664, &attr) == -1 ||
        mq_open(Q_TO_C, O_WRONLY | O_CREAT, 0664, &attr) == -1 ||
@@ -137,7 +148,7 @@ int init(){
 }
 
 void place_containers(){
-  for(int i = 1; i <=3 ; i++)
+  for(int i = 10; i <=13 ; i++)
     update_status(i, 0, STACK_OCCUPIED);
 }
 

@@ -125,23 +125,20 @@ int main(int argc,char* argv[]){
   double tmp;
 
   while(1) {
-    printf ("Enter a step size: <y>:\n");
+    printf ("Enter a step size: <x>:\n");
     scanf("%lf", &x);
 
     if(t_xcontroller == NULL && t_logger == NULL){
-      printf("Resetting ... .. .\n");
-      //pthread_create(&t_xcontroller, NULL, task_x_axies_controller, NULL);
-      pthread_create(&t_ycontroller, NULL, task_y_axies_controller, NULL);
-      usleep(1000 * 1000);
-      printf("starting logger\n");
+      pthread_create(&t_xcontroller, NULL, task_x_axies_controller, NULL);
+      //pthread_create(&t_ycontroller, NULL, task_y_axies_controller, NULL);
       pthread_create(&t_logger, NULL, logger, NULL);
 
     }
 
-    if(mq_send(to_y, (char *) &x, sizeof(x), 0) == -1)
+    if(mq_send(to_x, (char *) &x, sizeof(x), 0) == -1)
       printf("ERROR: send: %s\n", strerror(errno));
 
-    if(mq_receive(from_y, stupid_buffer, len, 0) == -1)
+    if(mq_receive(from_x, stupid_buffer, len, 0) == -1)
       printf("ERROR: recv: %s\n", strerror(errno));
     else{
       memcpy(&tmp, stupid_buffer, sizeof(int));
