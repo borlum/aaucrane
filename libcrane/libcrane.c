@@ -334,6 +334,19 @@ int get_ctrlpad_magnet_switch()
     return (int)in;
 }
 
+int get_ctrlpad_ctrl_switch()
+{
+    #ifndef TESTING
+    lsampl_t in;
+    comedi_dio_read(NI_card, DIO_SUBDEV, CHAN_CTRL_BTN, &in);
+    #else
+    int in = 1;
+    #endif
+
+    return (int)in;
+}
+
+
 /**
  * Turn on magnet
  */

@@ -32,9 +32,13 @@ int main(int argc, char* argv[])
     printf("JOYPAD: (x,y) = (%3f, %3f)\n", get_ctrlpad_x(), get_ctrlpad_y());
     printf("X_pos: %3f @ %3f| Y_pos: %3f @ %3f | ANGLE: %3f\n", get_xpos(), get_xpos_raw(), get_ypos(), get_ypos_raw(), get_angle() * (180.0/3.14));
 
-    angle = angle_controller(get_angle());
+    if(get_ctrlpad_ctrl_switch())
+      angle = angle_controller(get_angle());
+    else
+      angle = 0;
+    
     if( fabs((manual_x = get_ctrlpad_x())) < 2 )
-      manual_x = 0;
+      manual_x = 0;      
 
     if( fabs((manual_y = get_ctrlpad_y())) < 2 )
       manual_y = 0;

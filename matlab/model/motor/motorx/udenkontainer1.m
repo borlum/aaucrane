@@ -19,7 +19,7 @@ y = y(1:idx_end) - y(1);
 u = DATA(:,8);
 u = (-u(1:idx_end)) + u(idx_end);
 
-save measmotorx1 t u y
+save measudenkontainer1 t u y
 
 delete(TMP_FILE);
 

@@ -6,12 +6,29 @@ const static double TS = 0.001;
 
 double angle_integrate = 0, angle_prev = 0;
 
+/*Angle controller 3*/
+double pre_error = 0;
+double pre_out   = 0;
 
 double angle_controller(double angle_pos){
-  double out, TS = .001, windup_val = 12.5, angle_windup_val = 1, k = 38, tp = .1, td = .5, ti = 4;
+  double out, TS = .001, angle_windup_val = 1;
+  double k, tp, td, ti;
 
+  /* Diffrent parameters depending of container */
+  if(get_ctrlpad_magnet_switch){
+    k = 38;
+    tp = 0.1;
+    td = 0.5;
+    ti = 4;
+  }
+  else{
+    k = 0.185;
+    tp = 0.1;
+    td = 0.035;
+    ti = 4.545;
+  }
+  
   out = angle_pos*(k*tp + k * ti * (angle_integrate) * TS + k) + k * td * (angle_prev-angle_pos);
-
   angle_integrate += angle_pos;
 
   if(angle_integrate < -angle_windup_val) angle_integrate = -angle_windup_val;
@@ -32,8 +49,21 @@ double angle_controller2(double angle_pos){
   return out;
 }
 
+double angle_controller3(double error){
+  double out = 114.5 * error - 114.3 * pre_error + 0.99 * pre_out;
+  pre_out = out;
+  pre_error = error;
+  return out;
+}
+
 double position_controller_x(double error){
-  double k_p = 30;
+  double k_p;
+
+  if(get_ctrlpad_magnet_switch)
+    k_p = 30;
+  else
+    k_p = 20;
+
   return error * k_p;
 }
 
@@ -42,9 +72,18 @@ double position_controller_x2(double error){
   return error * k_p;
 }
 
-double position_controller_y(double error){
-  double k_p = 49.3;
+double position_controller_x3(double error){
+  double k_p = 11.6;
   return error * k_p;
+}
+
+double position_controller_y(double error){
+  double k_p = 49.3, comp;
+
+  if(error > 0) comp = 0;
+  else if(error < 0) comp = 0;
+
+  return error * (k_p + comp);
 }
 
 double velocity_controller_x(double error){

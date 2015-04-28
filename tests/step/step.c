@@ -110,9 +110,12 @@ int main(int argc,char* argv[]){
   if( init() == -1)
     exit(-1);
 
-  mqd_t to_x, from_x;
+  mqd_t to_x, from_x, to_y, from_y;
   to_x = mq_open(Q_TO_X, O_WRONLY);
   from_x = mq_open(Q_FROM_X, O_RDONLY);
+
+  to_y = mq_open(Q_TO_Y, O_WRONLY);
+  from_y = mq_open(Q_FROM_Y, O_RDONLY);
 
   double x;
   double y = 0.223;
@@ -126,11 +129,8 @@ int main(int argc,char* argv[]){
     scanf("%lf", &x);
 
     if(t_xcontroller == NULL && t_logger == NULL){
-      printf("Resetting ... .. .\n");
       pthread_create(&t_xcontroller, NULL, task_x_axies_controller, NULL);
-      /*pthread_create(&t_ycontroller, NULL, rt_y_axies_controller, NULL);*/
-      //usleep(1000 * 1000);
-      printf("starting logger\n");
+      //pthread_create(&t_ycontroller, NULL, task_y_axies_controller, NULL);
       pthread_create(&t_logger, NULL, logger, NULL);
 
     }

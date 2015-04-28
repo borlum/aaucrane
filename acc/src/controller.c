@@ -31,7 +31,7 @@ void *task_x_axies_controller(void * argc)
   int hit_count = 0;
   int new_ref = 0;
 
-  double x_ref;
+  double x_ref = -1;
   double out = 0;
 
   mqd_t input, output;
@@ -69,8 +69,10 @@ void *task_x_axies_controller(void * argc)
 //    out = pid_get_controller_output();
 
     /* P controller */
-      out = pid_get_controller_output();
-      //printf("Out: %lf\n", out);
+    if(x_ref != -1)
+      //out = pid_get_controller_output();
+      out = ld_get_controller_output(x_ref);
+    //printf("Out: %lf\n", out);
 
     double tmp = (roundf( (x_ref-get_xpos()) * 10.3f) / 10.3f);
     if ( (fabs(tmp) < X_ERR_BAND) && (get_motorx_velocity() == 0) && (get_angle() == 0) ) {
@@ -103,7 +105,7 @@ void *task_x_axies_controller(void * argc)
 void *task_y_axies_controller(void * argc)
 {
   int hit_count = 0;
-  int new_ref = 0;
+  int new_ref = -1;
   double y_ref = 0.2, y_pos = 0, y_err = 0;
 
   double out = 0;
@@ -143,14 +145,16 @@ void *task_y_axies_controller(void * argc)
       /*Settled*/
       hit_count++;
       if(hit_count >= 10 && new_ref){
-         new_ref = 0;
-         hit_count = 0;
-         int msg = 2;
-         mq_send(output, (char *)&msg, sizeof(int), 0);
+	new_ref = 0;
+	hit_count = 0;
+	int msg = 2;
+	mq_send(output, (char *)&msg, sizeof(int), 0);
       }
     }
 
-    out = position_controller_y(y_err);
+    if(y_ref != -1)
+      out = position_controller_y(y_err);
+
     run_motory(out);
 #ifdef RTAI
     rt_task_wait_period();
