@@ -51,7 +51,11 @@ double pid_get_controller_output(){
 double ld_get_controller_output(double x_ref){
   double out;
   out = angle_controller3(get_angle());
-  out += position_controller_x3(x_ref - get_xpos());
+  out += position_controller_x3(ref_arr[current_index] - get_xpos());
+  
+  if(current_index < (nr_of_ref - 1)) {
+    current_index++;
+  }
 
   return out;
 }
