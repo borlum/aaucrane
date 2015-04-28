@@ -50,7 +50,7 @@ double angle_controller2(double angle_pos){
 }
 
 double angle_controller3(double error){
-  double out = 114.5 * error - 114.3 * pre_error + 0.99 * pre_out;
+  double out = 80 * error - 80 * pre_error + 0.99 * pre_out;
   pre_out = out;
   pre_error = error;
   return out;
