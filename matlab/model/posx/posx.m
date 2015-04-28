@@ -33,4 +33,4 @@ save posxdata t y u;
 % plot(t, u);hold on
 % plot(t, x);
 % %%
-% delete(TMP_FILE);
+delete(TMP_FILE);
