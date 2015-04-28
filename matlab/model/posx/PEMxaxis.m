@@ -24,15 +24,19 @@ kt = 0.03;
 ra = 0.43;
 Grx = 7/144;
 rrx = 0.08;
+mm = 0.8; % Magnet + krog
+mp = 2.866 + mm;
+g  = 9.82;
+
 
 %%
 %The system identification
-sysx = idproc('P2U','InitialState','zero'); % For the x-axis
+sysx = idproc('P2ZU','InitialState','zero'); % For the x-axis
 
 %%
 %Determine the gain of TF.
-%sysx.Kp  =Grx*rrx*kt/ra; % For the x-axis
-sysx.Kp  =kt/ra; % For the x-axis
+sysx.Kp  =((-1)/(3+g+(1/mp)))*Grx*rrx*(kt/ra); % For the x-axis
+%sysx.Kp  =kt/ra; % For the x-axis
 
 %%
 % Here we run the Prediction error method.
