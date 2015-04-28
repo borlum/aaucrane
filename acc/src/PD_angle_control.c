@@ -46,3 +46,12 @@ double pid_get_controller_output(){
   }
   return out;
 }
+
+
+double ld_get_controller_output(double x_ref){
+  double out;
+  out = angle_controller3(get_angle());
+  out += position_controller_x3(x_ref - get_xpos());
+
+  return out;
+}

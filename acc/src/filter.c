@@ -6,6 +6,9 @@ const static double TS = 0.001;
 
 double angle_integrate = 0, angle_prev = 0;
 
+/*Angle controller 3*/
+double pre_error = 0;
+double pre_out   = 0;
 
 double angle_controller(double angle_pos){
   double out, TS = .001, angle_windup_val = 1;
@@ -46,6 +49,13 @@ double angle_controller2(double angle_pos){
   return out;
 }
 
+double angle_controller3(double error){
+  double out = 114.5 * error - 114.3 * pre_error + 0.99 * pre_out;
+  pre_out = out;
+  pre_error = error;
+  return out;
+}
+
 double position_controller_x(double error){
   double k_p;
 
@@ -59,6 +69,11 @@ double position_controller_x(double error){
 
 double position_controller_x2(double error){
   double k_p = 25;
+  return error * k_p;
+}
+
+double position_controller_x3(double error){
+  double k_p = 11.6;
   return error * k_p;
 }
 
