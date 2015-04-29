@@ -132,9 +132,6 @@ double get_angle()
 {
     double ang = 0.7367*get_angle_raw() - 1.3835;
 
-    if (fabs(ang) < 0.03)
-        return 0;
-
     return ang;
 }
 
