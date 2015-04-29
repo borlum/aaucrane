@@ -2,8 +2,6 @@ function y = simang4(u,t,par)
 
 s = tf('s');
 
-kt = 0.03;
-ra = 0.43;
 mp = 2.866 + 0.8;
 l  = 0.65;
 g  = 9.82;
