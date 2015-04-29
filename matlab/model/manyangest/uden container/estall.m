@@ -2,15 +2,15 @@
 clear;
 
     
-par0 = [-0.1677 3.0413];
+par0 = [0.001 0.001];
 
-for i = 5:5
+for i = 1:3
   str = sprintf('ang%d', i);
   run(str)
   mainest
-  parb(i-4) = pare(1);
-  parI(i-4) = pare(2);
-  erra(i-4) = errn;
+  parb(i) = pare(1);
+  parI(i) = pare(2);
+  erra(i) = errn;
   par0 = pare;
 end
 
