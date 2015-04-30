@@ -2,7 +2,7 @@
 clear;
 
     
-par0 = [0.1 0.1];
+par0 = [0.01 0.01];
 
 for i = 3:5
   str = sprintf('ang%d', i);
