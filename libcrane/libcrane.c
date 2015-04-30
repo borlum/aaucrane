@@ -133,8 +133,6 @@ double get_angle()
 {
     double ang = 0.7367*get_angle_raw() - 1.3835;
 
-    if (ang < 0.03 && ang > -0.03) ang = 0;
-
     return ang;
 }
 
