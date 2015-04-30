@@ -49,11 +49,13 @@ int run_motorx(double voltage)
         voltage = 4.2;
     }*/
 
+    if (voltage < 0.2 && voltage > -0.2) voltage = 0;
+
     if(voltage < 0) sign = -1;
     else if (voltage > 0) sign = 1;
     else if (voltage == 0) sign = 0;
 
-    voltage = sign * (sign * voltage + 4);
+    voltage = sign * (sign * voltage + 4.2);
 
     return run_motor(-voltage, 0); /* Change X motor direction */
 }
