@@ -98,7 +98,6 @@ int ramp_maker(double step, double *ramp_arr){
   if(step>0){
     for(i = 0; i<=step; i += speed){
       ramp_arr[j] = i + off_set;
-      printf("ramp: %lf \n", ramp_arr[j]);
       j++;
     }
   } else if(step < 0){
@@ -108,8 +107,6 @@ int ramp_maker(double step, double *ramp_arr){
     }
   }
 
-  ramp_arr[j] = step;
-
-  return j + 1;
+  return j;
 
 }
