@@ -6,7 +6,7 @@ X = Xm;
 W = Wm;
 %rlocus(Xm)
 C2 = 15;
-loop2 = feedback(C2 *  Mxm * gear * (1/s), 1);
+loop2 = feedback(C2 *  X, 1);
 %------------------------------------------------------------------------------
 % PID Control
 %------------------------------------------------------------------------------
@@ -20,17 +20,18 @@ Td = 0.02;
 % P part ->
 Tp = 0.5;     %from formular 0 < Tp <= 1 
 %Gain ->
-%rlocus((Tp+1+1/Ti*s+Tp*s)*loop2*C2*-Wm)
+%rlocus((Tp+1+1/(Ti*s))*loop2*-Wm)
 k = 10;     %Trail and error
+Cs = k*(Tp+1+1/(Ti*s));
 %% UDEN CONTAINER
 clear all;
 close;
 run('../model/cranemodel.m');
 X = Xu;
 W = Wu;
-%rlocus(Xu)
+%rlocus(X)
 C2 = 15;
-loop2 = feedback(C2 *  Mxu * gear * (1/s), 1);
+loop2 = feedback(C2 * X, 1);
 %------------------------------------------------------------------------------
 % PID Control
 %------------------------------------------------------------------------------
@@ -44,5 +45,6 @@ Td = 0.02;
 % P part ->
 Tp = 0.5;     %from formular 0 < Tp <= 1 
 %Gain ->
-%rlocus((Tp+1+1/Ti*s+Tp*s)*loop2*C2*-Wu)
+%rlocus(k*(Tp+1+1/(Ti*s))*loop2*-Wu)
 k = 10;     %Trail and error
+Cs = k*(Tp+1+1/(Ti*s));

@@ -17,12 +17,16 @@ t = linspace(0,t(idx_end), idx_end);
 u = DATA(:,4) * -.4981 + 4.7931;
 u = u(1:idx_end) - u(1);
 y = DATA(:,3);
-y = 0.7367 * y(1:idx_end) - 1.411;
+y = 0.7367 * y(1:idx_end) - 1.4125;
 
 save measang1 t u y
 
 delete(TMP_FILE);
 
 process = 'ang1'
-
+plot(t, y)
+grid on;
+title('Wire angle at a 3 s 11 V square pulse')
+ylabel('Wire angle [rad]')
+xlabel('Time [s]')
 %%
