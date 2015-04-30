@@ -1,6 +1,6 @@
 % Runs all motory files and estimates parameters using senstool
 
-
+par0 = [-0.001 0.001];
 for i = 1:3
   str = sprintf('udenkontainer%d', i);
   run(str)
@@ -8,7 +8,7 @@ for i = 1:3
   parb(i) = pare(1);
   parI(i) = pare(2);
   errx(i) = errn;
-  par0 = pare;
+  par0=pare;
 end
 
 meanb = mean(parb);

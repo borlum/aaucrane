@@ -21,8 +21,10 @@ u = (-u(1:idx_end)) + u(idx_end);
 
 save measudenkontainer1 t u y
 
-delete(TMP_FILE);
-
 process = 'udenkontainer1'
-
-%%
+% plot(t, y)
+% grid on;
+% title('Movement response to 9.5 V');
+% ylabel('X position [m]');
+% xlabel('Time [s]');
+delete(TMP_FILE);

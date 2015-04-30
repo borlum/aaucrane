@@ -23,6 +23,11 @@ save measudenkontainer3 t u y
 
 process = 'udenkontainer3'
 
-delete(TMP_FILE);
-
+% plot(t, u)
+% grid on;
+% title('Movement response to 9.5 V');
+% ylabel('X position [m]');
+% xlabel('Time [s]');
 % Senstool params: pare = [.0028 .0013]
+
+delete(TMP_FILE);
