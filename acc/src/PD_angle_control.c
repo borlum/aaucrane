@@ -41,8 +41,6 @@ double pid_get_controller_output(){
   out = angle_controller(get_angle());
   out += position_controller_x(ref_arr[current_index] - get_xpos());
   
-  printf("Ref arr: %lf \n", ref_arr[current_index]);
-
   if(current_index < (nr_of_ref - 1)) {
     current_index++;
   }
