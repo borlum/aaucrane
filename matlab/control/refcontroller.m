@@ -15,7 +15,7 @@ cref = wn^2/(s^2+2*zeta*wn*s+wn^2);
 
 C1 = 50;
 
-inner = feedback(Mx * C1,1);
+inner = feedback(Mxm * C1,1);
 
 C2 = 1/(s+1);
 
