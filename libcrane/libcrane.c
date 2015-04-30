@@ -41,12 +41,12 @@ int initialize_crane()
 int run_motorx(double voltage)
 {
 	int sign;
-    if (voltage > -4.2 && voltage < 0 - epsilon) {
-        voltage = -4.2;
+    if (voltage > -3.5 && voltage < 0 - epsilon) {
+        voltage = -3.5;
     }
 
-    if (voltage < 4.2 && voltage > 0 + epsilon) {
-        voltage = 4.2;
+    if (voltage < 3.5 && voltage > 0 + epsilon) {
+        voltage = 3.5;
     }
 
     /*if (voltage < 1 && voltage > -1) voltage = 0;
