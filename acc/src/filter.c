@@ -16,16 +16,16 @@ double angle_controller(double angle_pos){
 
   /* Diffrent parameters depending of container */
   if(get_ctrlpad_magnet_switch){
-    k = 38;
-    tp = 0.1;
-    td = 0.5;
-    ti = 4;
+    k = 15;
+    tp = 0.5;
+    td = 0.2;
+    ti = 4.1;
   }
   else{
-    k = 0.185;
-    tp = 0.1;
-    td = 0.035;
-    ti = 4.545;
+    k = 15;
+    tp = 0.5;
+    td = 0.2;
+    ti = 4.15;
   }
   
   out = angle_pos*(k*tp + k * ti * (angle_integrate) * TS + k) + k * td * (angle_prev-angle_pos);
@@ -60,9 +60,9 @@ double position_controller_x(double error){
   double k_p;
 
   if(get_ctrlpad_magnet_switch)
-    k_p = 30;
+    k_p = 15;
   else
-    k_p = 20;
+    k_p = 15;
 
   return error * k_p;
 }
