@@ -68,9 +68,6 @@ void *task_x_axies_controller(void * argc)
     /* Steffans PID */
     out = pid_get_controller_output();
 
-	printf("x-pos: %lf\n", get_xpos());
-
-
     /* P controller */
      // out = ld_get_controller_output(x_ref);
     //
