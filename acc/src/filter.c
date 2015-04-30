@@ -16,13 +16,13 @@ double angle_controller(double angle_pos){
 
   /* Diffrent parameters depending of container */
   if(get_ctrlpad_magnet_switch){
-    k = 15;
+    k = 10;
     tp = 0.5;
     td = 0.2;
     ti = 4.1;
   }
   else{
-    k = 15;
+    k = 10;
     tp = 0.5;
     td = 0.2;
     ti = 4.15;
