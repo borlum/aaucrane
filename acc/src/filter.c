@@ -108,6 +108,8 @@ int ramp_maker(double step, double *ramp_arr){
     }
   }
 
-  return j;
+  ramp_arr[j] = step;
+
+  return j + 1;
 
 }
