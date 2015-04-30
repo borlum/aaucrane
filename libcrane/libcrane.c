@@ -41,13 +41,13 @@ int initialize_crane()
 int run_motorx(double voltage)
 {
 	int sign;
-//    if (voltage < 0 && voltage > 0) voltage = 0;
+    if (voltage < 0 && voltage > 0) voltage = 0;
 
     if(voltage < 0) sign = -1;
     else if (voltage > 0) sign = 1;
     else if (voltage == 0) sign = 0;
 
-    voltage = sign * (sign * voltage + 4.2);
+    voltage = sign * (sign * voltage + 3.5);
 
     return run_motor(-voltage, 0); /* Change X motor direction */
 }
