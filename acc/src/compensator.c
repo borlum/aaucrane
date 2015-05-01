@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <libcrane.h>
-#include "controller.h"
+#include "compensator.h"
 
 #define NO_RAMP 1
 
