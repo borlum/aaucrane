@@ -42,13 +42,13 @@ double pid_get_controller_output(){
   static int aw  =0;
   double angle = get_angle();
 
-  out = angle_controller(angle);
+  out = angle_controller(angle, aw);
 
 //  printf("Angle Out: %lf\n", out);
 
 //  printf("Angle: %lf\n", angle);
 
-    out += position_controller_x(x_goal-get_xpos(), aw);
+    out += position_controller_x(x_goal-get_xpos());
 //    out += position_controller_x(ref_arr[current_index] - get_xpos());
 //  printf("Position Out: %lf\n", out);
   

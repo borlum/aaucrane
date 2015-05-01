@@ -27,8 +27,6 @@ RT_TASK *rt_y_axies_controller;
 #endif
 
 
-double x_err;
-
 void *task_x_axies_controller(void * argc)
 {
   int hit_count = 0;
@@ -69,14 +67,8 @@ void *task_x_axies_controller(void * argc)
     //out = pd_get_controller_output();
 
     /* Steffans PID  med ramp*/
-    out = pid_get_controller_output();
-
-
-    /* Steffans PID uden ramp */
-    x_err = x_ref - get_xpos();
-
-
-
+     out = pid_get_controller_output();
+    
     double tmp = x_ref-get_xpos();
  //   printf("tmp: %lf \n", tmp);
     if ( (fabs(tmp) < X_ERR_BAND) && (get_motorx_velocity() == 0) && (get_angle() <= .02) ) {
