@@ -4,7 +4,7 @@
 #define X_ERR_BAND 0.01
 #define Y_ERR_BAND 0.005
 #define ANGLE_ERR_BAND 0.02
-#define SETTLE_HITS 100
+#define SETTLE_HITS 250
 
 #ifdef RTAI
 extern RT_TASK *rt_x_axis_controller;
