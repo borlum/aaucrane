@@ -150,6 +150,10 @@ double get_angle()
 
     ang_prev = ang;
 
+    ang = (int)(ang*100);
+
+    ang = ang/(100.0);
+
     return ang;
 }
 
