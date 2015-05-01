@@ -71,10 +71,10 @@ void* logger(void* args){
 int init(){
 #ifdef RTAI
   if(rt_is_hard_timer_running() == 1){
-    printf("Timer is running");
+    printf("Timer is running...\n");
   }
   else{
-    printf("Starting timer \n");
+    printf("Starting timer...\n");
     rt_set_periodic_mode();
     start_rt_timer(0);
   }
@@ -90,15 +90,15 @@ int init(){
   attr.mq_msgsize = BUFFER_SIZE;
   attr.mq_curmsgs = 0;
 
-  if ( mq_open(Q_TO_X, O_RDONLY | O_CREAT, 0664, &attr) == -1 ||
-       mq_open(Q_TO_Y, O_WRONLY | O_CREAT, 0664, &attr) == -1 ||
-       mq_open(Q_TO_C, O_WRONLY | O_CREAT, 0664, &attr) == -1 ||
+  if ( mq_open(Q_TO_X, O_RDONLY   | O_CREAT, 0664, &attr) == -1 ||
+       mq_open(Q_TO_Y, O_WRONLY   | O_CREAT, 0664, &attr) == -1 ||
+       mq_open(Q_TO_C, O_WRONLY   | O_CREAT, 0664, &attr) == -1 ||
        mq_open(Q_FROM_X, O_RDONLY | O_CREAT, 0664, &attr) == -1 ||
        mq_open(Q_FROM_Y, O_WRONLY | O_CREAT, 0664, &attr) == -1 ||
        mq_open(Q_FROM_C, O_WRONLY | O_CREAT, 0664, &attr) == -1
-     ){
-      printf("ERROR: %s\n", strerror(errno));
-      return -1;
+  ){
+    printf("ERROR: %s\n", strerror(errno));
+    return -1;
   }
   return 0;
 }
@@ -126,20 +126,19 @@ int main(int argc,char* argv[]){
     scanf("%lf", &x);
 
     if(t_xcontroller == NULL && t_logger == NULL){
-      pthread_create(&t_xcontroller, NULL, task_x_axies_controller, NULL);
+      pthread_create(&t_xcontroller, NULL, task_x_axis_controller, NULL);
       pthread_create(&t_logger, NULL, logger, NULL);
-
     }
 
     if(mq_send(to_x, (char *) &x, sizeof(x), 0) == -1)
       printf("ERROR: send: %s\n", strerror(errno));
-
     if(mq_receive(from_x, stupid_buffer, len, 0) == -1)
       printf("ERROR: recv: %s\n", strerror(errno));
     else{
       memcpy(&tmp, stupid_buffer, sizeof(int));
       printf("Read: %lf", tmp);
     }
-    printf("Done\n");
+
+    printf("Done!\n");
   }
 }
