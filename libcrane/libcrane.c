@@ -147,14 +147,14 @@ double get_angle()
     if(ang_prev == ang) count++;
     else count = 0;
 
-    if(count > 10 && fabs(ang) < 0.1) {
+    if(count > 10) {
         offset = offset + ang;
         count = 0;
     }
 
     ang_prev = ang;
 
-//    if(ang < 0.01 && ang > -0.01) ang = 0;
+//     if(ang < 0.01 && ang > -0.01) ang = 0;
 
     return ang;
 }
