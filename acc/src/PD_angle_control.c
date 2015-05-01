@@ -46,9 +46,11 @@ double pid_get_controller_output(){
 
 //  printf("Angle: %lf\n", angle);
 
-
-  out += position_controller_x(ref_arr[current_index] - get_xpos());
-
+  if(no_ramp){
+    out += position_controller_x(x_err);
+  } else if (!no_ramp){
+    out += position_controller_x(ref_arr[current_index] - get_xpos());
+  }
 //  printf("Position Out: %lf\n", out);
   
 
