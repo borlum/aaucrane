@@ -1,9 +1,12 @@
 function [] = simvsacc()
 
     % Plot ACC step
-    [t, x, y, theta] = grabData('1430469544.csv');
+    [t1, x1, y1, theta1] = grabData('1430483951.csv');
+    [t2, x2, y2, theta2] = grabData('1430485866.csv');
 
-    plot(t, theta);
+    plot(t1, theta1);
+    hold on;
+    plot(t2, theta2);
 
     function [t,x,y,theta] = grabData(test)
         CRANE_URL = 'http://172.26.12.144/data';
@@ -12,9 +15,10 @@ function [] = simvsacc()
         
         raw   = csvread(TMP_FILE, 2, 0);
         t     = raw(:,1) * 1e-6;
-        theta = raw(:,3)*(0.7367)  - 1.3835;
-        x     = raw(:,4)*(-0.4981) + 4.7931;
-        y     = raw(:,5)*(-0.1536) + 1.2106;
+        theta = raw(:,3);
+        x     = raw(:,4);
+        y     = raw(:,5);
+        v     = raw(:,8);
 
         delete(TMP_FILE);
     end

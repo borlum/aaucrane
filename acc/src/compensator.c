@@ -61,7 +61,7 @@ double angle_controller(double angle, int aw){
 }
 
 double position_controller_x(double error){
-  double k_p = 15;
+  double k_p = 5;
   return error * k_p;
 }
 
