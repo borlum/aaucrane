@@ -39,7 +39,7 @@ double pd_get_controller_output(){
 
 double pid_get_controller_output(){
   double out;
-
+  static int aw  =0;
   double angle = get_angle();
 
   out = angle_controller(angle);
@@ -48,7 +48,7 @@ double pid_get_controller_output(){
 
 //  printf("Angle: %lf\n", angle);
 
-    out += position_controller_x(x_goal-get_xpos());
+    out += position_controller_x(x_goal-get_xpos(), aw);
 //    out += position_controller_x(ref_arr[current_index] - get_xpos());
 //  printf("Position Out: %lf\n", out);
   
@@ -56,6 +56,10 @@ double pid_get_controller_output(){
   if(current_index < (nr_of_ref - 1)) {
     current_index++;
   }
+
+if(fabs(out) >= 12.5) aw = 1;
+  else aw = 0;
+
   return out;
 }
 

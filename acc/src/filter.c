@@ -10,7 +10,7 @@ double angle_integrate = 0, angle_prev = 0;
 double pre_error = 0;
 double pre_out   = 0;
 
-double angle_controller(double angle_pos){
+double angle_controller(double angle_pos, int aw){
   double out, TS = .001, angle_windup_val = 1;
   double k, tp, td, ti;
 
@@ -19,21 +19,23 @@ double angle_controller(double angle_pos){
     k = 10;
     tp = 0.5;
     td = 0.2;
-    ti = 4.1;
+    if(aw) ti = 0;
+    else if (!aw) ti = 4.1;
   }
   else{
     k = 10;
     tp = 0.5;
     td = 0.2;
-    ti = 4.15;
+     if(aw) ti = 0;
+    else if (!aw) ti = 4.15;
   }
   
   out = angle_pos*(k*tp + k * ti * (angle_integrate) * TS + k) + k * td * (angle_prev-angle_pos);
   angle_integrate += angle_pos;
 
-/*  if(angle_integrate < -angle_windup_val) angle_integrate = -angle_windup_val;
+  if(angle_integrate < -angle_windup_val) angle_integrate = -angle_windup_val;
   else if(angle_integrate > angle_windup_val) angle_integrate = angle_windup_val;
-*/
+
   angle_prev = angle_pos;
 
   return out;
