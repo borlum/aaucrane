@@ -66,16 +66,13 @@ if(out >= 12.5 && out <= -12.5) aw = 1;
 
 double ld_get_controller_output(double x_ref){
   double out;
-  static int aw = 0;
-  out = angle_controller3(get_angle(), aw);
+
+  out = angle_controller3(get_angle());
   out += position_controller_x3(ref_arr[current_index] - get_xpos());
   
   if(current_index < (nr_of_ref - 1)) {
     current_index++;
   }
-
-if(out >= 12.5 && out <= -12.5) aw = 1;
-  else aw = 0;
 
   return out;
 }
