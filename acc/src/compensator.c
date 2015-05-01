@@ -21,7 +21,7 @@ double angle_controller(double angle, int aw){
 
   /* Diffrent parameters depending of container */
   if (get_ctrlpad_magnet_switch()) {
-    k = 10;
+    k = 12;
     td = 0.02;
     /*Anti-Windup*/
     if (aw) { 
