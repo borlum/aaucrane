@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <libcrane.h>
+#include "compensator.h"
 
 #define NO_RAMP 1
 
@@ -38,8 +39,6 @@ double angle_controller(double angle, int aw){
       ti = 4.15;
     }
   }
-  
-  out = angle * k * ( 1 + (1/ti) * angle_int * X_SAMPLE_TIME_S + (angle_pre-angle)
 
   out = 1 + (1/ti) * angle_int * X_SAMPLE_TIME_S;
   out = out + ((angle_pre - angle)/X_SAMPLE_TIME_S) * Td;
@@ -98,14 +97,6 @@ double pid_get_controller_output(double ref){
   return out;
 }
 
-void init_ramp(double x_ref){
-  double step;
-  x_goal = x_ref;
-  step = x_ref-get_xpos();
-  nr_of_ref = ramp_maker(step);
-  current_index = 0;
-}
-
 int ramp_maker(double step){
   double i,  speed = .0005, off_set = get_xpos(); //speed is in m/ms
   int j = 0;
@@ -123,4 +114,11 @@ int ramp_maker(double step){
   }
 
   return j;
+}
+
+void init_ramp(double x_ref){
+  double step;
+  step = x_ref-get_xpos();
+  nr_of_ref = ramp_maker(step);
+  current_index = 0;
 }

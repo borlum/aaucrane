@@ -148,7 +148,7 @@ void *task_y_axis_controller(void * argc)
       hit_count = 0;
     }
 
-    out = position_controller_y(y_err);
+    out = position_controller_y(err);
 
     run_motory(out);
 #ifdef RTAI
