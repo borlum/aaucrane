@@ -44,7 +44,7 @@ double pid_get_controller_output(){
 
   printf("Angle Out: %lf\n", out);
 
-  printf("Angle: %lf\n", angle());
+  printf("Angle: %lf\n", angle);
 
 
   out += position_controller_x(ref_arr[current_index] - get_xpos());
