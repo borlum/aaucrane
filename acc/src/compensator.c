@@ -98,7 +98,7 @@ double pid_get_controller_output(double ref){
 }
 
 int ramp_maker(double step){
-  double i,  speed = .001, off_set = get_xpos(); //speed is in m/ms
+  double i,  speed = .0005, off_set = get_xpos(); //speed is in m/ms
   int j = 0;
 
   if(step>0){
