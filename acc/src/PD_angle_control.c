@@ -14,10 +14,11 @@ size_t nr_of_ref;
 double ref_arr[REF_ARR_SZ];
 int current_index = 0;
 
-double step;
+double x_goal;
 
 void pd_init_controller(double x_ref){
-  
+  double step;
+  x_goal = x_ref;
   step = x_ref-get_xpos();
   nr_of_ref = ramp_maker(step, ref_arr);
   current_index = 0;
@@ -47,7 +48,7 @@ double pid_get_controller_output(){
 
 //  printf("Angle: %lf\n", angle);
 
-    out += position_controller_x(step);
+    out += position_controller_x(x_goal-get_xpos());
 //    out += position_controller_x(ref_arr[current_index] - get_xpos());
 //  printf("Position Out: %lf\n", out);
   
