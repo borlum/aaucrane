@@ -51,8 +51,8 @@ void* logger(void* args){
     t_sample = get_time_micros();
     fprintf(fp, "%ld,",  (t_sample - t_0));
 
-    /*SAMPLE SENSORS*/
-    fprintf(fp, "%f,", get_old_angle_raw());
+    /*SAMPLE SENSORS RAW*/
+/*    fprintf(fp, "%f,", get_old_angle_raw());
     fprintf(fp, "%f,", get_angle_raw());
     fprintf(fp, "%f,", get_xpos_raw());
     fprintf(fp, "%f,", get_ypos_raw());
@@ -60,7 +60,19 @@ void* logger(void* args){
     fprintf(fp, "%f,", get_motory_velocity_raw());
     fprintf(fp, "%f,", get_motorx_voltage());
     fprintf(fp, "%f", get_motory_voltage());
+    fprintf(fp, "\n");*/
+
+    /*SAMPLE SENSORS*/
+    fprintf(fp, "%f,", get_old_angle());
+    fprintf(fp, "%f,", get_angle());
+    fprintf(fp, "%f,", get_xpos());
+    fprintf(fp, "%f,", get_ypos());
+    fprintf(fp, "%f,", get_motorx_velocity());
+    fprintf(fp, "%f,", get_motory_velocity());
+    fprintf(fp, "%f,", get_motorx_voltage());
+    fprintf(fp, "%f", get_motory_voltage());
     fprintf(fp, "\n");
+
 #ifdef RTAI
     rt_task_wait_period();
 #else
