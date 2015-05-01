@@ -154,7 +154,7 @@ double get_angle()
 
     ang_prev = ang;
 
-    if(ang < .01) ang = 0;
+    if(fabs(ang) < .01) ang = 0;
 
     return ang;
 }
