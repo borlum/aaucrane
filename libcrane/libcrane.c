@@ -40,13 +40,14 @@ int initialize_crane()
  */
 int run_motorx(double voltage)
 {
-    if (voltage > -4.2 && voltage < 0 - epsilon) {
-        voltage = -4.2;
-    }
+	int sign;
+    if (voltage < 0.075 && voltage > 0.075) voltage = 0;
 
-    if (voltage < 4.2 && voltage > 0 + epsilon) {
-        voltage = 4.2;
-    }
+    if(voltage < 0) sign = -1;
+    else if (voltage > 0) sign = 1;
+    else if (voltage == 0) sign = 0;
+
+    voltage = sign * (sign * voltage + (4.2+(2-get_xpos())*0.07));
 
     return run_motor(-voltage, 0); /* Change X motor direction */
 }
@@ -130,7 +131,24 @@ int run_motor(double voltage, int axis)
  */
 double get_angle()
 {
-    double ang = 0.7367*get_angle_raw() - 1.3835;
+
+    static int count = 0;
+
+    static double ang_prev = 0;
+
+    static double offset = 1.3835;
+
+    double ang = 0.7367*get_angle_raw() - offset;
+
+    if(ang_prev == ang) count++;
+    else count = 0;
+
+    if(count > 50 && fabs(ang) < 0.1) {
+        offset = offset + ang;
+        count = 0;
+    }
+
+    ang_prev = ang;
 
     return ang;
 }

@@ -22,5 +22,10 @@ save measudenkontainer2 t u y
 
 process = 'udenkontainer2'
 
-delete(TMP_FILE);
+% plot(t, y)
+% grid on;
+% title('Movement response to 9.5 V');
+% ylabel('X position [m]');
+% xlabel('Time [s]');
 % Found parameters: pare = [0.0065 0.002]
+delete(TMP_FILE);
