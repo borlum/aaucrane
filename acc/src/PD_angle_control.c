@@ -57,7 +57,7 @@ double pid_get_controller_output(){
     current_index++;
   }
 
-if(fabs(out) >= 12.5) aw = 1;
+if(out >= 12.5 && out <= -12.5) aw = 1;
   else aw = 0;
 
   return out;
