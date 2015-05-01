@@ -41,7 +41,7 @@ void *task_x_axis_controller(void * argc)
 #ifdef RTAI
   /*Transform to RTAI task*/
   RTIME period = nano2count(X_SAMPLE_TIME_NS);
-  if(!(rt_x_axies_controller = rt_task_init_schmod(nam2num("rt_x_axis_controller"), 1, 0, 0, SCHED_FIFO, 0))){
+  if(!(rt_x_axis_controller = rt_task_init_schmod(nam2num("rt_x_axis_controller"), 1, 0, 0, SCHED_FIFO, 0))){
     printf("Could not start rt_x_axis_controller\n");
     exit(42);
   }
@@ -114,7 +114,7 @@ void *task_y_axis_controller(void * argc)
   }
   rt_task_make_periodic(rt_y_axis_controller, rt_get_time() + period, period);
   rt_make_hard_real_time();
-  printf("Started rt_y_axies_controller\n");
+  printf("Started rt_y_axis_controller\n");
 #endif
 
   while (1) {
