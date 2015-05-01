@@ -40,11 +40,11 @@ double angle_controller(double angle, int aw){
     }
   }
 
-  /*out = 1 + (1/ti) * angle_int * X_SAMPLE_TIME_S;
+  out = 1 + (1/ti) * angle_int * X_SAMPLE_TIME_S;
   out = out + ((angle_pre - angle)/X_SAMPLE_TIME_S) * td;
-  out = out * k * angle;*/
+  out = out * k * angle;
 
-  out = 410*angle - 800*angle_pre + 390*angle_pre2 + out_pre2;
+  /*out = 410*angle - 800*angle_pre + 390*angle_pre2 + out_pre2;*/
   
   /*Anti-Windup*/
   if (!aw) {
