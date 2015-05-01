@@ -8,6 +8,6 @@ int main(int argc, char* argv[])
     
     while(1) {
         printf("(x,y,\u03B8) = (%.2lf, %.2lf, %.2lf)\n", get_xpos(), get_ypos(), get_angle());
-        usleep(1000000 * 1);
+        usleep(1000000 * .1);
     }
 }
