@@ -63,7 +63,7 @@ void* logger(void* args){
     fprintf(fp, "\n");*/
 
     /*SAMPLE SENSORS*/
-    fprintf(fp, "%f,", get_old_angle());
+    fprintf(fp, "%f,", get_old_angle_raw());
     fprintf(fp, "%f,", get_angle());
     fprintf(fp, "%f,", get_xpos());
     fprintf(fp, "%f,", get_ypos());
