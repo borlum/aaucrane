@@ -73,7 +73,7 @@ void *task_x_axies_controller(void * argc)
     //
     //double tmp = (roundf( (x_ref-get_xpos()) * 10.3f) / 10.3f);
     double tmp = x_ref-get_xpos();
-    printf("tmp: %lf \n", tmp);
+ //   printf("tmp: %lf \n", tmp);
     if ( (fabs(tmp) < X_ERR_BAND) && (get_motorx_velocity() == 0) && (get_angle() <= .02) ) {
       if( ((hit_count++) >= 500) && new_ref ){
 	new_ref = 0;
