@@ -154,7 +154,7 @@ double get_angle()
 
     ang_prev = ang;
 
-    return (  (double)(int)(ang * 100) /100.00);
+    return ((double)(int)(ang * 100) /100.00);
 }
 
 /**
