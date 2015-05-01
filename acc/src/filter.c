@@ -31,9 +31,9 @@ double angle_controller(double angle_pos){
   out = angle_pos*(k*tp + k * ti * (angle_integrate) * TS + k) + k * td * (angle_prev-angle_pos);
   angle_integrate += angle_pos;
 
-  if(angle_integrate < -angle_windup_val) angle_integrate = -angle_windup_val;
+/*  if(angle_integrate < -angle_windup_val) angle_integrate = -angle_windup_val;
   else if(angle_integrate > angle_windup_val) angle_integrate = angle_windup_val;
-
+*/
   angle_prev = angle_pos;
 
   return out;
