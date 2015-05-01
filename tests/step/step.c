@@ -14,11 +14,9 @@
 #include "acc.h"
 #include "controller.h"
 
-
 #define DATA_PATH "/var/www/html/data/acc/steps/"
 #define DATA_HEADER "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n"
-
-
+#define NAME_LEN 160
 
 pthread_t t_xcontroller = NULL, t_ycontroller = NULL, t_logger = NULL;
 
@@ -31,7 +29,7 @@ void* logger(void* args){
   unsigned long t_0, t_sample;
 
 #ifdef RTAI
-  RTIME period = nano2count(1000 * 1000 * 1); /* We think 10 milli */
+  RTIME period = nano2count(1000 * 1000 * 1); 
   if(!(rt_logger = rt_task_init_schmod(nam2num("logger"), 1, 0, 0, SCHED_FIFO, 0))){
     printf("Could not start rt_task\n");
     exit(42);
@@ -40,7 +38,7 @@ void* logger(void* args){
   rt_make_hard_real_time();
 #endif
 
-  char tmp[160];
+  char tmp[NAME_LEN];
   sprintf(tmp, "%s/%d.csv", DATA_PATH, (int)time(NULL));
   fp = fopen(tmp, "w");
   fprintf(fp, DATA_HEADER);
@@ -51,17 +49,6 @@ void* logger(void* args){
     t_sample = get_time_micros();
     fprintf(fp, "%ld,",  (t_sample - t_0));
 
-    /*SAMPLE SENSORS RAW*/
-/*    fprintf(fp, "%f,", get_old_angle_raw());
-    fprintf(fp, "%f,", get_angle_raw());
-    fprintf(fp, "%f,", get_xpos_raw());
-    fprintf(fp, "%f,", get_ypos_raw());
-    fprintf(fp, "%f,", get_motorx_velocity_raw());
-    fprintf(fp, "%f,", get_motory_velocity_raw());
-    fprintf(fp, "%f,", get_motorx_voltage());
-    fprintf(fp, "%f", get_motory_voltage());
-    fprintf(fp, "\n");*/
-
     /*SAMPLE SENSORS*/
     fprintf(fp, "%f,", get_old_angle_raw());
     fprintf(fp, "%f,", get_angle());
@@ -70,7 +57,7 @@ void* logger(void* args){
     fprintf(fp, "%f,", get_motorx_velocity());
     fprintf(fp, "%f,", get_motory_velocity());
     fprintf(fp, "%f,", get_motorx_voltage());
-    fprintf(fp, "%f", get_motory_voltage());
+    fprintf(fp, "%f",  get_motory_voltage());
     fprintf(fp, "\n");
 
 #ifdef RTAI
@@ -88,7 +75,6 @@ int init(){
   }
   else{
     printf("Starting timer \n");
-    //rt_set_oneshot_mode(); /* ONE SHOT! */
     rt_set_periodic_mode();
     start_rt_timer(0);
   }
@@ -130,8 +116,7 @@ int main(int argc,char* argv[]){
   from_y = mq_open(Q_FROM_Y, O_RDONLY);
 
   double x;
-  double y = 0.223;
-
+  
   size_t len = 2 * BUFFER_SIZE;
   char stupid_buffer[2 * BUFFER_SIZE];
   double tmp;
@@ -142,7 +127,6 @@ int main(int argc,char* argv[]){
 
     if(t_xcontroller == NULL && t_logger == NULL){
       pthread_create(&t_xcontroller, NULL, task_x_axies_controller, NULL);
-      //pthread_create(&t_ycontroller, NULL, task_y_axies_controller, NULL);
       pthread_create(&t_logger, NULL, logger, NULL);
 
     }
