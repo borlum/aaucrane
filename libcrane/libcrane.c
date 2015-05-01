@@ -49,7 +49,7 @@ int run_motorx(double voltage)
         else if (voltage > 0) sign = 1;
         else if (voltage == 0) sign = 0;
 
-        voltage = sign * (sign * voltage + (4.2+(2-get_xpos())*0.07));
+        voltage = sign * (sign * voltage + 4.2) ; //+(2-get_xpos())*0.07));
 
     }
 
