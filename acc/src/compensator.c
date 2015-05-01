@@ -81,7 +81,7 @@ double pid_get_controller_output(double ref){
   if (NO_RAMP) {
     out += position_controller_x(ref-get_xpos());
   } else {
-    out += position_controller_x(ref_arr[current_index]);
+    out += position_controller_x(ref_arr[current_index]-get_xpos());
   }
 
   if(current_index < (nr_of_ref - 1)) {
