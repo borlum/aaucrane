@@ -92,6 +92,7 @@ void *task_x_axis_controller(void * argc)
         /*Send msg that we have settled!*/
         int msg = 1;
         printf("[X]: DONE @ %lf\n", get_xpos());
+	printf("[X] trunked: %lf\n", ((double)(int)( (get_xpos()) * 10) / 10.00))
         if (mq_send(output, (char *)&msg, sizeof(int), 0) == -1)
           printf("%s\n", strerror(errno));
       }
