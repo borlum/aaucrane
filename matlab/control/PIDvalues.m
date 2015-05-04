@@ -5,7 +5,7 @@ run('../model/cranemodel.m');
 X = Xm;
 W = Wm;
 %rlocus(Xm)
-C1 = 15;
+C1 = 7.5;
 loop2 = feedback(C1 *  X, 1);
 %------------------------------------------------------------------------------
 % PID Control
