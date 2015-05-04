@@ -2,7 +2,7 @@
 #include <libcrane.h>
 #include "compensator.h"
 
-#define NO_RAMP 0
+#define RAMP 1
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -40,9 +40,11 @@ double angle_controller(double angle, int aw){
     }
   }
 
+  k = 10;
+
   out = 1 + (1/ti) * angle_int * X_SAMPLE_TIME_S;
   out = out + ((angle_pre - angle)/X_SAMPLE_TIME_S) * td;
-  out = out * k * angle;
+  out = k * angle;
 
   /*out = 410*angle - 800*angle_pre + 390*angle_pre2 + out_pre2;*/
   
@@ -78,7 +80,7 @@ double pid_get_controller_output(double ref){
   out = angle_controller(angle, aw);
 
   /*STEP or RAMP?*/
-  if (NO_RAMP) {
+  if (RAMP == 0) {
     out += position_controller_x(ref-get_xpos());
   } else {
     out += position_controller_x(ref_arr[current_index]-get_xpos());

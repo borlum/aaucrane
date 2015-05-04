@@ -30,7 +30,7 @@ void *task_x_axis_controller(void * argc)
   int hit_count = 0;
   int received_new_ref = 0;
 
-  double x_ref = -1;
+  double x_ref = 0;
   double out = 0;
 
   mqd_t input, output;
@@ -50,6 +50,21 @@ void *task_x_axis_controller(void * argc)
   printf("Started rt_x_axis_controller\n");
 #endif
 
+  printf("Waiting for ref..\n");
+  while(mq_receive(input, input_buffer, BUFFER_SIZE, 0) < 0) {
+    if (errno != EAGAIN){
+      printf("[X]: error %d, %s\n", errno, strerror(errno));
+    }
+#ifdef RTAI
+    rt_task_wait_period();
+#endif
+  }
+
+  memcpy(&x_ref, input_buffer, sizeof(double));
+  printf("[X]: New x_ref = %.3f\n", x_ref);
+  received_new_ref = 1;
+  init_ramp(x_ref);
+
   while (1) {
     /*If new reference in queue*/
     if (mq_receive(input, input_buffer, BUFFER_SIZE, 0) > 0) {
@@ -66,9 +81,9 @@ void *task_x_axis_controller(void * argc)
     out = pid_get_controller_output(x_ref);
     
     /*Settled?*/
-    double err = x_ref - get_xpos();
+    double err = ((double)(int)( (x_ref - get_xpos()) * 1000) / 1000.00);
     /*X inside error band? Angle inside error band? Velocity = 0?*/
-    if ( (fabs(err) < X_ERR_BAND) && (get_motorx_velocity() == 0) && (fabs(get_angle()) < ANGLE_ERR_BAND) ) {
+    if ( (fabs(err) < X_ERR_BAND) /* && (get_motorx_velocity() == 0) */ && (fabs(get_angle()) < ANGLE_ERR_BAND) ) {
       /*Has this happened more than SETTLE_HITS times?*/
       if( ((hit_count++) >= SETTLE_HITS) && received_new_ref ) {
         /*Settled! Allow for new reference and reset hit counter!*/
@@ -77,6 +92,7 @@ void *task_x_axis_controller(void * argc)
         /*Send msg that we have settled!*/
         int msg = 1;
         printf("[X]: DONE @ %lf\n", get_xpos());
+	printf("[X]: trunked: %lf\n", ((double)(int)( (get_xpos()) * 1000) / 1000.00));
         if (mq_send(output, (char *)&msg, sizeof(int), 0) == -1)
           printf("%s\n", strerror(errno));
       }
@@ -97,7 +113,7 @@ void *task_y_axis_controller(void * argc)
   int hit_count = 0;
   int received_new_ref = 0;
   
-  double y_ref = -1;
+  double y_ref = 0;
   double out = 0;
 
   mqd_t input, output;
@@ -117,6 +133,22 @@ void *task_y_axis_controller(void * argc)
   printf("Started rt_y_axis_controller\n");
 #endif
 
+
+  while(mq_receive(input, input_buffer, BUFFER_SIZE, 0) < 0) {
+    if (errno != EAGAIN){
+      printf("[Y]: error %d, %s\n", errno, strerror(errno));
+    }
+#ifdef RTAI
+    rt_task_wait_period();
+#endif
+  }
+
+  memcpy(&y_ref, input_buffer, sizeof(double));
+  printf("[Y]: New y_ref = %.3f\n", y_ref);
+  received_new_ref = 1;
+  init_ramp(y_ref);
+
+  
   while (1) {
     /*If new reference in queue*/
     if (mq_receive(input, input_buffer, BUFFER_SIZE, 0) > 0) {
@@ -132,7 +164,7 @@ void *task_y_axis_controller(void * argc)
     /*Settled?*/
     double err = y_ref - get_ypos();
     /*X inside error band? Angle inside error band? Velocity = 0?*/
-    if ( (fabs(err) < Y_ERR_BAND) && (get_motory_velocity() == 0) ) {
+    if ( (fabs(err) < Y_ERR_BAND) ) {
       /*Has this happened more than SETTLE_HITS times?*/
       if( ((hit_count++) >= SETTLE_HITS) && received_new_ref ) {
         /*Settled! Allow for new reference and reset hit counter!*/
