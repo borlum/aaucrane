@@ -68,7 +68,7 @@ void *task_x_axis_controller(void * argc)
 
   printf("Before while\n");
   while (1) {
-    prtinf("inside while\n");
+    printf("inside while\n");
     /*If new reference in queue*/
     if (mq_receive(input, input_buffer, BUFFER_SIZE, 0) > 0) {
       memcpy(&x_ref, input_buffer, sizeof(double));
