@@ -15,9 +15,8 @@ RTAI_LIB += -I/usr/realtime/bin/
 
 SOURCE += $(TARGET).c
 SOURCE += src/controller.c
-SOURCE += src/filter.c
+SOURCE += src/compensator.c
 SOURCE += src/stack.c
-SOURCE += src/PD_angle_control.c
 
 TESTING = -D TESTING
 RTAI = -DRTAI $(RTAI_LIB)
