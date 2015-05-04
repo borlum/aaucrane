@@ -2,7 +2,7 @@
 #include <libcrane.h>
 #include "compensator.h"
 
-#define NO_RAMP 0
+#define RAMP 0
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -80,7 +80,7 @@ double pid_get_controller_output(double ref){
   out = angle_controller(angle, aw);
 
   /*STEP or RAMP?*/
-  if (NO_RAMP) {
+  if (RAMP == 0) {
     out += position_controller_x(ref-get_xpos());
   } else {
     out += position_controller_x(ref_arr[current_index]-get_xpos());
