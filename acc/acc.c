@@ -33,7 +33,7 @@ void *controller(void * args)
   size_t buf_len = BUFFER_SIZE;
   char buf[BUFFER_SIZE];
   
-  double reset_pos_flag = 0;
+  double reset_pos_flag = 0.2;
   
 
   crane_cmd_t* cmd;
