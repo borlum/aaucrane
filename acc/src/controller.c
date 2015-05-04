@@ -83,8 +83,8 @@ void *task_x_axis_controller(void * argc)
     out = pid_get_controller_output(x_ref);
     
     /*Settled?*/
-    double err = ((x_ref - get_xpos()) * 10) / 10.00;
-    printf("[X] err: %lf\n", err);
+    double err = (x_ref - get_xpos());
+    printf("[X] err: %lf\n", ((err * 10) / 10.00));
     /*X inside error band? Angle inside error band? Velocity = 0?*/
     if ( (fabs(err) < X_ERR_BAND) && (get_motorx_velocity() == 0) && (fabs(get_angle()) < ANGLE_ERR_BAND) ) {
       /*Has this happened more than SETTLE_HITS times?*/
