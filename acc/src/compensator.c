@@ -2,7 +2,7 @@
 #include <libcrane.h>
 #include "compensator.h"
 
-#define RAMP 1
+#define RAMP 0
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
