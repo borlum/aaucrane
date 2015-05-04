@@ -144,7 +144,7 @@ void *task_y_axis_controller(void * argc)
 #endif
   }
 
-  y_ref = (double) *input_buffer;
+  memcpy(&y_ref, input_buffer, sizeof(double));
   printf("[Y]: New y_ref = %.3f\n", y_ref);
   received_new_ref = 1;
   init_ramp(y_ref);
