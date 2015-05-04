@@ -52,7 +52,6 @@ void *task_x_axis_controller(void * argc)
 
   printf("Waiting for ref..\n");
   while(mq_receive(input, input_buffer, BUFFER_SIZE, 0) < 0) {
-    printf("Inside while\n");
     if (errno != EAGAIN){
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
@@ -66,7 +65,6 @@ void *task_x_axis_controller(void * argc)
   received_new_ref = 1;
   init_ramp(x_ref);
 
-  printf("Before while\n");
   while (1) {
     /*If new reference in queue*/
     if (mq_receive(input, input_buffer, BUFFER_SIZE, 0) > 0) {
@@ -84,9 +82,8 @@ void *task_x_axis_controller(void * argc)
     
     /*Settled?*/
     double err = ((double)(int)( (x_ref - get_xpos()) * 10) / 10.00);
-  printf("[X] err: %lf\n", err);
     /*X inside error band? Angle inside error band? Velocity = 0?*/
-    if ( (fabs(err) < X_ERR_BAND) && (get_motorx_velocity() == 0) && (fabs(get_angle()) < ANGLE_ERR_BAND) ) {
+    if ( (fabs(err) < X_ERR_BAND) /* && (get_motorx_velocity() == 0) */ && (fabs(get_angle()) < ANGLE_ERR_BAND) ) {
       /*Has this happened more than SETTLE_HITS times?*/
       if( ((hit_count++) >= SETTLE_HITS) && received_new_ref ) {
         /*Settled! Allow for new reference and reset hit counter!*/
@@ -165,13 +162,10 @@ void *task_y_axis_controller(void * argc)
 
     /*Settled?*/
     double err = y_ref - get_ypos();
-    printf("[Y] err: %lf\n", err);
     /*X inside error band? Angle inside error band? Velocity = 0?*/
     if ( (fabs(err) < Y_ERR_BAND) ) {
-      printf("HIT\n");
       /*Has this happened more than SETTLE_HITS times?*/
       if( ((hit_count++) >= SETTLE_HITS) && received_new_ref ) {
-	printf("Should stop now\n");
         /*Settled! Allow for new reference and reset hit counter!*/
         received_new_ref = 0;
         hit_count = 0;
