@@ -3,7 +3,7 @@
 
 #define X_ERR_BAND 0.01
 #define Y_ERR_BAND 0.005
-#define ANGLE_ERR_BAND 0.02
+#define ANGLE_ERR_BAND 0.03
 #define SETTLE_HITS 250
 
 #ifdef RTAI
