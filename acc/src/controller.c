@@ -50,7 +50,9 @@ void *task_x_axis_controller(void * argc)
   printf("Started rt_x_axis_controller\n");
 #endif
 
+  printf("Waiting for ref..");
   while(mq_receive(input, input_buffer, BUFFER_SIZE, 0) < 0) {
+    printf("Inside while");
     if (errno != EAGAIN){
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
