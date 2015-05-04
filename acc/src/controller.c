@@ -169,7 +169,7 @@ void *task_y_axis_controller(void * argc)
       printf("HIT\n");
       /*Has this happened more than SETTLE_HITS times?*/
       if( ((hit_count++) >= SETTLE_HITS) && received_new_ref ) {
-	printf("Should stop now\n")
+	printf("Should stop now\n");
         /*Settled! Allow for new reference and reset hit counter!*/
         received_new_ref = 0;
         hit_count = 0;
