@@ -50,6 +50,20 @@ void *task_x_axis_controller(void * argc)
   printf("Started rt_x_axis_controller\n");
 #endif
 
+  while(mq_receive(input, input_buffer, BUFFER_SIZE, 0) < 0) {
+    if (errno != EAGAIN){
+      printf("[X]: error %d, %s\n", errno, strerror(errno));
+    }
+#ifdef RTAI
+    rt_task_wait_period();
+#endif
+  }
+
+  x_ref = (double) input_buffer;
+  printf("[X]: New x_ref = %.3f\n", x_ref);
+  received_new_ref = 1;
+  init_ramp(x_ref);
+  
   while (1) {
     /*If new reference in queue*/
     if (mq_receive(input, input_buffer, BUFFER_SIZE, 0) > 0) {
@@ -97,7 +111,7 @@ void *task_y_axis_controller(void * argc)
   int hit_count = 0;
   int received_new_ref = 0;
   
-  double y_ref = -1;
+  double y_ref = 0;
   double out = 0;
 
   mqd_t input, output;
@@ -117,6 +131,22 @@ void *task_y_axis_controller(void * argc)
   printf("Started rt_y_axis_controller\n");
 #endif
 
+
+  while(mq_receive(input, input_buffer, BUFFER_SIZE, 0) < 0) {
+    if (errno != EAGAIN){
+      printf("[Y]: error %d, %s\n", errno, strerror(errno));
+    }
+#ifdef RTAI
+    rt_task_wait_period();
+#endif
+  }
+
+  y_ref = (double) input_buffer;
+  printf("[Y]: New x_ref = %.3f\n", x_ref);
+  received_new_ref = 1;
+  init_ramp(y_ref);
+
+  
   while (1) {
     /*If new reference in queue*/
     if (mq_receive(input, input_buffer, BUFFER_SIZE, 0) > 0) {

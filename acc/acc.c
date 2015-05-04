@@ -35,8 +35,10 @@ void *controller(void * args)
   
   double reset_pos_flag = 0;
   
+
   crane_cmd_t* cmd;
-  char * buffer = malloc(BUFFER_SIZE);
+  size_t cmd_buf_len = BUFFER_SIZE;
+  char cmd_buf[BUFFER_SIZE];
 
   to_x = mq_open(Q_TO_X, O_WRONLY);
   from_x = mq_open(Q_FROM_X, O_RDONLY);
@@ -47,18 +49,25 @@ void *controller(void * args)
   to_c = mq_open(Q_TO_C, O_RDONLY);
   from_c = mq_open(Q_FROM_C, O_WRONLY);
 
-  
+  /* Wait for the crane is @ 0,0 */
+  pthread_create(&thread_xcontroller, NULL, task_x_axis_controller, NULL); /* Starts with a ref @ 0 */
+  pthread_create(&thread_ycontroller, NULL, task_y_axis_controller, NULL);  /* Starts with a ref @ 0 */
+  /* Wait untill (0,0) has been reached */
+  mq_send(to_x, (char*) &reset_pos_flag, sizeof(double), 0);
+  mq_receive(from_x, buf, buf_len, 0);
+  mq_send(to_y, (char*) &reset_pos_flag, sizeof(double), 0);
+  mq_receive(from_y, buf, buf_len, 0);
+
   while(1){
     printf("Crane reday for next command... \n");
-    mq_receive(to_c, buffer, BUFFER_SIZE, 0);
+    mq_receive(to_c, cmd_buf, cmd_buf_len, 0);
     cmd = (crane_cmd_t*) buffer;
     
     printf("#### NEW COMMAND ####\n");
     printf("GOTO (%.3f, %.3f)\n", cmd->pickup_point.x, cmd->pickup_point.y);
     printf("Carry @ %.3f\n", cmd->carry_height);
     printf("GOTO (%.3f, %.3f)\n", cmd->dest_point.x, cmd->dest_point.y);
-    printf("#### END COMMAND ####\n");
-    
+    printf("#### END COMMAND ####\n");    
     
     mq_send(to_x, (char *) &(cmd->pickup_point.x), sizeof(cmd->pickup_point.x), 0);
     mq_receive(from_x, buf, buf_len, 0);
@@ -111,7 +120,6 @@ int init(){
     start_rt_timer(0);
   }
 #endif /* RTAI */
-
   
   struct mq_attr attr;  
   attr.mq_flags = 0;  
@@ -141,9 +149,8 @@ int init(){
       return -1;
   }
   
-  pthread_create(&thread_xcontroller, NULL, task_x_axies_controller, NULL);
-  pthread_create(&thread_ycontroller, NULL, task_y_axies_controller, NULL);
   pthread_create(&thread_controller, NULL, controller, NULL);
+  
   return 0;
 }
 
