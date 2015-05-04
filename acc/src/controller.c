@@ -30,7 +30,7 @@ void *task_x_axis_controller(void * argc)
   int hit_count = 0;
   int received_new_ref = 0;
 
-  double x_ref = -1;
+  double x_ref = 0;
   double out = 0;
 
   mqd_t input, output;
@@ -52,7 +52,7 @@ void *task_x_axis_controller(void * argc)
 
   printf("Waiting for ref..\n");
   while(mq_receive(input, input_buffer, BUFFER_SIZE, 0) < 0) {
-    printf("Inside while\n")
+    printf("Inside while\n");
     if (errno != EAGAIN){
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
@@ -61,7 +61,7 @@ void *task_x_axis_controller(void * argc)
 #endif
   }
 
-  x_ref = (double) input_buffer;
+  x_ref = (double) *input_buffer;
   printf("[X]: New x_ref = %.3f\n", x_ref);
   received_new_ref = 1;
   init_ramp(x_ref);
@@ -143,8 +143,8 @@ void *task_y_axis_controller(void * argc)
 #endif
   }
 
-  y_ref = (double) input_buffer;
-  printf("[Y]: New x_ref = %.3f\n", x_ref);
+  y_ref = (double) *input_buffer;
+  printf("[Y]: New y_ref = %.3f\n", y_ref);
   received_new_ref = 1;
   init_ramp(y_ref);
 
