@@ -2,7 +2,7 @@
 #include <libcrane.h>
 #include "compensator.h"
 
-#define NO_RAMP 0
+#define NO_RAMP 1
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
