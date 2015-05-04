@@ -164,6 +164,7 @@ void *task_y_axis_controller(void * argc)
 
     /*Settled?*/
     double err = y_ref - get_ypos();
+    printf("[Y] err: %lf\n", err);
     /*X inside error band? Angle inside error band? Velocity = 0?*/
     if ( (fabs(err) < Y_ERR_BAND) && (get_motory_velocity() == 0) ) {
       printf("HIT\n");
