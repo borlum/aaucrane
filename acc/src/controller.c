@@ -61,7 +61,7 @@ void *task_x_axis_controller(void * argc)
 #endif
   }
 
-  x_ref = (double) *input_buffer;
+  memcpy(&x_ref, input_buffer, sizeof(double));
   printf("[X]: New x_ref = %.3f\n", x_ref);
   received_new_ref = 1;
   init_ramp(x_ref);
