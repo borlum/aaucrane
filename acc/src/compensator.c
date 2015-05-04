@@ -42,9 +42,9 @@ double angle_controller(double angle, int aw){
 
   k = 10;
 
-  out = 1 + (1/ti) * angle_int * X_SAMPLE_TIME_S;
-  out = out + ((angle_pre - angle)/X_SAMPLE_TIME_S) * td;
-  out = out * k * angle;
+//  out = 1 + (1/ti) * angle_int * X_SAMPLE_TIME_S;
+//  out = out + ((angle_pre - angle)/X_SAMPLE_TIME_S) * td;
+  out = k * angle;
 
   /*out = 410*angle - 800*angle_pre + 390*angle_pre2 + out_pre2;*/
   
