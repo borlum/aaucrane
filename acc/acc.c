@@ -53,11 +53,11 @@ void *controller(void * args)
   pthread_create(&thread_xcontroller, NULL, task_x_axis_controller, NULL); /* Starts with a ref @ 0 */
   pthread_create(&thread_ycontroller, NULL, task_y_axis_controller, NULL);  /* Starts with a ref @ 0 */
   /* Wait untill (0,0) has been reached */
-  mq_send(to_x, (char*) &reset_pos_flag, sizeof(double), 0);
-  mq_receive(from_x, buf, buf_len, 0);
   mq_send(to_y, (char*) &reset_pos_flag, sizeof(double), 0);
   mq_receive(from_y, buf, buf_len, 0);
-
+  mq_send(to_x, (char*) &reset_pos_flag, sizeof(double), 0);
+  mq_receive(from_x, buf, buf_len, 0);
+  
   while(1){
     printf("Crane reday for next command... \n");
     mq_receive(to_c, cmd_buf, cmd_buf_len, 0);
