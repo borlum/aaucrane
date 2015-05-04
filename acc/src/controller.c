@@ -166,8 +166,10 @@ void *task_y_axis_controller(void * argc)
     double err = y_ref - get_ypos();
     /*X inside error band? Angle inside error band? Velocity = 0?*/
     if ( (fabs(err) < Y_ERR_BAND) && (get_motory_velocity() == 0) ) {
+      printf("HIT\n")
       /*Has this happened more than SETTLE_HITS times?*/
       if( ((hit_count++) >= SETTLE_HITS) && received_new_ref ) {
+	printf("Should stop now\n")
         /*Settled! Allow for new reference and reset hit counter!*/
         received_new_ref = 0;
         hit_count = 0;
