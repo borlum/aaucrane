@@ -81,7 +81,7 @@ void *task_x_axis_controller(void * argc)
     out = pid_get_controller_output(x_ref);
     
     /*Settled?*/
-    double err = ((double)(int)( (x_ref - get_xpos()) * 10) / 10.00);
+    double err = ((double)(int)( (x_ref - get_xpos()) * 1000) / 1000.00);
     /*X inside error band? Angle inside error band? Velocity = 0?*/
     if ( (fabs(err) < X_ERR_BAND) /* && (get_motorx_velocity() == 0) */ && (fabs(get_angle()) < ANGLE_ERR_BAND) ) {
       /*Has this happened more than SETTLE_HITS times?*/
@@ -92,7 +92,7 @@ void *task_x_axis_controller(void * argc)
         /*Send msg that we have settled!*/
         int msg = 1;
         printf("[X]: DONE @ %lf\n", get_xpos());
-	printf("[X]: trunked: %lf\n", ((double)(int)( (get_xpos()) * 100) / 100.00));
+	printf("[X]: trunked: %lf\n", ((double)(int)( (get_xpos()) * 1000) / 1000.00));
         if (mq_send(output, (char *)&msg, sizeof(int), 0) == -1)
           printf("%s\n", strerror(errno));
       }
