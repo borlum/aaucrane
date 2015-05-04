@@ -2,7 +2,7 @@
 #include <libcrane.h>
 #include "compensator.h"
 
-#define RAMP 0
+#define RAMP 1
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -44,7 +44,7 @@ double angle_controller(double angle, int aw){
 
   out = 1 + (1/ti) * angle_int * X_SAMPLE_TIME_S;
   out = out + ((angle_pre - angle)/X_SAMPLE_TIME_S) * td;
-  out = out * k * angle;
+  out = k * angle;
 
   /*out = 410*angle - 800*angle_pre + 390*angle_pre2 + out_pre2;*/
   
