@@ -61,7 +61,7 @@ void *controller(void * args)
   while(1){
     printf("Crane reday for next command... \n");
     mq_receive(to_c, cmd_buf, cmd_buf_len, 0);
-    cmd = (crane_cmd_t*) buffer;
+    cmd = (crane_cmd_t*) cmd_buf;
     
     printf("#### NEW COMMAND ####\n");
     printf("GOTO (%.3f, %.3f)\n", cmd->pickup_point.x, cmd->pickup_point.y);
