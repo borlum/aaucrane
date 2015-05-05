@@ -203,6 +203,7 @@ void* task_logger(void* args){
 	fclose(fp);
 
       sprintf(tmp, "%s-%d.csv", file_prefix, action_count++);
+      printf("New log in: %s", tmp);
       fp = fopen(tmp, "w");
       fprintf(fp, "%s", header);
       _new_log = 0;
