@@ -206,13 +206,16 @@ void* task_logger(void* args){
   printf("Logger task 5 %d\n", _enable_logger);
       
   while(_enable_logger == 1){
-    printf("Logger\n");
+    printf("Logger \n");
     
     if(_new_log){
+      printf("New log \n");
+
       if(!(fp == NULL))
 	fclose(fp);
 
       sprintf(tmp, "%s-%d.csv", file_prefix, action_count++);
+      printf("%s", tmp);
       fp = fopen(tmp, "w");
       fprintf(fp, "%s", header);
       _new_log = 0;
