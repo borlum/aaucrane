@@ -19,6 +19,8 @@
 #include <acc.h>
 #include <controller.h>
 #include <compensator.h>
+#include <misc.h>
+
 
 #ifdef RTAI
 RT_TASK *rt_x_axis_controller;
@@ -82,7 +84,8 @@ void *task_x_axis_controller(void * argc)
     out = pid_get_controller_output(x_ref);
     
     /*Settled?*/
-    double err = ((double)(int)( (x_ref - get_xpos()) * 1000) / 1000.00);
+    /* double err = ((double)(int)( (x_ref - get_xpos()) * 1000) / 1000.00); */
+    double err = truncate(x_ref - get_xpos());
     /*X inside error band? Angle inside error band? Velocity = 0?*/
     if ( (fabs(err) < X_ERR_BAND) /* && (get_motorx_velocity() == 0) */ && (fabs(get_angle()) < ANGLE_ERR_BAND) ) {
       /*Has this happened more than SETTLE_HITS times?*/
@@ -163,7 +166,7 @@ void *task_y_axis_controller(void * argc)
     }
 
     /*Settled?*/
-    double err = y_ref - get_ypos();
+    double err = truncate(y_ref - get_ypos());
     /*X inside error band? Angle inside error band? Velocity = 0?*/
     if ( (fabs(err) < Y_ERR_BAND) ) {
       /*Has this happened more than SETTLE_HITS times?*/
