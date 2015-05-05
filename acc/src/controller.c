@@ -217,7 +217,7 @@ void* task_logger(void* args){
 int init_logger(){
   _enable_logger = 0;
   _new_log = 1;
-  rt_mutex_init(&_logger_sem);
+  rt_sem_init(&_logger_sem, 1);
   
 }
 
