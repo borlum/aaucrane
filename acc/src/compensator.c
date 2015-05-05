@@ -41,9 +41,9 @@ double angle_controller(double angle, int aw){
   }
 
   /* After Kirsten */
-//  k = 10;
-//  td = 4;
-  // out =  k * td * (1/td * (angle_pre - angle) / X_SAMPLE_TIME_S +1 ) * -1;
+  k = 10;
+  td = 4;
+  out =  k * td * (1/td * (angle - angle_pre) / X_SAMPLE_TIME_S +1 ) ;
 
 //  out = angle * 20040 - 19960 * angle_pre - out_pre; 
 //  printf("out: %lf\n", out);
