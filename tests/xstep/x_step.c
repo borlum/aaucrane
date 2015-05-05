@@ -9,6 +9,7 @@ pthread_t thread_sampler;
 FILE * fp;
 
 #ifdef RTAI
+#include <rtai_lxrt.h>
 RT_TASK *rt_sampler;
 #endif
 
