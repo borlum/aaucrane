@@ -69,7 +69,7 @@ double angle_controller(double angle, int aw){
 }
 
 double position_controller_x(double error){
-  double k_p = 3.75; // Med container
+  double k_p = 4; // Med container
   return error * k_p;
 }
 
