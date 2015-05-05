@@ -9,11 +9,9 @@
 typedef long unsigned int rt_semt_t; 
 
 /* RTAI tasks */
-extern RT_TASK *rt_x_axis_controller;
-extern RT_TASK *rt_y_axis_controller;
-
-/* Logger task - enable and disable flag */
-extern RT_TASK *rt_logger;
+//extern RT_TASK *rt_x_axis_controller;
+//extern RT_TASK *rt_y_axis_controller;
+//extern RT_TASK *rt_logger;
 
 void* task_x_axis_controller(void *);
 void* task_y_axis_controller(void *);

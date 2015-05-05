@@ -8,9 +8,9 @@
 #include <pthread.h>
 #include <fcntl.h>
 #include <mqueue.h>
+#include <semaphore.h>
 
 #include <rtai_lxrt.h>
-#include <rtai_sem.h>
 
 #include <libcrane.h>
 #include <acc.h>
@@ -169,7 +169,7 @@ void *task_y_axis_controller(void * argc)
   }
 }
 
-SEM _logger_sem;
+sem_t _logger_sem;
 int _enable_logger;
 int _new_log;
 
@@ -204,6 +204,7 @@ void* task_logger(void* args){
       sprintf(tmp, "%s-%d.csv", file_prefix, action_count++);
       fp = fopen(tmp, "w");
       fprintf(fp, "%s", header);
+      _new_log = 0;
     }
     
     /*GRAB TIMESTAMP*/
@@ -228,39 +229,20 @@ void* task_logger(void* args){
 int init_logger(){
   _enable_logger = 0;
   _new_log = 1;
-  rt_sem_init(&_logger_sem, 1);
+  sem_init(&_logger_sem, 0, 1);
 }
 
 int disable_logger(){
-  int ret = 0;
-  RTIME delay =  nano2count(1000);
-  if (rt_sem_wait_timed(&_logger_sem, delay) == 0xFFFF){
-    ret = -1;
-  }
-  else{
-    _enable_logger = 0;
-    if (rt_sem_signal(&_logger_sem) == 0xFFFF){
-      ret = -1;
-    }
-  }
-  return ret;
+  sem_wait(&_logger_sem);
+  _enable_logger = 0;
+  sem_post(&_logger_sem);
+  return 0;
 }
 
 int enable_logger(){
-  int ret = 0;
-  RTIME delay =  nano2count(1000);
-  printf("Inside enable_logger\n");
-  if (rt_sem_wait_timed(&_logger_sem, delay) == 0xFFFF){
-    printf("enable_logger did not obtain sem\n");
-    ret = -1;
-  }
-  else{
-    printf("enable_logger got sem\n");
-    _enable_logger = 1;
-    _new_log = 1;
-    if (rt_sem_signal(&_logger_sem) == 0xFFFF){
-      ret = -1;
-    }
-  }
-  return ret;
+  sem_wait(&_logger_sem);
+  _enable_logger = 1;
+  _new_log = 1;
+  sem_post(&_logger_sem);
+  return 0;
 }

@@ -22,6 +22,7 @@
 pthread_t thread_xcontroller;
 pthread_t thread_ycontroller;
 pthread_t thread_controller;
+pthread_t thread_logger;
 
 void *controller(void * args)
 {
@@ -150,7 +151,8 @@ int init(){
   }
   
   pthread_create(&thread_controller, NULL, controller, NULL);
-  
+  pthread_create(&thread_logger, NULL, task_logger, NULL);
+
   return 0;
 }
 
@@ -160,9 +162,9 @@ void place_containers(){
 }
 
 int main(int argc,char* argv[]){  
+  init_logger();
   if( init() == -1)
     exit(-1);
-  init_logger();
 
   printf("Before enable_logger\n");
   if (enable_logger() == 0)
