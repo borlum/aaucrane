@@ -209,8 +209,8 @@ void* task_logger(void* args){
 }
 
 int init_logger(){
-  bool enable_logger;
-  bool new_log = true;
+  static bool enable_logger;
+  static bool new_log = true;
   rt_typed_sem_init(logger_sem, 1, BIN_SEM | FIFO_Q );
   
 }

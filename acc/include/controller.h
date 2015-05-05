@@ -12,9 +12,9 @@ extern RT_TASK *rt_y_axis_controller;
 
 /* Logger task - enable and disable flag */
 extern RT_TASK *rt_logger;
-extern SEM logger_sem;
-extern bool enable_logger;
-extern bool new_log;
+extern static SEM logger_sem;
+extern static bool enable_logger;
+extern static bool new_log;
 
 void* task_x_axis_controller(void *);
 void* task_y_axis_controller(void *);
