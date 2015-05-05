@@ -194,37 +194,40 @@ void* task_logger(void* args){
 
   char tmp[2 * name_len];
   t_0 = get_time_micros();
+
+  while(1){    
+    if(_enable_logger){
+      if(_new_log){
+	printf("New log\n");
+	if(!(fp == NULL)){
+	  fclose(fp);
+	}
       
-  while(_enable_logger){    
-    printf("...");
-    if(_new_log){
-      printf("New log\n");
-      if(!(fp == NULL)){
-	fclose(fp);
+	sprintf(tmp, "%s-%d.csv", file_prefix, action_count++);
+	printf("New log in: %s", tmp);
+	fp = fopen(tmp, "w");
+	fprintf(fp, "%s", header);
+	_new_log = 0;
       }
-      
-      sprintf(tmp, "%s-%d.csv", file_prefix, action_count++);
-      printf("New log in: %s", tmp);
-      fp = fopen(tmp, "w");
-      fprintf(fp, "%s", header);
-      _new_log = 0;
-    }
     
-    /*GRAB TIMESTAMP*/
-    t_sample = get_time_micros();
-    fprintf(fp, "%ld,",  (t_sample - t_0));
+      /*GRAB TIMESTAMP*/
+      t_sample = get_time_micros();
+      fprintf(fp, "%ld,",  (t_sample - t_0));
 
-    /*SAMPLE SENSORS*/
-    fprintf(fp, "%f,", get_old_angle_raw());
-    fprintf(fp, "%f,", get_angle());
-    fprintf(fp, "%f,", get_xpos());
-    fprintf(fp, "%f,", get_ypos());
-    fprintf(fp, "%f,", get_motorx_velocity());
-    fprintf(fp, "%f,", get_motory_velocity());
-    fprintf(fp, "%f,", get_motorx_voltage());
-    fprintf(fp, "%f",  get_motory_voltage());
-    fprintf(fp, "\n");
-
+      /*SAMPLE SENSORS*/
+      fprintf(fp, "%f,", get_old_angle_raw());
+      fprintf(fp, "%f,", get_angle());
+      fprintf(fp, "%f,", get_xpos());
+      fprintf(fp, "%f,", get_ypos());
+      fprintf(fp, "%f,", get_motorx_velocity());
+      fprintf(fp, "%f,", get_motory_velocity());
+      fprintf(fp, "%f,", get_motorx_voltage());
+      fprintf(fp, "%f",  get_motory_voltage());
+      fprintf(fp, "\n");
+    }
+    else{
+      printf("...")
+    }
     rt_task_wait_period();
   }
 }
