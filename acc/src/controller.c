@@ -169,7 +169,7 @@ void *task_y_axis_controller(void * argc)
   }
 }
 
-struct SEM *_logger_sem;
+struct rt_semaphore _logger_sem;
 int _enable_logger;
 int _new_log;
 
@@ -217,19 +217,19 @@ void* task_logger(void* args){
 int init_logger(){
   _enable_logger = 0;
   _new_log = 1;
-  _logger_sem = rt_typed_sem_init(42, 1, BIN_SEM | FIFO_Q );
+  rt_typed_sem_init(&_logger_sem, 1, BIN_SEM | FIFO_Q );
   
 }
 
 int disabel_logger(){
   int ret = 0;
   RTIME delay =  nano2count(1000);
-  if (rt_sem_wait_timed(_logger_sem, delay) == 0xFFFF){
+  if (rt_sem_wait_timed(&_logger_sem, delay) == 0xFFFF){
     ret = -1;
   }
   else{
     _enable_logger = 0;
-    if (rt_sem_signal(_logger_sem) == 0xFFFF){
+    if (rt_sem_signal(&_logger_sem) == 0xFFFF){
       ret = -1;
     }
   }
@@ -239,13 +239,13 @@ int disabel_logger(){
 int enable_logger(){
   int ret = 0;
   RTIME delay =  nano2count(1000);
-  if (rt_sem_wait_timed(_logger_sem, delay) == 0xFFFF){
+  if (rt_sem_wait_timed(&_logger_sem, delay) == 0xFFFF){
     ret = -1;
   }
   else{
     _enable_logger = 1;
     _new_log = 1;
-    if (rt_sem_signal(_logger_sem) == 0xFFFF){
+    if (rt_sem_signal(&_logger_sem) == 0xFFFF){
       ret = -1;
     }
   }
