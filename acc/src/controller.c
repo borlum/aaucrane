@@ -172,17 +172,17 @@ void *task_y_axis_controller(void * argc)
 sem_t _logger_sem;
 int _enable_logger;
 int _new_log;
+char *_data_path;
 
 void* task_logger(void* args){
   FILE* fp = NULL;
   unsigned long t_0, t_sample;
   int name_len = 256;
-  char data_path[] = "/var/www/html/data/acc/steps/";
   char header[] = "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n";
   int action_count = 0;
 
   char file_prefix[name_len];
-  sprintf(file_prefix, "%s/%d.csv", data_path, (int)time(NULL));
+  sprintf(file_prefix, "%s/%d.csv", _data_path, (int)time(NULL));
 
   
   RTIME period = nano2count(SAMPLE_TIME_NS); 
@@ -226,10 +226,12 @@ void* task_logger(void* args){
   }
 }
 
-int init_logger(){
+int init_logger(const char *data_path){
   _enable_logger = 0;
   _new_log = 1;
   sem_init(&_logger_sem, 0, 1);
+  _data_path = malloc( sizeof(data_path) / sizeof(data_path[0]) );
+  memcpy(_data_path, data_path, (sizeof(data_path) / sizeof(data_path[0])));
 }
 
 int disable_logger(){
