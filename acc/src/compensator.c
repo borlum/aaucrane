@@ -41,11 +41,11 @@ double angle_controller(double angle, int aw){
   }
 
   /* After Kirsten */
-  /* C2 = 10 * (s + 4) = 40 * (1/4 *s +1) = 4 * (1/4 f'(error) + 1) */
-
   k = 10;
   td = 4;
-  out =  k * td * (1/td * (angle_pre - angle) / X_SAMPLE_TIME_S +1 ) * -1;
+  // out =  k * td * (1/td * (angle_pre - angle) / X_SAMPLE_TIME_S +1 ) * -1;
+
+  out = angle * 20040 - 19960 * angle_pre - out_pre; 
 
 
 /*  out = 1 + (1/ti) * angle_int * X_SAMPLE_TIME_S;
