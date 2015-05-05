@@ -63,7 +63,7 @@ int init(){
 int main(int argc,char* argv[]){
   if( init() == -1)
     exit(-1);
-  init_logger();
+  init_logger("/var/www/html/data/acc/steps/", sizeof("/var/www/html/data/acc/steps/"));
   mqd_t to_x, from_x, to_y, from_y;
   to_x = mq_open(Q_TO_X, O_WRONLY);
   from_x = mq_open(Q_FROM_X, O_RDONLY);
@@ -86,7 +86,10 @@ int main(int argc,char* argv[]){
       pthread_create(&t_logger, NULL, task_logger, NULL);
     }
 
+    printf("Before 1\n");
     enable_logger();
+    printf("After 1\n");
+
     
     if(mq_send(to_x, (char *) &x, sizeof(x), 0) == -1)
       printf("ERROR: send: %s\n", strerror(errno));
@@ -97,8 +100,10 @@ int main(int argc,char* argv[]){
       printf("Read: %lf", tmp);
     }
 
+    printf("Before 2\n");
     disable_logger();
-    
+    printf("After 2\n");
+
     printf("Done!\n");
   }
 }
