@@ -40,9 +40,17 @@ double angle_controller(double angle, int aw){
     }
   }
 
-  out = 1 + (1/ti) * angle_int * X_SAMPLE_TIME_S;
+  /* After Kirsten */
+  /* C2 = 10 * (s + 4) = 40 * (1/4 *s +1) = 4 * (1/4 f'(error) + 1) */
+
+  k = 10;
+  td = 4;
+  out =  k * td * (1/td * (angle_pre - angle) / X_SAMPLE_TIME_S +1 );
+
+
+/*  out = 1 + (1/ti) * angle_int * X_SAMPLE_TIME_S;
   out = out + ((angle_pre - angle)/X_SAMPLE_TIME_S) * td;
-  out = k * angle;
+  out = k * angle; */
 
   /*out = 410*angle - 800*angle_pre + 390*angle_pre2 + out_pre2;*/
   
@@ -61,7 +69,7 @@ double angle_controller(double angle, int aw){
 }
 
 double position_controller_x(double error){
-  double k_p = 7.5;
+  double k_p = 3.75; // Med container
   return error * k_p;
 }
 
