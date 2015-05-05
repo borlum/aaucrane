@@ -226,7 +226,7 @@ void* task_logger(void* args){
       fprintf(fp, "\n");
     }
     else{
-      printf("Enable logger: %d, new log: %d\n", _enable_logger, _new_log);
+      //printf("Enable logger: %d, new log: %d\n", _enable_logger, _new_log);
     }
     rt_task_wait_period();
   }
