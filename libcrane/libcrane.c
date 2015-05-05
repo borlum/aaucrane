@@ -10,6 +10,13 @@ static const double MAX_MOTOR_OUTPUT = 12.5;
 static const double MIN_MOTOR_OUTPUT = 0;
 static const double epsilon = 0.2;
 
+double libcrane_truncate(double stuff_oreo){
+  int stupid_tmp = (int) (round(stuff_oreo * 1000));
+  double tmp_d = stupid_tmp / 1000.0;
+  return tmp_d;    
+}
+
+
 /**
  * Open comedi driver for interfacing w. crane
  * @return Return 0 if failed to init, 1 if success
@@ -154,7 +161,7 @@ double get_angle()
 
     ang_prev = ang;
 
-    return ((double)(int)(ang * 100) /100.00);
+    return libcrane_truncate(ang);
 }
 
 /**
