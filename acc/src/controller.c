@@ -169,9 +169,9 @@ void *task_y_axis_controller(void * argc)
   }
 }
 
-SEM logger_sem;
-int enable_logger;
-int new_log;
+SEM _logger_sem;
+int _enable_logger;
+int _new_log;
 
 void* task_logger(void* args){
   FILE* fp;
@@ -215,9 +215,9 @@ void* task_logger(void* args){
 }
 
 int init_logger(){
-  enable_logger = 0;
-  new_log = 1;
-  rt_typed_sem_init(logger_sem, 1, BIN_SEM | FIFO_Q );
+  _enable_logger = 0;
+  _new_log = 1;
+  rt_typed_sem_init(&_logger_sem, 1, BIN_SEM | FIFO_Q );
   
 }
 
@@ -228,7 +228,7 @@ int disabel_logger(){
     ret = -1;
   }
   else{
-    enable_logger = 0;
+    _enable_logger = 0;
     if (rt_sem_signal(&logger_sem) == 0xFFFF){
       ret = -1;
     }
@@ -243,8 +243,8 @@ int enable_logger(){
     ret = -1;
   }
   else{
-    enable_logger = 1;
-    new_log = 1;
+    _enable_logger = 1;
+    _new_log = 1;
     if (rt_sem_signal(&logger_sem) == 0xFFFF){
       ret = -1;
     }
