@@ -22,4 +22,4 @@ ANGLE: $(TARGET).c
 	$(GCC) $(SOURCE) $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -DANGLE -o $(TARGET)
 
 clean:
-	rm xpos_controller
+	rm $(TARGET)
