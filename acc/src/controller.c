@@ -169,7 +169,7 @@ void *task_y_axis_controller(void * argc)
   }
 }
 
-long unsigned int  _logger_sem;
+SEM _logger_sem;
 int _enable_logger;
 int _new_log;
 
