@@ -203,7 +203,7 @@ void* task_logger(void* args){
   char tmp[2 * name_len];
   t_0 = get_time_micros();
 
-  printf("Logger task 5\n");
+  printf("Logger task 5 %d\n", _enable_logger);
       
   while(_enable_logger){
     printf("Logger");
