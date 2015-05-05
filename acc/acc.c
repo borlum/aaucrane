@@ -164,6 +164,19 @@ int main(int argc,char* argv[]){
     exit(-1);
   init_logger();
 
+  printf("Before enable_logger\n");
+  if (enable_logger() == 0)
+    printf("Logger enabled\n");
+  else
+    printf("Logger failed\n");
+
+  usleep(1000 * 10);
+
+  if (disable_logger() == 0)
+    printf("Logger disabled\n");
+  else
+    printf("Logger failed\n");
+
   size_t buf_len = BUFFER_SIZE;
   char buf[BUFFER_SIZE];
 
@@ -212,9 +225,9 @@ int main(int argc,char* argv[]){
     cmd.dest_point = dest.loc;
 
     if (enable_logger() == 0)
-      printf("Logger enabled");
+      printf("Logger enabled\n");
     else
-      printf("Logger failed");
+      printf("Logger failed\n");
     
     mq_send(to_c, (char *) &cmd, sizeof(cmd), 0);
     update_status(source_row, source_col, STACK_FREE);
@@ -222,8 +235,8 @@ int main(int argc,char* argv[]){
     update_status(dest_row, dest_col, STACK_OCCUPIED);
 
     if (disable_logger() == 0)
-      printf("Logger disabled");
+      printf("Logger disabled\n");
     else
-      printf("Logger failed");
+      printf("Logger failed\n");
   } 
 }
