@@ -194,7 +194,7 @@ void* task_logger(void* args){
   fprintf(fp, header);
 
   t_0 = get_time_micros();
-  while(anable_logger){
+  while(_enable_logger){
     /*GRAB TIMESTAMP*/
     t_sample = get_time_micros();
     fprintf(fp, "%ld,",  (t_sample - t_0));
