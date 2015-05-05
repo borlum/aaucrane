@@ -232,7 +232,7 @@ int init_logger(){
   
 }
 
-int disabel_logger(){
+int disable_logger(){
   int ret = 0;
   RTIME delay =  nano2count(1000);
   if (rt_sem_wait_timed(&_logger_sem, delay) == 0xFFFF){
