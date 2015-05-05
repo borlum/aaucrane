@@ -175,14 +175,18 @@ int _new_log;
 char *_data_path;
 
 void* task_logger(void* args){
+  printf("Logger task\n");
   FILE* fp = NULL;
   unsigned long t_0, t_sample;
   int name_len = 256;
   char header[] = "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n";
   int action_count = 0;
+  printf("Logger task 2\n");
 
   char file_prefix[name_len];
   sprintf(file_prefix, "%s/%d.csv", _data_path, (int)time(NULL));
+
+  printf("Logger task 3\n");
 
   
   RTIME period = nano2count(SAMPLE_TIME_NS); 
@@ -193,8 +197,14 @@ void* task_logger(void* args){
   rt_task_make_periodic(rt_logger, rt_get_time() + period, period);
   rt_make_hard_real_time();
 
+  printf("Logger task 4\n");
+
+  
   char tmp[2 * name_len];
   t_0 = get_time_micros();
+
+  printf("Logger task 5\n")
+      
   while(_enable_logger){
     printf("Logger");
     
