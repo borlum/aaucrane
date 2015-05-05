@@ -205,7 +205,7 @@ void* task_logger(void* args){
 
   printf("Logger task 5 %d\n", _enable_logger);
       
-  while(_enable_logger){
+  while(_enable_logger == 1){
     printf("Logger");
     
     if(_new_log){
