@@ -167,6 +167,10 @@ void *task_y_axis_controller(void * argc)
   }
 }
 
+SEM logger_sem;
+int enable_logger;
+int new_log;
+
 void* task_logger(void* args){
   FILE* fp;
   unsigned long t_0, t_sample;
@@ -209,8 +213,8 @@ void* task_logger(void* args){
 }
 
 int init_logger(){
-  static int enable_logger = 0;
-  static int new_log = 1;
+  enable_logger = 0;
+  new_log = 1;
   rt_typed_sem_init(logger_sem, 1, BIN_SEM | FIFO_Q );
   
 }
