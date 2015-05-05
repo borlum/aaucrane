@@ -19,7 +19,6 @@
 #include <acc.h>
 #include <controller.h>
 #include <compensator.h>
-#include <misc.h>
 
 
 #ifdef RTAI
