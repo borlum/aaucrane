@@ -164,6 +164,18 @@ int main(int argc,char* argv[]){
     exit(-1);
   init_logger();
 
+  if (enable_logger() == 0)
+    printf("Logger enabled");
+  else
+    printf("Logger failed");
+
+  usleep(1000 * 10);
+
+  if (disable_logger() == 0)
+    printf("Logger disabled");
+  else
+    printf("Logger failed");
+
   size_t buf_len = BUFFER_SIZE;
   char buf[BUFFER_SIZE];
 
