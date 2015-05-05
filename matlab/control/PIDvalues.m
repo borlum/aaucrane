@@ -22,7 +22,7 @@ Tp = 0.5;     %from formular 0 < Tp <= 1
 %Gain ->
 %rlocus((Tp+1+1/(Ti*s))*loop2*-Wm)
 k = 10;     %Trail and error
-Cs = k*(Tp+1+1/(Ti*s));
+Cs = k*(1+1/(Ti*s));
 %% UDEN CONTAINER
 clear all;
 close;
@@ -53,14 +53,14 @@ Cs = k*(Tp+1+1/(Ti*s));
 % Y Control UPWARDS
 %------------------------------------------------------------------------------
 %rlocus(Yu) to find C3
-C3 = 449;
+C3 = 49;
 %------------------------------------------------------------------------------
 % Y Control DOWNWARDS
 %------------------------------------------------------------------------------
 %rlocus(Yd) to find C4
 C4 = 94.9;
-
-
+%%
 PID = k*(1+1/s*1/Ti+s*Td);
 % Discrete PID
 dPID = c2d(PID, .001, 'tustin');
+
