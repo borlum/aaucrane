@@ -198,7 +198,7 @@ void* task_logger(void* args){
   while(_enable_logger){    
 
     if(_new_log){
-
+      printf("New log\n");
       if(!(fp == NULL)){
 	fclose(fp);
       }
