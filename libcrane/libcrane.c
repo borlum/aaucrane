@@ -11,7 +11,7 @@ static const double MIN_MOTOR_OUTPUT = 0;
 static const double epsilon = 0.2;
 
 double libcrane_truncate(double stuff_oreo){
-  int stupid_tmp = (int) (round(stuff__oreo * 100));
+  int stupid_tmp = (int) (round(stuff_oreo * 100));
   double tmp_d = stupid_tmp / 100.0;
   return tmp_d;    
 }
