@@ -63,8 +63,12 @@ void *sampler(void *args)
         if (sample_nr == 3000) {
             run_motorx(0);
         }
-
-        usleep(1000);
+	
+#ifdef RTAI
+	rt_task_wait_period();
+#else
+	usleep(1000);
+#endif
     }
 }
 
