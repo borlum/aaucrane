@@ -5,7 +5,7 @@ run('../model/cranemodel.m');
 X = Xm;
 W = Wm;
 %rlocus(Xm)
-C1 = 15;
+C1 = 7.5;
 loop2 = feedback(C1 *  X, 1);
 %------------------------------------------------------------------------------
 % PID Control
@@ -22,7 +22,7 @@ Tp = 0.5;     %from formular 0 < Tp <= 1
 %Gain ->
 %rlocus((Tp+1+1/(Ti*s))*loop2*-Wm)
 k = 10;     %Trail and error
-Cs = k*(Tp+1+1/(Ti*s));
+Cs = k*(1+1/(Ti*s));
 %% UDEN CONTAINER
 clear all;
 close;
@@ -53,9 +53,9 @@ Cs = k*(Tp+1+1/(Ti*s));
 % Y Control UPWARDS
 %------------------------------------------------------------------------------
 %rlocus(Yu) to find C3
-C3 = 449;
+C3 = 49;
 %------------------------------------------------------------------------------
 % Y Control DOWNWARDS
 %------------------------------------------------------------------------------
 %rlocus(Yd) to find C4
-C4 = 94.9;
+C4 = 49;
