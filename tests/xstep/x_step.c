@@ -13,7 +13,7 @@ FILE * fp;
 RT_TASK *rt_sampler;
 #endif
 
-const static float step_size = 12.5;
+const static float step_size = 12.5*0;
 
 void *sampler(void *args)
 {
