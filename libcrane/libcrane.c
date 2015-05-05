@@ -147,11 +147,11 @@ double get_angle()
 
     static double ang_prev = 0;
 
-    static double offset = 1.3855;
+    static double offset = 1.3835;
 
     double ang = 0.7367*get_angle_raw() - offset;
 
- /*   if(ang_prev == ang) count++;
+    if(ang_prev == ang) count++;
     else count = 0;
 
     if(count > 10) {
@@ -160,7 +160,7 @@ double get_angle()
     }
 
     ang_prev = ang;
-*/
+
     return libcrane_truncate(ang);
 }
 
