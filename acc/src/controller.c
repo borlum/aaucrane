@@ -249,10 +249,13 @@ int disable_logger(){
 int enable_logger(){
   int ret = 0;
   RTIME delay =  nano2count(1000);
+  printf("Inside enable_logger\n");
   if (rt_sem_wait_timed(&_logger_sem, delay) == 0xFFFF){
+    printf("enable_logger did not obtain sem\n");
     ret = -1;
   }
   else{
+    printf("enable_logger got sem\n");
     _enable_logger = 1;
     _new_log = 1;
     if (rt_sem_signal(&_logger_sem) == 0xFFFF){
