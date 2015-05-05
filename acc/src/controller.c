@@ -196,7 +196,7 @@ void* task_logger(void* args){
   t_0 = get_time_micros();
       
   while(_enable_logger){    
-    printf("...")
+    printf("...");
     if(_new_log){
       printf("New log\n");
       if(!(fp == NULL)){
