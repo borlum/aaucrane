@@ -8,7 +8,9 @@
 #include <pthread.h>
 #include <fcntl.h>
 #include <mqueue.h>
+
 #include <rtai_lxrt.h>
+#include <rtai_sem.h>
 
 #include <libcrane.h>
 #include <acc.h>
