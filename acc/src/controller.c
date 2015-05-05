@@ -244,5 +244,5 @@ int enable_logger(){
   _enable_logger = 1;
   _new_log = 1;
   sem_post(&_logger_sem);
-  return 0
+  return 0;
 }
