@@ -214,7 +214,7 @@ void* task_logger(void* args){
       if(!(fp == NULL))
 	fclose(fp);
 
-      printf("After fclose\n")
+      printf("After fclose\n");
       sprintf(tmp, "%s-%d.csv", file_prefix, action_count++);
       printf("%s\n", tmp);
       fp = fopen(tmp, "w");
