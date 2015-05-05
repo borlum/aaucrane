@@ -195,13 +195,14 @@ void* task_logger(void* args){
   char tmp[2 * name_len];
   t_0 = get_time_micros();
       
-  while(_enable_logger == 1){    
+  while(_enable_logger){    
 
     if(_new_log){
 
-      if(!(fp == NULL))
+      if(!(fp == NULL)){
 	fclose(fp);
-
+      }
+      
       sprintf(tmp, "%s-%d.csv", file_prefix, action_count++);
       printf("New log in: %s", tmp);
       fp = fopen(tmp, "w");
