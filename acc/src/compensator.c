@@ -46,7 +46,7 @@ double angle_controller(double angle, int aw){
   // out =  k * td * (1/td * (angle_pre - angle) / X_SAMPLE_TIME_S +1 ) * -1;
 
   out = angle * 20040 - 19960 * angle_pre - out_pre; 
-
+  printf("out: %lf\n", out);
 
 /*  out = 1 + (1/ti) * angle_int * X_SAMPLE_TIME_S;
   out = out + ((angle_pre - angle)/X_SAMPLE_TIME_S) * td;
