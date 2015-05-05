@@ -71,7 +71,7 @@ void *task_x_axis_controller(void * argc)
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
 
-    out = pid_get_controller_output(x_ref);
+    out = get_controller_output(x_ref);
     
     /*Settled?*/
     double err = libcrane_truncate(x_ref - get_xpos());
