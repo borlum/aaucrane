@@ -21,52 +21,8 @@
 pthread_t t_xcontroller = NULL, t_ycontroller = NULL, t_logger = NULL;
 
 #ifdef RTAI
-static RT_TASK *rt_xcontroller, *rt_ycontroller, *rt_step_logger;
+static RT_TASK *rt_xcontroller, *rt_ycontroller, *rt_logger;
 #endif
-
-void* logger(void* args){
-  FILE* fp;
-  unsigned long t_0, t_sample;
-
-#ifdef RTAI
-  RTIME period = nano2count(1000 * 1000 * 1); 
-  if(!(rt_logger = rt_task_init_schmod(nam2num("logger"), 1, 0, 0, SCHED_FIFO, 0))){
-    printf("Could not start rt_task\n");
-    exit(42);
-  }
-  rt_task_make_periodic(rt_step_logger, rt_get_time() + period, period);
-  rt_make_hard_real_time();
-#endif
-
-  char tmp[NAME_LEN];
-  sprintf(tmp, "%s/%d.csv", DATA_PATH, (int)time(NULL));
-  fp = fopen(tmp, "w");
-  fprintf(fp, DATA_HEADER);
-
-  t_0 = get_time_micros();
-  while(1){
-    /*GRAB TIMESTAMP*/
-    t_sample = get_time_micros();
-    fprintf(fp, "%ld,",  (t_sample - t_0));
-
-    /*SAMPLE SENSORS*/
-    fprintf(fp, "%f,", get_old_angle_raw());
-    fprintf(fp, "%f,", get_angle());
-    fprintf(fp, "%f,", get_xpos());
-    fprintf(fp, "%f,", get_ypos());
-    fprintf(fp, "%f,", get_motorx_velocity());
-    fprintf(fp, "%f,", get_motory_velocity());
-    fprintf(fp, "%f,", get_motorx_voltage());
-    fprintf(fp, "%f",  get_motory_voltage());
-    fprintf(fp, "\n");
-
-#ifdef RTAI
-    rt_task_wait_period();
-#else
-    usleep(1000);
-#endif
-  }
-}
 
 int init(){
 #ifdef RTAI
@@ -107,7 +63,7 @@ int init(){
 int main(int argc,char* argv[]){
   if( init() == -1)
     exit(-1);
-
+  init_logger();
   mqd_t to_x, from_x, to_y, from_y;
   to_x = mq_open(Q_TO_X, O_WRONLY);
   from_x = mq_open(Q_FROM_X, O_RDONLY);
@@ -124,12 +80,14 @@ int main(int argc,char* argv[]){
   while(1) {
     printf ("Enter a step size: <x>:\n");
     scanf("%lf", &x);
-
+    
     if(t_xcontroller == NULL && t_logger == NULL){
       pthread_create(&t_xcontroller, NULL, task_x_axis_controller, NULL);
-      pthread_create(&t_logger, NULL, logger, NULL);
+      pthread_create(&t_logger, NULL, task_logger, NULL);
     }
 
+    enable_logger();
+    
     if(mq_send(to_x, (char *) &x, sizeof(x), 0) == -1)
       printf("ERROR: send: %s\n", strerror(errno));
     if(mq_receive(from_x, stupid_buffer, len, 0) == -1)
@@ -139,6 +97,8 @@ int main(int argc,char* argv[]){
       printf("Read: %lf", tmp);
     }
 
+    disable_logger();
+    
     printf("Done!\n");
   }
 }
