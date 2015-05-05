@@ -39,7 +39,7 @@
 #define CHAN_CTRLPAD_X_IN 14
 #define CHAN_CTRLPAD_Y_IN 15
 
-double truncate(double orig);
+double libcrane_truncate(double orig);
 
 int initialize_crane();
 

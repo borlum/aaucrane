@@ -84,7 +84,7 @@ void *task_x_axis_controller(void * argc)
     
     /*Settled?*/
     /* double err = ((double)(int)( (x_ref - get_xpos()) * 1000) / 1000.00); */
-    double err = truncate(x_ref - get_xpos());
+    double err = libcrane_truncate(x_ref - get_xpos());
     /*X inside error band? Angle inside error band? Velocity = 0?*/
     if ( (fabs(err) < X_ERR_BAND) /* && (get_motorx_velocity() == 0) */ && (fabs(get_angle()) < ANGLE_ERR_BAND) ) {
       /*Has this happened more than SETTLE_HITS times?*/
@@ -95,7 +95,6 @@ void *task_x_axis_controller(void * argc)
         /*Send msg that we have settled!*/
         int msg = 1;
         printf("[X]: DONE @ %lf\n", get_xpos());
-	printf("[X]: trunked: %lf\n", ((double)(int)( (get_xpos()) * 1000) / 1000.00));
         if (mq_send(output, (char *)&msg, sizeof(int), 0) == -1)
           printf("%s\n", strerror(errno));
       }
@@ -165,7 +164,7 @@ void *task_y_axis_controller(void * argc)
     }
 
     /*Settled?*/
-    double err = truncate(y_ref - get_ypos());
+    double err = libcrane_truncate(y_ref - get_ypos());
     /*X inside error band? Angle inside error band? Velocity = 0?*/
     if ( (fabs(err) < Y_ERR_BAND) ) {
       /*Has this happened more than SETTLE_HITS times?*/

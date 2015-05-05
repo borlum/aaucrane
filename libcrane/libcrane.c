@@ -10,7 +10,7 @@ static const double MAX_MOTOR_OUTPUT = 12.5;
 static const double MIN_MOTOR_OUTPUT = 0;
 static const double epsilon = 0.2;
 
-double truncate(double orig){
+double libcrane_truncate(double orig){
   int tmp_i = (int) (round(orig * 100));
   double tmp_d = tmp_i / 100.0;
   return tmp_d;    
@@ -161,7 +161,7 @@ double get_angle()
 
     ang_prev = ang;
 
-    return truncate(ang);
+    return libcrane_truncate(ang);
 }
 
 /**
