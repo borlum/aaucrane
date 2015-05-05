@@ -87,7 +87,7 @@ void *task_x_axis_controller(void * argc)
     double err = libcrane_truncate(x_ref - get_xpos());
     printf("[X] err: %lf - hit_count %d\n ", err, hit_count);
     /*X inside error band? Angle inside error band? Velocity = 0?*/
-    if ( (fabs(err) < X_ERR_BAND) /* && (get_motorx_velocity() == 0) */ && (fabs(get_angle()) < ANGLE_ERR_BAND) ) {
+    if ( (fabs(err) <= X_ERR_BAND) /* && (get_motorx_velocity() == 0) */ && (fabs(get_angle()) < ANGLE_ERR_BAND) ) {
       /*Has this happened more than SETTLE_HITS times?*/
       if( ((hit_count++) >= SETTLE_HITS) && received_new_ref ) {
         /*Settled! Allow for new reference and reset hit counter!*/
