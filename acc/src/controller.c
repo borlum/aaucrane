@@ -182,7 +182,7 @@ void* task_logger(void* args){
   int action_count = 0;
 
   char file_prefix[name_len];
-  sprintf(file_prefix, "%s/%d.csv", _data_path, (int)time(NULL));
+  sprintf(file_prefix, "%s/%d", _data_path, (int)time(NULL));
 
   RTIME period = nano2count(SAMPLE_TIME_NS); 
   if(!(rt_logger = rt_task_init_schmod(nam2num("logger"), 1, 0, 0, SCHED_FIFO, 0))){
