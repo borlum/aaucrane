@@ -27,7 +27,7 @@ void *sampler(void *args)
 #ifdef RTAI
     /*Transform to RTAI task*/
     RTIME period = nano2count(1E6);
-    if(!(rt_x_axis_controller = rt_task_init_schmod(nam2num("rt_sampler"), 1, 0, 0, SCHED_FIFO, 0))){
+    if(!(rt_sampler = rt_task_init_schmod(nam2num("rt_sampler"), 1, 0, 0, SCHED_FIFO, 0))){
       printf("rt_sampler\n");
       exit(42);
     }
