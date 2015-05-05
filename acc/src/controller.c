@@ -226,7 +226,7 @@ void* task_logger(void* args){
       fprintf(fp, "\n");
     }
     else{
-      printf("...")
+      printf("...");
     }
     rt_task_wait_period();
   }
