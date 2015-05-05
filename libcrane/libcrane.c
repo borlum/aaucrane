@@ -167,8 +167,8 @@ double get_angle()
     static double ang_prev = 0;
     static double offset = 1.3835;
 
-    double ang = 0.7367*get_angle_raw() - offset;
-
+//    double ang = 0.7367*get_angle_raw() - offset;
+    double ang = (get_angle_raw() - 4.26) * 0.2631;
     /* MORTENS HACK
     if(ang_prev == ang) count++;
     else count = 0;
