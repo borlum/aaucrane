@@ -154,7 +154,7 @@ double get_angle()
     if(ang_prev == ang) count++;
     else count = 0;
 
-    if(count > 2) {
+    if(count > 10) {
         offset = offset + ang;
         count = 0;
     }
