@@ -151,11 +151,10 @@ double get_angle()
 
     double ang = 0.7367*get_angle_raw() - offset;
 
-    printf("[debug] Count: %d\n", count);
     if(ang_prev == ang) count++;
     else count = 0;
 
-    if(count > 50) {
+    if(count > 10) {
         offset = offset + ang;
         count = 0;
     }
