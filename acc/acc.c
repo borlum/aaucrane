@@ -211,13 +211,19 @@ int main(int argc,char* argv[]){
     cmd.pickup_point = source.loc;
     cmd.dest_point = dest.loc;
 
-    enable_logger();
+    if (enable_logger() == 0)
+      printf("Logger enabled");
+    else
+      printf("Logger failed");
     
     mq_send(to_c, (char *) &cmd, sizeof(cmd), 0);
     update_status(source_row, source_col, STACK_FREE);
     mq_receive(from_c, buf, buf_len, 0);
     update_status(dest_row, dest_col, STACK_OCCUPIED);
 
-    disable_logger();
+    if (disable_logger() == 0)
+      printf("Logger disabled");
+    else
+      printf("Logger failed");
   } 
 }
