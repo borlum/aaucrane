@@ -176,9 +176,9 @@ int new_log;
 void* task_logger(void* args){
   FILE* fp;
   unsigned long t_0, t_sample;
-  uint32_t name_len = 256;
-  char data_path = "/var/www/html/data/acc/steps/";
-  char header = "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n";
+  int name_len = 256;
+  char data_path[] = "/var/www/html/data/acc/steps/";
+  char header[] = "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n";
 
   RTIME period = nano2count(SAMPLE_TIME_NS); 
   if(!(rt_logger = rt_task_init_schmod(nam2num("logger"), 1, 0, 0, SCHED_FIFO, 0))){
