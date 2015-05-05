@@ -8,9 +8,9 @@
 #include <pthread.h>
 #include <fcntl.h>
 #include <mqueue.h>
+#include <semaphore.h>
 
 #include <rtai_lxrt.h>
-#include <rtai_sem.h>
 
 #include <libcrane.h>
 #include <acc.h>
@@ -169,17 +169,22 @@ void *task_y_axis_controller(void * argc)
   }
 }
 
-SEM  _logger_sem;
+sem_t _logger_sem;
 int _enable_logger;
 int _new_log;
 
 void* task_logger(void* args){
-  FILE* fp;
+  FILE* fp = NULL;
   unsigned long t_0, t_sample;
   int name_len = 256;
   char data_path[] = "/var/www/html/data/acc/steps/";
   char header[] = "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n";
+  int action_count = 0;
 
+  char file_prefix[name_len];
+  sprintf(file_prefix, "%s/%d.csv", data_path, (int)time(NULL));
+
+  
   RTIME period = nano2count(SAMPLE_TIME_NS); 
   if(!(rt_logger = rt_task_init_schmod(nam2num("logger"), 1, 0, 0, SCHED_FIFO, 0))){
     printf("Could not start logger task\n");
@@ -188,13 +193,20 @@ void* task_logger(void* args){
   rt_task_make_periodic(rt_logger, rt_get_time() + period, period);
   rt_make_hard_real_time();
 
-  char tmp[name_len];
-  sprintf(tmp, "%s/%d.csv", data_path, (int)time(NULL));
-  fp = fopen(tmp, "w");
-  fprintf(fp, "%s", header);
-
+  char tmp[2 * name_len];
   t_0 = get_time_micros();
   while(_enable_logger){
+
+    if(_new_log){
+      if(!(fp == NULL))
+	fclose(fp);
+
+      sprintf(tmp, "%s-%d.csv", file_prefix, action_count++);
+      fp = fopen(tmp, "w");
+      fprintf(fp, "%s", header);
+      _new_log = 0;
+    }
+    
     /*GRAB TIMESTAMP*/
     t_sample = get_time_micros();
     fprintf(fp, "%ld,",  (t_sample - t_0));
@@ -217,37 +229,20 @@ void* task_logger(void* args){
 int init_logger(){
   _enable_logger = 0;
   _new_log = 1;
-  rt_typed_sem_init(&_logger_sem, 1, BIN_SEM | FIFO_Q );
-  
+  sem_init(&_logger_sem, 0, 1);
 }
 
-int disabel_logger(){
-  int ret = 0;
-  RTIME delay =  nano2count(1000);
-  if (rt_sem_wait_timed(&_logger_sem, delay) == 0xFFFF){
-    ret = -1;
-  }
-  else{
-    _enable_logger = 0;
-    if (rt_sem_signal(&_logger_sem) == 0xFFFF){
-      ret = -1;
-    }
-  }
-  return ret;
+int disable_logger(){
+  sem_wait(&_logger_sem);
+  _enable_logger = 0;
+  sem_post(&_logger_sem);
+  return 0;
 }
 
 int enable_logger(){
-  int ret = 0;
-  RTIME delay =  nano2count(1000);
-  if (rt_sem_wait_timed(&_logger_sem, delay) == 0xFFFF){
-    ret = -1;
-  }
-  else{
-    _enable_logger = 1;
-    _new_log = 1;
-    if (rt_sem_signal(&_logger_sem) == 0xFFFF){
-      ret = -1;
-    }
-  }
-  return ret;
+  sem_wait(&_logger_sem);
+  _enable_logger = 1;
+  _new_log = 1;
+  sem_post(&_logger_sem);
+  return 0;
 }
