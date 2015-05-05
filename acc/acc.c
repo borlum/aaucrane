@@ -162,7 +162,7 @@ void place_containers(){
 int main(int argc,char* argv[]){  
   if( init() == -1)
     exit(-1);
-  init_logger()
+  init_logger();
 
   size_t buf_len = BUFFER_SIZE;
   char buf[BUFFER_SIZE];
