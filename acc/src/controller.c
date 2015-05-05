@@ -197,7 +197,7 @@ void* task_logger(void* args){
   t_0 = get_time_micros();
   while(_enable_logger){
 
-    if(_new_file){
+    if(_new_log){
       if(!(fp == NULL))
 	fclose(fp);
 
