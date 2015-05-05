@@ -169,7 +169,7 @@ void *task_y_axis_controller(void * argc)
   }
 }
 
-SEM _logger_sem;
+rt_sem_t _logger_sem;
 int _enable_logger;
 int _new_log;
 
@@ -191,7 +191,7 @@ void* task_logger(void* args){
   char tmp[name_len];
   sprintf(tmp, "%s/%d.csv", data_path, (int)time(NULL));
   fp = fopen(tmp, "w");
-  fprintf(fp, header);
+  fprintf(fp, "%s", header);
 
   t_0 = get_time_micros();
   while(_enable_logger){
