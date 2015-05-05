@@ -8,7 +8,9 @@
 #include <pthread.h>
 #include <fcntl.h>
 #include <mqueue.h>
+
 #include <rtai_lxrt.h>
+#include <rtai_sem.h>
 
 #include <libcrane.h>
 #include <acc.h>
@@ -167,12 +169,16 @@ void *task_y_axis_controller(void * argc)
   }
 }
 
+SEM logger_sem;
+int enable_logger;
+int new_log;
+
 void* task_logger(void* args){
   FILE* fp;
   unsigned long t_0, t_sample;
-  uint32_t name_len = 256;
-  char data_path = "/var/www/html/data/acc/steps/";
-  char header = "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n";
+  int name_len = 256;
+  char data_path[] = "/var/www/html/data/acc/steps/";
+  char header[] = "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n";
 
   RTIME period = nano2count(SAMPLE_TIME_NS); 
   if(!(rt_logger = rt_task_init_schmod(nam2num("logger"), 1, 0, 0, SCHED_FIFO, 0))){
@@ -209,8 +215,8 @@ void* task_logger(void* args){
 }
 
 int init_logger(){
-  bool enable_logger;
-  bool new_log = true;
+  enable_logger = 0;
+  new_log = 1;
   rt_typed_sem_init(logger_sem, 1, BIN_SEM | FIFO_Q );
   
 }
@@ -222,7 +228,7 @@ int disabel_logger(){
     ret = -1;
   }
   else{
-    enable_logger = false;
+    enable_logger = 0;
     if (rt_sem_signal(&logger_sem) == 0xFFFF){
       ret = -1;
     }
@@ -237,8 +243,8 @@ int enable_logger(){
     ret = -1;
   }
   else{
-    enable_logger = true;
-    new_log = true;
+    enable_logger = 1;
+    new_log = 1;
     if (rt_sem_signal(&logger_sem) == 0xFFFF){
       ret = -1;
     }
