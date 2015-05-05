@@ -147,7 +147,7 @@ double get_angle()
 
     static double ang_prev = 0;
 
-    static double offset = 1.3835;
+    static double offset = 1.3874;
 
     double ang = 0.7367*get_angle_raw() - offset;
 
