@@ -58,4 +58,9 @@ C3 = 49;
 % Y Control DOWNWARDS
 %------------------------------------------------------------------------------
 %rlocus(Yd) to find C4
-C4 = 49;
+C4 = 94.9;
+%%
+PID = k*(1+1/s*1/Ti+s*Td);
+% Discrete PID
+dPID = c2d(PID, .001, 'tustin');
+
