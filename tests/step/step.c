@@ -21,7 +21,7 @@
 pthread_t t_xcontroller = NULL, t_ycontroller = NULL, t_logger = NULL;
 
 #ifdef RTAI
-static RT_TASK *rt_xcontroller, *rt_ycontroller, *rt_logger;
+static RT_TASK *rt_xcontroller, *rt_ycontroller, *rt_step_logger;
 #endif
 
 void* logger(void* args){
@@ -34,7 +34,7 @@ void* logger(void* args){
     printf("Could not start rt_task\n");
     exit(42);
   }
-  rt_task_make_periodic(rt_logger, rt_get_time() + period, period);
+  rt_task_make_periodic(rt_step_logger, rt_get_time() + period, period);
   rt_make_hard_real_time();
 #endif
 
