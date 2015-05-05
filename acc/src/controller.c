@@ -224,12 +224,12 @@ int init_logger(){
 int disabel_logger(){
   int ret = 0;
   RTIME delay =  nano2count(1000);
-  if (rt_sem_wait_timed(&loggger_sem, delay) == 0xFFFF){
+  if (rt_sem_wait_timed(&_logger_sem, delay) == 0xFFFF){
     ret = -1;
   }
   else{
     _enable_logger = 0;
-    if (rt_sem_signal(&logger_sem) == 0xFFFF){
+    if (rt_sem_signal(&_logger_sem) == 0xFFFF){
       ret = -1;
     }
   }
@@ -239,13 +239,13 @@ int disabel_logger(){
 int enable_logger(){
   int ret = 0;
   RTIME delay =  nano2count(1000);
-  if (rt_sem_wait_timed(&loggger_sem, delay) == 0xFFFF){
+  if (rt_sem_wait_timed(&_logger_sem, delay) == 0xFFFF){
     ret = -1;
   }
   else{
     _enable_logger = 1;
     _new_log = 1;
-    if (rt_sem_signal(&logger_sem) == 0xFFFF){
+    if (rt_sem_signal(&_logger_sem) == 0xFFFF){
       ret = -1;
     }
   }
