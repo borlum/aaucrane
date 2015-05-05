@@ -13,7 +13,7 @@ FILE * fp;
 RT_TASK *rt_sampler;
 #endif
 
-const static float step_size = 2.6 * 0;
+const static float step_size = 12.5;
 
 void *sampler(void *args)
 {
@@ -60,7 +60,7 @@ void *sampler(void *args)
     
         sample_nr++;
 
-        if (sample_nr == 3000) {
+        if (sample_nr == 2000) {
             run_motorx(0);
         }
 	
