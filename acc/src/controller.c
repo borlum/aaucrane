@@ -245,8 +245,8 @@ int init_logger(const char *data_path, size_t len){
   _enable_logger = 0;
   _new_log = 1;
   sem_init(&_logger_sem, 0, 1);
-  _data_path = malloc( sizeof(data_path) / sizeof(data_path[0]) );
-  memcpy(_data_path, data_path, (sizeof(data_path) / sizeof(data_path[0])));
+  _data_path = malloc(len);
+  memcpy(_data_path, data_path, len);
 }
 
 int disable_logger(){
