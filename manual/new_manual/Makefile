@@ -9,7 +9,7 @@ GCC=gcc -std=gnu11
 LIBS=-lm -lpthread -lcomedi
 
 SOURCE += $(TARGET).c
-SOURCE += ../../acc/src/filter.c
+SOURCE += ../../acc/src/compensator.c
 
 all: $(TARGET)
 
