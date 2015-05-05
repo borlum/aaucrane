@@ -170,8 +170,8 @@ void *task_y_axis_controller(void * argc)
 }
 
 sem_t _logger_sem;
-int _enable_logger;
-int _new_log;
+int _enable_logger = 0;
+int _new_log = 0;
 char *_data_path;
 
 void* task_logger(void* args){
