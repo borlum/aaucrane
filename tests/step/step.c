@@ -63,7 +63,7 @@ int init(){
 int main(int argc,char* argv[]){
   if( init() == -1)
     exit(-1);
-  init_logger("/var/www/html/data/acc/steps/");
+  init_logger("/var/www/html/data/acc/steps/", sizeof("/var/www/html/data/acc/steps/"));
   mqd_t to_x, from_x, to_y, from_y;
   to_x = mq_open(Q_TO_X, O_WRONLY);
   from_x = mq_open(Q_FROM_X, O_RDONLY);
@@ -98,7 +98,7 @@ int main(int argc,char* argv[]){
     }
 
     disable_logger();
-    
+
     printf("Done!\n");
   }
 }

@@ -170,8 +170,8 @@ void *task_y_axis_controller(void * argc)
 }
 
 sem_t _logger_sem;
-int _enable_logger;
-int _new_log;
+int _enable_logger = 0;
+int _new_log = 0;
 char *_data_path;
 
 void* task_logger(void* args){
@@ -184,7 +184,6 @@ void* task_logger(void* args){
   char file_prefix[name_len];
   sprintf(file_prefix, "%s/%d.csv", _data_path, (int)time(NULL));
 
-  
   RTIME period = nano2count(SAMPLE_TIME_NS); 
   if(!(rt_logger = rt_task_init_schmod(nam2num("logger"), 1, 0, 0, SCHED_FIFO, 0))){
     printf("Could not start logger task\n");
@@ -195,13 +194,16 @@ void* task_logger(void* args){
 
   char tmp[2 * name_len];
   t_0 = get_time_micros();
-  while(_enable_logger){
+      
+  while(_enable_logger == 1){    
 
     if(_new_log){
+
       if(!(fp == NULL))
 	fclose(fp);
 
       sprintf(tmp, "%s-%d.csv", file_prefix, action_count++);
+      printf("New log in: %s", tmp);
       fp = fopen(tmp, "w");
       fprintf(fp, "%s", header);
       _new_log = 0;
@@ -226,12 +228,12 @@ void* task_logger(void* args){
   }
 }
 
-int init_logger(const char *data_path){
+int init_logger(const char *data_path, size_t len){
   _enable_logger = 0;
   _new_log = 1;
   sem_init(&_logger_sem, 0, 1);
-  _data_path = malloc( sizeof(data_path) / sizeof(data_path[0]) );
-  memcpy(_data_path, data_path, (sizeof(data_path) / sizeof(data_path[0])));
+  _data_path = malloc(len);
+  memcpy(_data_path, data_path, len);
 }
 
 int disable_logger(){
