@@ -1,5 +1,6 @@
 #include "libcrane.h"
 #include <math.h>
+
 #ifndef TESTING
 comedi_t *NI_card;
 #else
@@ -10,6 +11,46 @@ static const double MAX_MOTOR_OUTPUT = 12.5;
 static const double MIN_MOTOR_OUTPUT = 0;
 static const double epsilon = 0.2;
 
+/*Container-flag*/
+static int payload = 0;
+
+/**
+ * Sets containers flag HIGH => we have a container attached!
+ */
+void libcrane_load()
+{
+    payload = 1;
+}
+
+/**
+ * Sets container flag LOW => we have NO container attached!
+ */
+void libcrane_unload()
+{
+    payload = 0;
+}
+
+/**
+ * Is there a container attached?
+ * @return 1 if YES, 0 if NO (returns val of flag)
+ */
+int libcrane_is_loaded()
+{
+    return payload;
+}
+
+/**
+ * Truncutes and rounds
+ * @param  stuff_oreo Values before truncate
+ * @return            Value  after  truncate
+ */
+double libcrane_truncate(double stuff_oreo)
+{
+    int stupid_tmp = (int) (round(stuff_oreo * 100));
+    double tmp_d = stupid_tmp / 100.0;
+    return tmp_d;    
+}
+
 /**
  * Open comedi driver for interfacing w. crane
  * @return Return 0 if failed to init, 1 if success
@@ -18,13 +59,13 @@ int initialize_crane()
 {
     NI_card = NULL;
 
-    #ifndef TESTING
+#ifndef TESTING
     NI_card = comedi_open(DEVICE);
     /*Global config*/
     comedi_set_global_oor_behavior(COMEDI_OOR_NUMBER);
     comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, COMEDI_OUTPUT);
     comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, COMEDI_INPUT);
-    #endif
+#endif
 
     if (NI_card == NULL) {
         return 0;
@@ -43,17 +84,17 @@ int run_motorx(double voltage)
 	int sign;
     if (voltage < 0.075 && voltage > -0.075) voltage = 0;
 
-    if(voltage){
+    if (voltage) {
 
         if(voltage < 0) sign = -1;
         else if (voltage > 0) sign = 1;
         else if (voltage == 0) sign = 0;
 
         voltage = sign * (sign * voltage + 4.2);
-
     }
 
-    return run_motor(-voltage, 0); /* Change X motor direction */
+    /* Change X motor direction */
+    return run_motor(-voltage, 0);
 }
 
 /**
@@ -97,20 +138,7 @@ int run_motor(double voltage, int axis)
 
     output = (int) (157.5 * voltage + 2024);
 
-    /* old_val = voltage; */
-
-    /* old_max =  MAX_MOTOR_OUTPUT; new_max  = 4400; */
-    /* old_min = -MAX_MOTOR_OUTPUT; new_min  =    0; */
-
-    /* old_range = old_max - old_min; */
-    /* new_range = new_max - new_min; */
-
-    /* /\* SEE: */
-    /* http://stackoverflow.com/questions/929103/convert-a-number-range-to-another-range-maintaining-ratio */
-    /*  *\/ */
-    /* new_val = (((old_val - old_min) * new_range) / old_range) + new_min; */
-
-    #ifndef TESTING
+#ifndef TESTING
 
     if (axis == 0) {
         axis = CHAN_XMOTOR_OUT;
@@ -124,7 +152,7 @@ int run_motor(double voltage, int axis)
     if (comedi_data_write(NI_card, AOUT_SUBDEV, axis, 0, AREF_GROUND, output) == -1) {
         return -1;
     }
-    #endif
+#endif
 
     return output;
 }
@@ -135,26 +163,25 @@ int run_motor(double voltage, int axis)
  */
 double get_angle()
 {
-
     static int count = 0;
-
     static double ang_prev = 0;
+    static double offset = 1.3209;
 
-    static double offset = 1.3835;
-
-    double ang = 0.7367*get_angle_raw() - offset;
-
+//    double ang = 0.7367*get_angle_raw() - offset;
+    double ang = 0.2631 * get_angle_raw() - offset ;
+    /* MORTENS HACK
     if(ang_prev == ang) count++;
     else count = 0;
 
-    if(count > 50) {
+    if(count > 10) {
         offset = offset + ang;
         count = 0;
     }
 
     ang_prev = ang;
+    */
 
-    return ((double)(int)(ang * 100) /100.00);
+    return libcrane_truncate(ang);
 }
 
 /**
@@ -182,7 +209,6 @@ double get_old_angle_raw()
 double get_xpos()
 {
     return  (-0.4981)*get_xpos_raw() + 4.7931;
-    /*return -((get_xpos_raw() * 0.5) - 0.8) + 4.0;*/
 }
 
 /**
@@ -201,7 +227,6 @@ double get_xpos_raw()
 double get_ypos()
 {
     return (-0.1536)*get_ypos_raw() + 1.2106;
-    /*return ((get_ypos_raw() * - 0.15) + 1.35) - 0.2;*/
 }
 
 /**
@@ -230,11 +255,10 @@ double get_x_velocity()
 double get_motorx_velocity()
 {
     double D;
-
     D = (get_motorx_velocity_raw() * 34.18 ) + 0.007721;
 
-    if(D< 0.33){
-      D = 0;
+    if (D < 0.33) {
+        D = 0;
     }
 
     return D;
@@ -292,49 +316,51 @@ double get_motory_voltage()
  */
 double get_ctrlpad_x()
 {
-  double raw_val;
+    double raw_val;
 
-  double old_val, new_val;
-  double old_range, new_range, old_max, old_min, new_max, new_min;
+    double old_val, new_val;
+    double old_range, new_range, old_max, old_min, new_max, new_min;
 
-  raw_val = get_sensor_raw(CHAN_CTRLPAD_X_IN);
+    raw_val = get_sensor_raw(CHAN_CTRLPAD_X_IN);
 
-  old_val = raw_val - 0.9;
+    old_val = raw_val - 0.9;
 
-  old_max =  10; new_max   =  MAX_MOTOR_OUTPUT;
-  old_min = 0;   new_min   = -MAX_MOTOR_OUTPUT;
+    old_max = 10;  new_max   =  MAX_MOTOR_OUTPUT;
+    old_min = 0;   new_min   = -MAX_MOTOR_OUTPUT;
 
-  old_range = old_max - old_min;
-  new_range = new_max - new_min;
+    old_range = old_max - old_min;
+    new_range = new_max - new_min;
 
-  new_val = -( (((old_val - old_min) * new_range) / old_range) + new_min );
+    new_val = -( (((old_val - old_min) * new_range) / old_range) + new_min );
 
-  return new_val - 0.5; /* The sensor is biased, so we need to pull it down a bit */
+    /* The sensor is biased, so we need to pull it down a bit */
+    return new_val - 0.5;
 }
+
 /**
  * Samples current y-axis voltage of control pad
  * @return Control pad y-axis voltage
  */
 double get_ctrlpad_y()
 {
-  double raw_val;
+    double raw_val;
 
-  double old_val, new_val;
-  double old_range, new_range, old_max, old_min, new_max, new_min;
+    double old_val, new_val;
+    double old_range, new_range, old_max, old_min, new_max, new_min;
 
-  raw_val = get_sensor_raw(CHAN_CTRLPAD_Y_IN);
+    raw_val = get_sensor_raw(CHAN_CTRLPAD_Y_IN);
 
-  old_val = raw_val;
+    old_val = raw_val;
 
-  old_max =  10; new_max   =  MAX_MOTOR_OUTPUT;
-  old_min = 0;   new_min   = -MAX_MOTOR_OUTPUT;
+    old_max = 10;  new_max   =  MAX_MOTOR_OUTPUT;
+    old_min = 0;   new_min   = -MAX_MOTOR_OUTPUT;
 
-  old_range = old_max - old_min;
-  new_range = new_max - new_min;
+    old_range = old_max - old_min;
+    new_range = new_max - new_min;
 
-  new_val = (((old_val - old_min) * new_range) / old_range) + new_min;
+    new_val = (((old_val - old_min) * new_range) / old_range) + new_min;
 
-  return new_val;
+    return new_val;
 }
 
 /**
@@ -343,37 +369,36 @@ double get_ctrlpad_y()
  */
 int get_ctrlpad_magnet_switch()
 {
-    #ifndef TESTING
+#ifndef TESTING
     lsampl_t in;
     comedi_dio_read(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, &in);
-    #else
+#else
     int in = 1;
-    #endif
+#endif
 
     return (int)in;
 }
 
 int get_ctrlpad_ctrl_switch()
 {
-    #ifndef TESTING
+#ifndef TESTING
     lsampl_t in;
     comedi_dio_read(NI_card, DIO_SUBDEV, CHAN_CTRL_BTN, &in);
-    #else
+#else
     int in = 1;
-    #endif
+#endif
 
     return (int)in;
 }
-
 
 /**
  * Turn on magnet
  */
 void enable_magnet()
 {
-    #ifndef TESTING
+#ifndef TESTING
     comedi_dio_write(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, 1);
-    #endif
+#endif
 }
 
 /**
@@ -381,9 +406,9 @@ void enable_magnet()
  */
 void disable_magnet()
 {
-    #ifndef TESTING
+#ifndef TESTING
     comedi_dio_write(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, 0);
-    #endif
+#endif
 }
 
 /**
@@ -395,7 +420,7 @@ double get_sensor_raw(int channel)
 {
     double physical_value = -1;
 
-    #ifndef TESTING
+#ifndef TESTING
     lsampl_t data, max_data;
     comedi_range *range_info;
 
@@ -406,7 +431,7 @@ double get_sensor_raw(int channel)
     physical_value = comedi_to_phys(data, range_info, max_data);
 
     return physical_value;
-    #endif
+#endif
 
     return physical_value;
 }

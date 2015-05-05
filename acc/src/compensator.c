@@ -2,7 +2,7 @@
 #include <libcrane.h>
 #include "compensator.h"
 
-#define RAMP 1
+#define RAMP 0
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -10,60 +10,23 @@ size_t nr_of_ref;
 double ref_arr[REF_ARR_SZ];
 int current_index = 0;
 
-double angle_controller(double angle, int aw){
-  double out, k, td, ti;
+double angle_controller(double error){
+  static double pre_error = 0;
+  double out, k, td;
 
-  static double angle_int  = 0;
-  static double angle_pre  = 0;
-  static double angle_pre2 = 0;
-  static double out_pre    = 0;
-  static double out_pre2   = 0;
+  /* After Kirsten */
+  k  = 10;
+  td =  4;
 
-  /* Diffrent parameters depending of container */
-  if (get_ctrlpad_magnet_switch()) {
-    k = 10;
-    td = 0.02;
-    /*Anti-Windup*/
-    if (aw) { 
-      ti = 0;
-    } else if (!aw) {
-      ti = 4.15;
-    }
-  } else {
-    k = 10;
-    td = 0.02;
-    /*Anti-Windup*/
-    if (aw) {
-      ti = 0;
-    } else if (!aw) {
-      ti = 4.15;
-    }
-  }
+  out =  k*td * ( ( (1/td) * (error - pre_error) / SAMPLE_TIME_S ) + 1);
 
-  k = 10;
-
-  out = 1 + (1/ti) * angle_int * X_SAMPLE_TIME_S;
-  out = out + ((angle_pre - angle)/X_SAMPLE_TIME_S) * td;
-  out = k * angle;
-
-  /*out = 410*angle - 800*angle_pre + 390*angle_pre2 + out_pre2;*/
-  
-  /*Anti-Windup*/
-  if (!aw) {
-    angle_int += angle;
-  }
-
-  out_pre2 = out_pre;
-  out_pre = out;
-
-  angle_pre2 = angle_pre;
-  angle_pre = angle;
+  pre_error = error;
 
   return out;
 }
 
 double position_controller_x(double error){
-  double k_p = 7.5;
+  double k_p = 3.75; // Med container
   return error * k_p;
 }
 
@@ -72,28 +35,22 @@ double position_controller_y(double error){
   return error * k_p;
 }
 
-double pid_get_controller_output(double ref){
-  double out;
-  static int aw = 0;
-  double angle = get_angle();
-
-  out = angle_controller(angle, aw);
+double get_controller_output(double ref){
+  double out, angle;
+  
+  angle = get_angle();
+  out   = angle_controller(angle);
 
   /*STEP or RAMP?*/
   if (RAMP == 0) {
-    out += position_controller_x(ref-get_xpos());
+    out += position_controller_x( ref - get_xpos() );
   } else {
-    out += position_controller_x(ref_arr[current_index]-get_xpos());
+    out += position_controller_x( ref_arr[current_index] - get_xpos() );
   }
 
+  /*Update RAMP*/
   if(current_index < (nr_of_ref - 1)) {
     current_index++;
-  }
-
-  if(out >= 12.5 && out <= -12.5) {
-    aw = 1;
-  } else {
-    aw = 0;
   }
 
   return out;

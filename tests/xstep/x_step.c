@@ -8,7 +8,12 @@
 pthread_t thread_sampler;
 FILE * fp;
 
-const static float step_size = 2.6 * 0;
+#ifdef RTAI
+#include <rtai_lxrt.h>
+RT_TASK *rt_sampler;
+#endif
+
+const static float step_size = 12.5*0;
 
 void *sampler(void *args)
 {
@@ -18,6 +23,20 @@ void *sampler(void *args)
 
     t_0 = get_time_micros();
     step = 1;
+
+#ifdef RTAI
+    /*Transform to RTAI task*/
+    RTIME period = nano2count(1E6);
+    if(!(rt_sampler = rt_task_init_schmod(nam2num("rt_sampler"), 1, 0, 0, SCHED_FIFO, 0))){
+      printf("rt_sampler\n");
+      exit(42);
+    }
+    rt_task_make_periodic(rt_sampler, rt_get_time() + period, period);
+    rt_make_hard_real_time();
+    printf("Started rt_sampler\n");
+#endif
+
+    
     while (1) {
         if (step) {
 	  printf("Comedi out %d\n", run_motorx(step_size));
@@ -41,11 +60,15 @@ void *sampler(void *args)
     
         sample_nr++;
 
-        if (sample_nr == 3000) {
+        if (sample_nr == 2000) {
             run_motorx(0);
         }
-
-        usleep(1000);
+	
+#ifdef RTAI
+	rt_task_wait_period();
+#else
+	usleep(1000);
+#endif
     }
 }
 

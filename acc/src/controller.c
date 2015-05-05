@@ -9,21 +9,17 @@
 #include <fcntl.h>
 #include <mqueue.h>
 
-#ifdef RTAI
 #include <rtai_lxrt.h>
-#endif
+#include <rtai_sem.h>
 
-#ifndef TEST
 #include <libcrane.h>
-#endif
 #include <acc.h>
 #include <controller.h>
 #include <compensator.h>
 
-#ifdef RTAI
 RT_TASK *rt_x_axis_controller;
 RT_TASK *rt_y_axis_controller;
-#endif
+RT_TASK *rt_logger;
 
 void *task_x_axis_controller(void * argc)
 {
@@ -38,9 +34,8 @@ void *task_x_axis_controller(void * argc)
   input = mq_open(Q_TO_X, O_RDONLY | O_NONBLOCK);
   output = mq_open(Q_FROM_X, O_WRONLY);
 
-#ifdef RTAI
   /*Transform to RTAI task*/
-  RTIME period = nano2count(X_SAMPLE_TIME_NS);
+  RTIME period = nano2count(SAMPLE_TIME_NS);
   if(!(rt_x_axis_controller = rt_task_init_schmod(nam2num("rt_x_axis_controller"), 1, 0, 0, SCHED_FIFO, 0))){
     printf("Could not start rt_x_axis_controller\n");
     exit(42);
@@ -48,16 +43,13 @@ void *task_x_axis_controller(void * argc)
   rt_task_make_periodic(rt_x_axis_controller, rt_get_time() + period, period);
   rt_make_hard_real_time();
   printf("Started rt_x_axis_controller\n");
-#endif
 
   printf("Waiting for ref..\n");
   while(mq_receive(input, input_buffer, BUFFER_SIZE, 0) < 0) {
     if (errno != EAGAIN){
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
-#ifdef RTAI
     rt_task_wait_period();
-#endif
   }
 
   memcpy(&x_ref, input_buffer, sizeof(double));
@@ -79,21 +71,19 @@ void *task_x_axis_controller(void * argc)
       printf("[X]: error %d, %s\n", errno, strerror(errno));
     }
 
-    out = pid_get_controller_output(x_ref);
+    out = get_controller_output(x_ref);
     
     /*Settled?*/
-    double err = ((double)(int)( (x_ref - get_xpos()) * 1000) / 1000.00);
-    /*X inside error band? Angle inside error band? Velocity = 0?*/
-    if ( (fabs(err) < X_ERR_BAND) /* && (get_motorx_velocity() == 0) */ && (fabs(get_angle()) < ANGLE_ERR_BAND) ) {
+    double err = libcrane_truncate(x_ref - get_xpos());
+    if ( (fabs(err) <= X_ERR_BAND) /* && (get_motorx_velocity() == 0) */ && (fabs(get_angle()) < ANGLE_ERR_BAND) ) {
       /*Has this happened more than SETTLE_HITS times?*/
-      if( ((hit_count++) >= SETTLE_HITS) && received_new_ref ) {
-        /*Settled! Allow for new reference and reset hit counter!*/
+      if( received_new_ref && ((++hit_count) >= SETTLE_HITS) ) {
+         /*Settled! Allow for new reference and reset hit counter!*/
         received_new_ref = 0;
         hit_count = 0;
         /*Send msg that we have settled!*/
         int msg = 1;
         printf("[X]: DONE @ %lf\n", get_xpos());
-	printf("[X]: trunked: %lf\n", ((double)(int)( (get_xpos()) * 1000) / 1000.00));
         if (mq_send(output, (char *)&msg, sizeof(int), 0) == -1)
           printf("%s\n", strerror(errno));
       }
@@ -103,9 +93,7 @@ void *task_x_axis_controller(void * argc)
     
     run_motorx(out);
 
-#ifdef RTAI
     rt_task_wait_period();
-#endif
   }
 }
 
@@ -122,9 +110,8 @@ void *task_y_axis_controller(void * argc)
   input = mq_open(Q_TO_Y, O_RDONLY | O_NONBLOCK);
   output = mq_open(Q_FROM_Y, O_WRONLY);
 
-#ifdef RTAI
   /*Transform to RTAI task*/
-  RTIME period = nano2count(Y_SAMPLE_TIME_NS);
+  RTIME period = nano2count(SAMPLE_TIME_NS);
   if(!(rt_y_axis_controller = rt_task_init_schmod(nam2num("rt_y_axis_controller"), 2, 0, 0, SCHED_FIFO, 0))) {
     printf("Could not start rt_y_axis_controller\n");
     exit(42);
@@ -132,16 +119,12 @@ void *task_y_axis_controller(void * argc)
   rt_task_make_periodic(rt_y_axis_controller, rt_get_time() + period, period);
   rt_make_hard_real_time();
   printf("Started rt_y_axis_controller\n");
-#endif
-
 
   while(mq_receive(input, input_buffer, BUFFER_SIZE, 0) < 0) {
     if (errno != EAGAIN){
       printf("[Y]: error %d, %s\n", errno, strerror(errno));
     }
-#ifdef RTAI
     rt_task_wait_period();
-#endif
   }
 
   memcpy(&y_ref, input_buffer, sizeof(double));
@@ -163,11 +146,9 @@ void *task_y_axis_controller(void * argc)
     }
 
     /*Settled?*/
-    double err = y_ref - get_ypos();
-    /*X inside error band? Angle inside error band? Velocity = 0?*/
+    double err = libcrane_truncate(y_ref - get_ypos());
     if ( (fabs(err) < Y_ERR_BAND) ) {
-      /*Has this happened more than SETTLE_HITS times?*/
-      if( ((hit_count++) >= SETTLE_HITS) && received_new_ref ) {
+      if( received_new_ref && ((++hit_count) >= SETTLE_HITS) ) {
         /*Settled! Allow for new reference and reset hit counter!*/
         received_new_ref = 0;
         hit_count = 0;
@@ -184,8 +165,102 @@ void *task_y_axis_controller(void * argc)
     out = position_controller_y(err);
 
     run_motory(out);
-#ifdef RTAI
     rt_task_wait_period();
-#endif
   }
+}
+
+struct rt_semaphore _logger_sem;
+int _enable_logger;
+int _new_log;
+
+void* task_logger(void* args){
+  FILE* fp = NULL;
+  unsigned long t_0, t_sample;
+  int name_len = 256;
+  char data_path[] = "/var/www/html/data/acc/steps/";
+  char header[] = "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n";
+  int action_count = 0;
+
+  char file_prefix[name_len];
+  sprintf(file_prefix, "%s/%d.csv", data_path, (int)time(NULL));
+
+  
+  RTIME period = nano2count(SAMPLE_TIME_NS); 
+  if(!(rt_logger = rt_task_init_schmod(nam2num("logger"), 1, 0, 0, SCHED_FIFO, 0))){
+    printf("Could not start logger task\n");
+    exit(42);
+  }
+  rt_task_make_periodic(rt_logger, rt_get_time() + period, period);
+  rt_make_hard_real_time();
+
+  char tmp[2 * name_len];
+  t_0 = get_time_micros();
+  while(_enable_logger){
+
+    if(_new_log){
+      if(!(fp == NULL))
+	fclose(fp);
+
+      sprintf(tmp, "%s-%d.csv", file_prefix, action_count++);
+      fp = fopen(tmp, "w");
+      fprintf(fp, "%s", header);
+    }
+    
+    /*GRAB TIMESTAMP*/
+    t_sample = get_time_micros();
+    fprintf(fp, "%ld,",  (t_sample - t_0));
+
+    /*SAMPLE SENSORS*/
+    fprintf(fp, "%f,", get_old_angle_raw());
+    fprintf(fp, "%f,", get_angle());
+    fprintf(fp, "%f,", get_xpos());
+    fprintf(fp, "%f,", get_ypos());
+    fprintf(fp, "%f,", get_motorx_velocity());
+    fprintf(fp, "%f,", get_motory_velocity());
+    fprintf(fp, "%f,", get_motorx_voltage());
+    fprintf(fp, "%f",  get_motory_voltage());
+    fprintf(fp, "\n");
+
+    rt_task_wait_period();
+  }
+}
+
+int init_logger(){
+  _enable_logger = 0;
+  _new_log = 1;
+  rt_sem_init(&_logger_sem, 1);
+}
+
+int disable_logger(){
+  int ret = 0;
+  RTIME delay =  nano2count(1000);
+  if (rt_sem_wait_timed(&_logger_sem, delay) == 0xFFFF){
+    ret = -1;
+  }
+  else{
+    _enable_logger = 0;
+    if (rt_sem_signal(&_logger_sem) == 0xFFFF){
+      ret = -1;
+    }
+  }
+  return ret;
+}
+
+int enable_logger(){
+  int ret = 0;
+  RTIME delay =  nano2count(1000);
+  printf("Inside enable_logger\n")
+  if (rt_sem_wait_timed(&_logger_sem, delay) == 0xFFFF){
+    printf("enable_logger did not obtain sem\n")
+    ret = -1;
+  }
+  else{
+    printf("enable_logger got sem\n")	  
+    _enable_logger = 1;
+    _new_log = 1;
+    if (rt_sem_signal(&_logger_sem) == 0xFFFF){
+      ret = -1;
+    }
+  }
+  return ret;
 }

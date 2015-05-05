@@ -1,3 +1,6 @@
+#ifndef _LIBCRANE_H_
+#define _LIBCRANE_H_
+
 #include <stdio.h>
 #include <time.h>
 
@@ -35,6 +38,8 @@
 
 #define CHAN_CTRLPAD_X_IN 14
 #define CHAN_CTRLPAD_Y_IN 15
+
+double libcrane_truncate(double sutff_oreo);
 
 int initialize_crane();
 
@@ -76,3 +81,5 @@ void disable_magnet();
 double get_sensor_raw(int channel);
 
 unsigned long get_time_micros();
+
+#endif /* _LIBCRANE_H_ */
