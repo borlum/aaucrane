@@ -162,6 +162,7 @@ void place_containers(){
 int main(int argc,char* argv[]){  
   if( init() == -1)
     exit(-1);
+  init_logger()
 
   size_t buf_len = BUFFER_SIZE;
   char buf[BUFFER_SIZE];
@@ -209,10 +210,14 @@ int main(int argc,char* argv[]){
 
     cmd.pickup_point = source.loc;
     cmd.dest_point = dest.loc;
+
+    enable_logger();
     
     mq_send(to_c, (char *) &cmd, sizeof(cmd), 0);
     update_status(source_row, source_col, STACK_FREE);
     mq_receive(from_c, buf, buf_len, 0);
     update_status(dest_row, dest_col, STACK_OCCUPIED);
+
+    disable_logger();
   } 
 }
