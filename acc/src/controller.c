@@ -209,8 +209,8 @@ void* task_logger(void* args){
 }
 
 int init_logger(){
-  static bool enable_logger;
-  static bool new_log = true;
+  static int enable_logger = 0;
+  static int new_log = 1;
   rt_typed_sem_init(logger_sem, 1, BIN_SEM | FIFO_Q );
   
 }
@@ -222,7 +222,7 @@ int disabel_logger(){
     ret = -1;
   }
   else{
-    enable_logger = false;
+    enable_logger = 0;
     if (rt_sem_signal(&logger_sem) == 0xFFFF){
       ret = -1;
     }
@@ -237,8 +237,8 @@ int enable_logger(){
     ret = -1;
   }
   else{
-    enable_logger = true;
-    new_log = true;
+    enable_logger = 1;
+    new_log = 1;
     if (rt_sem_signal(&logger_sem) == 0xFFFF){
       ret = -1;
     }
