@@ -6,12 +6,23 @@
 #define ANGLE_ERR_BAND 0.03
 #define SETTLE_HITS 250
 
-#ifdef RTAI
+/* RTAI tasks */
 extern RT_TASK *rt_x_axis_controller;
 extern RT_TASK *rt_y_axis_controller;
-#endif
+
+/* Logger task - enable and disable flag */
+extern RT_TASK *rt_logger;
+extern SEM logger_sem;
+extern bool enable_logger;
+extern bool new_log;
 
 void* task_x_axis_controller(void *);
 void* task_y_axis_controller(void *);
+void* task_logger(void *);
+
+int init_logger();
+
+int enable_logger();
+int disable_logger();
 
 #endif
