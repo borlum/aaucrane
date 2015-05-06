@@ -40,7 +40,7 @@ double angle_controller(double error){
   /* After Kirsten */  
   k  =  1;
   tp =  2;
-  td =  1;
+  td =  0.1;
 
   printf("=====================\n");
   printf("[C2] pre_error = %lf \n", pre_error);
