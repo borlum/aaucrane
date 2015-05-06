@@ -66,7 +66,7 @@ double position_controller_x(double error){
 #ifdef NEW
   double k_p = 4;
 #else
-  double k_p = 3.75;
+  double k_p = 10;
 #endif
   /*printf("[C1] error = %lf \n", error);*/
  /* printf("=====================\n");
