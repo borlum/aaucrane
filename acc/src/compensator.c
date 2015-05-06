@@ -26,10 +26,7 @@ double angle_controller(double error){
   printf("[C2] P     = %lf \n", k*td*error);
   printf("[C2] D     = %lf \n", k * (error - pre_error));*/
 
-  out = k*tp * error + k*td * (error - pre_error);
-
-  /*Just P*/
-  out = 10 * error;
+  out = k * error + tp * (error - pre_error);
 
   printf("[C2] OUT   = %lf \n", out);
 
