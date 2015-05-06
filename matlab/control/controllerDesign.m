@@ -9,9 +9,9 @@ run('../model/cranemodel');
 % Tuning, lav settle time, lav overshoot
 C1 = 3.75;
 
-tp = .75;
+tp = 4;
 
-td = 0;
+td = .1;
 
 % Dæmp 4 rad/s
 C2 = (td * s+ tp);
@@ -23,7 +23,7 @@ XXm = feedback(C1 * Xm, 1-Wm*C2*k);
 
 XVm = feedback(feedback(C1 * Xm, 1) * - Wm, C2 * k);	
 
-dC2 = c2d(C2*k, .001, 'tustin');
+dC2 = c2d(C2*k, .01, 'tustin');
 
 %====================================
 %			Uden container
