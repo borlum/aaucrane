@@ -15,10 +15,14 @@ double angle_controller(double error){
   double out, k, td;
 
   /* After Kirsten */
-  k  = 10;
-  td =  1;
+  k  = 10.0;
+  td =  1.0;
 
   //out =  k*td * ( ( (1/td) * (error - pre_error) / SAMPLE_TIME_S ) + 1);
+  
+  printf("[C2] error = %ld \n", error);
+  printf("[C2] P     = %ld \n", k*td*error);
+  printf("[C2] D     = %ld \n", k * (error - pre_error) / SAMPLE_TIME_S);
 
   out = k*td*error + k * (error - pre_error) / SAMPLE_TIME_S;
 
@@ -32,6 +36,10 @@ double angle_controller(double error){
 
 double position_controller_x(double error){
   double k_p = 3.75; // Med container
+
+  printf("[C1] error = %ld \n", error);
+  printf("[C2] P     = %ld \n", k_p*error);
+
   return error * k_p;
 }
 
