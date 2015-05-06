@@ -196,8 +196,8 @@ void* task_logger(void* args){
   t_0 = get_time_micros();
 
   while(1){    
-    if(_enable_logger){
-      if(_new_log){
+    if(get_enable_logger()){
+      if(get_new_log()){
 	if(!(fp == NULL)){
 	  fclose(fp);
 	}
@@ -252,4 +252,20 @@ int enable_logger(){
   _new_log = 1;
   sem_post(&_logger_sem);
   return 0;
+}
+
+int get_enable_logger(){
+  int ret = -1;
+  sem_wait(&_logger_sem);
+  ret = _enable_logger;
+  sem_post(&_logger_sem);
+  return ret;
+}
+
+int get_new_log(){
+  int ret = -1;
+  sem_wait(&_logger_sem);
+  ret = _new_log;
+  sem_post(&_logger_sem);
+  return ret;
 }
