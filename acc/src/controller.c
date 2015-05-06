@@ -175,20 +175,15 @@ int _new_log = 0;
 char *_data_path;
 
 void* task_logger(void* args){
-  printf("Logger task\n");
   FILE* fp = NULL;
   unsigned long t_0, t_sample;
   int name_len = 256;
   char header[] = "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n";
   int action_count = 0;
-  printf("Logger task 2\n");
 
   char file_prefix[name_len];
-  sprintf(file_prefix, "%s/%d.csv", _data_path, (int)time(NULL));
+  sprintf(file_prefix, "%s/%d", _data_path, (int)time(NULL));
 
-  printf("Logger task 3\n");
-
-  
   RTIME period = nano2count(SAMPLE_TIME_NS); 
   if(!(rt_logger = rt_task_init_schmod(nam2num("logger"), 1, 0, 0, SCHED_FIFO, 0))){
     printf("Could not start logger task\n");
@@ -197,46 +192,41 @@ void* task_logger(void* args){
   rt_task_make_periodic(rt_logger, rt_get_time() + period, period);
   rt_make_hard_real_time();
 
-  printf("Logger task 4\n");
-
-  
   char tmp[2 * name_len];
   t_0 = get_time_micros();
 
-  printf("Logger task 5 %d\n", _enable_logger);
+  while(1){    
+    if(get_enable_logger()){
+      if(get_new_log()){
+	if(!(fp == NULL)){
+	  fclose(fp);
+	}
       
-  while(_enable_logger == 1){
-    printf("Logger \n");
+	sprintf(tmp, "%s-%d.csv", file_prefix, action_count++);
+	printf("New log in: %s\n", tmp);
+	fp = fopen(tmp, "w");
+	fprintf(fp, "%s", header);
+	_new_log = 0;
+      }
     
-    if(_new_log){
-      printf("New log \n");
+      /*GRAB TIMESTAMP*/
+      t_sample = get_time_micros();
+      fprintf(fp, "%ld,",  (t_sample - t_0));
 
-      if(!(fp == NULL))
-	fclose(fp);
-
-      printf("After fclose\n");
-      sprintf(tmp, "%s-%d.csv", file_prefix, action_count++);
-      printf("%s\n", tmp);
-      fp = fopen(tmp, "w");
-      fprintf(fp, "%s", header);
-      _new_log = 0;
+      /*SAMPLE SENSORS*/
+      fprintf(fp, "%f,", get_old_angle_raw());
+      fprintf(fp, "%f,", get_angle());
+      fprintf(fp, "%f,", get_xpos());
+      fprintf(fp, "%f,", get_ypos());
+      fprintf(fp, "%f,", get_motorx_velocity());
+      fprintf(fp, "%f,", get_motory_velocity());
+      fprintf(fp, "%f,", get_motorx_voltage());
+      fprintf(fp, "%f",  get_motory_voltage());
+      fprintf(fp, "\n");
     }
-    
-    /*GRAB TIMESTAMP*/
-    t_sample = get_time_micros();
-    fprintf(fp, "%ld,",  (t_sample - t_0));
-
-    /*SAMPLE SENSORS*/
-    fprintf(fp, "%f,", get_old_angle_raw());
-    fprintf(fp, "%f,", get_angle());
-    fprintf(fp, "%f,", get_xpos());
-    fprintf(fp, "%f,", get_ypos());
-    fprintf(fp, "%f,", get_motorx_velocity());
-    fprintf(fp, "%f,", get_motory_velocity());
-    fprintf(fp, "%f,", get_motorx_voltage());
-    fprintf(fp, "%f",  get_motory_voltage());
-    fprintf(fp, "\n");
-
+    else{
+      //printf("Enable logger: %d, new log: %d\n", _enable_logger, _new_log);
+    }
     rt_task_wait_period();
   }
 }
@@ -245,8 +235,8 @@ int init_logger(const char *data_path, size_t len){
   _enable_logger = 0;
   _new_log = 1;
   sem_init(&_logger_sem, 0, 1);
-  _data_path = malloc( sizeof(data_path) / sizeof(data_path[0]) );
-  memcpy(_data_path, data_path, (sizeof(data_path) / sizeof(data_path[0])));
+  _data_path = malloc(len);
+  memcpy(_data_path, data_path, len);
 }
 
 int disable_logger(){
@@ -262,4 +252,20 @@ int enable_logger(){
   _new_log = 1;
   sem_post(&_logger_sem);
   return 0;
+}
+
+int get_enable_logger(){
+  int ret = -1;
+  sem_wait(&_logger_sem);
+  ret = _enable_logger;
+  sem_post(&_logger_sem);
+  return ret;
+}
+
+int get_new_log(){
+  int ret = -1;
+  sem_wait(&_logger_sem);
+  ret = _new_log;
+  sem_post(&_logger_sem);
+  return ret;
 }
