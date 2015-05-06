@@ -16,7 +16,7 @@ double angle_controller(double error){
   double out, k, td, tp;
 
   /* After Kirsten */
-  k  =  6.5;
+  k  =  7.5;
   tp =  1;
   td =  0.1;
 
@@ -24,9 +24,9 @@ double angle_controller(double error){
   printf("[C2] pre_error = %lf \n", pre_error);
   printf("[C2] error     = %lf \n", error);
   printf("[C2] P         = %lf \n", k*tp * error);
-  printf("[C2] D         = %lf \n", k*td * (error - pre_error) / 0.01);
+  printf("[C2] D         = %lf \n", k*td * (error - pre_error) / SAMPLE_TIME_S);
 
-  out = k*tp * error + k*td * (error - pre_error) / 0.01;
+  out = k*tp * error + k*td * (error - pre_error) / SAMPLE_TIME_S;
   //out = error*240 - 160 * pre_error - pre_out;
 
   printf("[C2] OUT   = %lf \n", out);
