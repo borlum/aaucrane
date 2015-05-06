@@ -23,9 +23,9 @@ double angle_controller(double error){
   printf("[C2] pre_error = %lf \n", pre_error);
   printf("[C2] error = %lf \n", error);
   printf("[C2] P     = %lf \n", k*td*error);
-  printf("[C2] D     = %lf \n", k * (error - pre_error) *1000.0);
+  printf("[C2] D     = %lf \n", k * (error - pre_error));
 
-  out = k*td*error + k * (error - pre_error) * 1000.0;
+  out = k*td*error + k * (error - pre_error);
 
   /*Skip, and run proportional instead!*/
   //out = error * 10;
@@ -39,7 +39,7 @@ double position_controller_x(double error){
   double k_p = 3.75; // Med container
 
   printf("[C1] error = %lf \n", error);
-  printf("[C2] P     = %lf \n", k_p*error);
+  printf("[C1] P     = %lf \n", k_p*error);
 
   return error * k_p;
 }
