@@ -3,7 +3,7 @@
 #include "compensator.h"
 #include <math.h>
 
-#define RAMP 0
+#define RAMP 1
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
