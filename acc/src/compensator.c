@@ -15,12 +15,12 @@ double angle_controller(double error){
   double out, k, td;
 
   /* After Kirsten */
-  k  = 5;
+  k  = 10;
   td =  4;
 
   //out =  k*td * ( ( (1/td) * (error - pre_error) / SAMPLE_TIME_S ) + 1);
 
-  out = k*error + k*(1/td) * (error - pre_error) / SAMPLE_TIME_S;
+  out = k*td*error + k * (error - pre_error) / SAMPLE_TIME_S;
 
   /*Skip, and run proportional instead!*/
   //out = error * 10;
