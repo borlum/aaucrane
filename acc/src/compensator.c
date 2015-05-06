@@ -12,28 +12,31 @@ int current_index = 0;
 
 double angle_controller(double error){
   static double pre_error = 0;
+  static double pre_out = 0;
   double out, k, td, tp;
 
   /* After Kirsten */
   k  =  10.0;
-  tp =  4.0;
-  td =  1.0;
+  tp =  1.0;
+  td =  0.1;
 
-  //out =  k*td * ( ( (1/td) * (error - pre_error) / SAMPLE_TIME_S ) + 1);
-  
-  /*printf("[C2] pre_error = %lf \n", pre_error);
-  printf("[C2] error = %lf \n", error);
-  printf("[C2] P     = %lf \n", k*td*error);
-  printf("[C2] D     = %lf \n", k * (error - pre_error));*/
+  printf("=====================\n");
+  printf("[C2] pre_error = %lf \n", pre_error);
+  printf("[C2] error     = %lf \n", error);
+  printf("[C2] P         = %lf \n", k*tp * error);
+  printf("[C2] D         = %lf \n", k*td * (error - pre_error) / 0.1);
 
-  out = 7.5 * error;
+  out = k*tp * error + k*td * (error - pre_error) / 0.1;
+  //out = error*240 - 160 * pre_error - pre_out;
 
   printf("[C2] OUT   = %lf \n", out);
+  printf("=====================\n");
 
   /*Skip, and run proportional instead!*/
   //out = error * 10;
 
   pre_error = error;
+  pre_out = out;
 
   return out;
 }
@@ -43,7 +46,10 @@ double position_controller_x(double error){
   double k_p = 3.75;
 
   /*printf("[C1] error = %lf \n", error);*/
+  printf("=====================\n");
+  printf("[C1] error     = %lf \n", error);
   printf("[C1] OUT     = %lf \n", k_p*error);
+  printf("=====================\n");
 
   return error * k_p;
 }
