@@ -53,7 +53,7 @@ double angle_controller(double error){
   //out = error*240 - 160 * pre_error - pre_out;
 
   printf("[C2] OUT   = %lf \n", out);
-  printf("=====================\n");*/
+  printf("=====================\n");
 
   /*Skip, and run proportional instead!*/
   //out = error * 10;
