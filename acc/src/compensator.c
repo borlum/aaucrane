@@ -14,7 +14,7 @@ int current_index = 0;
 double angle_controller(double error){
   static double pre_error = 0;
   static double pre_out = 0;
-  static double ang_lim = 8;
+  static double ang_lim = 7;
   int sign;
   double out, k, td, tp;
 
