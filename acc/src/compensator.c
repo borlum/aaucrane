@@ -66,7 +66,7 @@ double position_controller_x(double error){
 #ifdef NEW
   double k_p = 6;
   if(error < 0.1)
-    k_p = 2 * k_p;
+    k_p = 3 * k_p;
 #else
   double k_p = 10;
 #endif
