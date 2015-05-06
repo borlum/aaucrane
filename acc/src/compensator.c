@@ -42,9 +42,9 @@ double angle_controller(double error){
 
  /* Alternate Design */
 
- k = 3; 
+ k = 30; 
 
- tp = 4*0.01;
+ tp = 4;
 
  td = .01;
 
@@ -55,7 +55,10 @@ double angle_controller(double error){
 
   pre_error = error;
   pre_out = out;
-  out = ang_lim * sign; 
+  if(fabs(out) > ang_lim){
+    out = ang_lim * sign; 
+  }
+  
 
   return out;
 }
