@@ -42,7 +42,7 @@ double angle_controller(double error){
 
  /* Alternate Design */
 
- k = 1.5; 
+ k = .5; 
 
  tp = 4;
 
