@@ -55,7 +55,7 @@ double angle_controller(double error){
   printf("=====================\n");
 
   /*Skip, and run proportional instead!*/
-  //out = error * 10;
+  out = error * 3.5;
 #endif
   return out;
 }
