@@ -15,7 +15,7 @@ double angle_controller(double error){
   double out, k, td;
 
   /* After Kirsten */
-  k  = 10.0;
+  k  = 5.0;
   td =  1.0;
 
   //out =  k*td * ( ( (1/td) * (error - pre_error) / SAMPLE_TIME_S ) + 1);
