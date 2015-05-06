@@ -9,11 +9,10 @@ function [] = simvsacc()
     %STEP, PID KONTROL
     %[t4, x4, y4, theta4] = grabData('1430727000.csv'); 
 
-    % Step PD - NO RAMPT
-    [t, x, y, theta] = grabData('1430838033.csv');     
+    % Step P, 7.5 - NO RAMPT
+    [t, x, y, theta] = grabData('1430913702-0.csv');    
 
-    plot(t, theta);
-    legend('P rampe', 'PID rampe');
+    plot(t, x);
 
     %plot(t2, x2, t3, x3);
     %legend('P x', 'PID x');
