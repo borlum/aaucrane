@@ -60,6 +60,9 @@ double get_controller_output(double ref){
   double out, angle;
   
   angle = get_angle();
+  
+  printf("ANGLE = %lf \n", angle);
+
   out   = angle_controller(angle);
 
   /*STEP or RAMP?*/
