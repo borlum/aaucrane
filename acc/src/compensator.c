@@ -20,11 +20,12 @@ double angle_controller(double error){
 
   //out =  k*td * ( ( (1/td) * (error - pre_error) / SAMPLE_TIME_S ) + 1);
   
+  printf("[C2] pre_error = %lf \n", pre_error);
   printf("[C2] error = %lf \n", error);
   printf("[C2] P     = %lf \n", k*td*error);
-  printf("[C2] D     = %lf \n", k * (error - pre_error) / 0.001);
+  printf("[C2] D     = %lf \n", k * (error - pre_error) *1000.0);
 
-  out = k*td*error + k * (error - pre_error) / 0.001;
+  out = k*td*error + k * (error - pre_error) * 1000.0;
 
   /*Skip, and run proportional instead!*/
   //out = error * 10;
