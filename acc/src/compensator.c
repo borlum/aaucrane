@@ -14,7 +14,7 @@ int current_index = 0;
 double angle_controller(double error){
   static double pre_error = 0;
   static double pre_out = 0;
-  static double ang_lim = 7;
+  static double ang_lim = 7.5;
   int sign;
   double out, k, td, tp;
 
@@ -65,7 +65,7 @@ double position_controller_x(double error){
 //  double k_p = 4.75;
 #ifdef NEW
   double k_p = 4;
-  if(error < 0.05)
+  if(error < 0.1)
     k_p = 3 * k_p;
 #else
   double k_p = 10;
