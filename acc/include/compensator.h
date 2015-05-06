@@ -2,7 +2,7 @@
 #define _COMPENSATOR_H
 
 #define SAMPLE_TIME_NS 1E7
-#define SAMPLE_TIME_S SAMPLE_TIME_NS * 1E-6 
+#define SAMPLE_TIME_S SAMPLE_TIME_NS * 1E-6
 
 double angle_controller(double error);
 double position_controller_x(double error);
