@@ -35,5 +35,4 @@ k = 10;
 
 XXu = feedback(C1 * Xu, 1-Wu*C2*k);
 
-XVu = feedback(feedback(C1 * Xu, 1) * - Wu, C2 * k);	
-
+XVu = feedback(feedback(C1 * Xu, 1) * - Wu, C2 * k);
