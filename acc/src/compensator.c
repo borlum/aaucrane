@@ -20,7 +20,7 @@ double angle_controller(double error){
 
 #ifdef NEW
   /* Alternate Design */  
-  k = 15; 
+  k = 20; 
   
   tp = 4;
   
@@ -66,7 +66,7 @@ double position_controller_x(double error){
 #ifdef NEW
   double k_p = 4;
   if(error < 0.1)
-    k_p = 3 * k_p;
+    k_p = 4 * k_p;
 #else
   double k_p = 10;
 #endif
