@@ -25,7 +25,7 @@ dC2 = c2d(C2*k, .001, 'tustin');
 %			Uden container
 %====================================
 % Tuning, lav settle time, lav overshoot
-C1 = 3.5;
+C1 = 3.75;
 
 % Dæmp 4 rad/s
 C2 = (s+4);

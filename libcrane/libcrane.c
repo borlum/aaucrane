@@ -47,7 +47,7 @@ int libcrane_is_loaded()
 double libcrane_truncate(double stuff_oreo)
 {
     int stupid_tmp = (int) (round(stuff_oreo * 100));
-    double tmp_d = stupid_tmp / 100.0;
+    double tmp_d = (stupid_tmp / 100.0);
     return tmp_d;    
 }
 
