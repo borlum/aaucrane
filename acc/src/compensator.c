@@ -38,7 +38,7 @@ double angle_controller(double error){
   }
 #else
   /* After Kirsten */  
-  k  =  3.5;
+  k  =  7;
   tp =  1;
   td =  0.00;
 
@@ -55,7 +55,7 @@ double angle_controller(double error){
   printf("=====================\n");
 
   /*Skip, and run proportional instead!*/
-  out = error * 3.5;
+  out = error * k;
 #endif
   return out;
 }
