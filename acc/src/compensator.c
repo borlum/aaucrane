@@ -57,9 +57,9 @@ double get_controller_output(double ref){
 
   /*STEP or RAMP?*/
   if (RAMP == 0) {
-    out += position_controller_x( ref - get_xpos() );
+    out = position_controller_x( out + ref - get_xpos() );
   } else {
-    out += position_controller_x( ref_arr[current_index] - get_xpos() );
+    out = position_controller_x( out + ref_arr[current_index] - get_xpos() );
   }
 
   /*Update RAMP*/
