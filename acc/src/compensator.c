@@ -38,8 +38,8 @@ double angle_controller(double error){
   }
 #else
   /* After Kirsten */  
-  k  =  1;
-  tp =  2;
+  k  =  0.5;
+  tp =  1;
   td =  0.1;
 
   printf("=====================\n");
