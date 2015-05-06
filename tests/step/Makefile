@@ -20,7 +20,7 @@ all: $(TARGET)
 
 $(TARGET): $(TARGET).c
 	cd $(CRANELIB_PATH) && make
-	$(GCC) $(SOURCE) -DRTAI $(RTAI_LIB) $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o $(TARGET)
+	$(GCC) $(SOURCE) -DRTAI -DNEW $(RTAI_LIB) $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -o $(TARGET)
 
 test: $(TARGET).c
 	$(GCC) $(SOURCE) -DTEST -I/usr/local/lib -Iinclude/ -lpthread -lrt -o $(TARGET)
