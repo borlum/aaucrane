@@ -15,4 +15,7 @@ int init_logger();
 int enable_logger();
 int disable_logger();
 
+int get_enable_logger();
+int get_new_log();
+
 #endif
