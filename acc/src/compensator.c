@@ -17,7 +17,7 @@ double angle_controller(double error){
 
   /* After Kirsten */
   k  =  10.0;
-  tp =  4.0;
+  tp =  1.0;
   td =  0.1;
 
   printf("=====================\n");
