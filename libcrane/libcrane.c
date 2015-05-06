@@ -171,11 +171,6 @@ double get_angle()
     double ang = 0.2631 * get_angle_raw() - offset;
     /* MORTENS HACK */
 
-
-    if(fabs(ang) < .005){
-        ang = 0;
-    }
-
    if(fabs(ang_prev - ang) < 0.001) count++;
     else count = 0;
 
