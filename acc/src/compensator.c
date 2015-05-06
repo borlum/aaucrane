@@ -20,7 +20,7 @@ double angle_controller(double error){
 
 #ifdef NEW
   /* Alternate Design */  
-  k = 3; 
+  k = 10; 
   
   tp = 4;
   
