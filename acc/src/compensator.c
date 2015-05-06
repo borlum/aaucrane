@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <libcrane.h>
 #include "compensator.h"
+#include <math.h>
 
 #define RAMP 0
 
