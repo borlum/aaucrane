@@ -38,9 +38,9 @@ double angle_controller(double error){
   }
 #else
   /* After Kirsten */  
-  k  =  7.5;
+  k  =  10;
   tp =  1;
-  td =  0.5;
+  td =  0.2;
 
   printf("=====================\n");
   printf("[C2] pre_error = %lf \n", pre_error);
