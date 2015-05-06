@@ -20,11 +20,13 @@ double angle_controller(double error){
 
   //out =  k*td * ( ( (1/td) * (error - pre_error) / SAMPLE_TIME_S ) + 1);
   
+  /*printf("[C2] pre_error = %lf \n", pre_error);
   printf("[C2] error = %lf \n", error);
   printf("[C2] P     = %lf \n", k*td*error);
-  printf("[C2] D     = %lf \n", k * (error - pre_error) / 0.001);
+  printf("[C2] D     = %lf \n", k * (error - pre_error));*/
 
-  out = k*td*error + k * (error - pre_error) / 0.001;
+  out = k*td*error + k * (error - pre_error);
+  printf("[C2] OUT   = %lf \n", out);
 
   /*Skip, and run proportional instead!*/
   //out = error * 10;
@@ -37,8 +39,8 @@ double angle_controller(double error){
 double position_controller_x(double error){
   double k_p = 3.75; // Med container
 
-  printf("[C1] error = %lf \n", error);
-  printf("[C2] P     = %lf \n", k_p*error);
+  /*printf("[C1] error = %lf \n", error);*/
+  printf("[C1] OUT     = %lf \n", k_p*error);
 
   return error * k_p;
 }
@@ -56,9 +58,9 @@ double get_controller_output(double ref){
 
   /*STEP or RAMP?*/
   if (RAMP == 0) {
-    out += position_controller_x( ref - get_xpos() );
+    out = position_controller_x( out + ref - get_xpos() );
   } else {
-    out += position_controller_x( ref_arr[current_index] - get_xpos() );
+    out = position_controller_x( out + ref_arr[current_index] - get_xpos() );
   }
 
   /*Update RAMP*/
