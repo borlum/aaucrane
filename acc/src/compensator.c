@@ -14,6 +14,7 @@ int current_index = 0;
 double angle_controller(double error){
   static double pre_error = 0;
   static double pre_out = 0;
+  static double ang_lim = 10;
   int sign;
   double out, k, td, tp;
 
@@ -55,7 +56,7 @@ double angle_controller(double error){
   pre_error = error;
   pre_out = out;
 
-if (fabs(out) > 5) out = 5 * sign; 
+if (fabs(out) > ang_lim) ang_lim = 10 * sign; 
 
   return out;
 }
