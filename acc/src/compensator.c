@@ -64,9 +64,9 @@ double position_controller_x(double error){
   /*W. container*/
 //  double k_p = 4.75;
 #ifdef NEW
-  double k_p = 5;
+  double k_p = 6;
   if(error < 0.1)
-    k_p = 3* k_p;
+    k_p = 2 * k_p;
 #else
   double k_p = 10;
 #endif
