@@ -163,14 +163,20 @@ int run_motor(double voltage, int axis)
  */
 double get_angle()
 {
-    static int count = 0;
+    static int count = 0, sign;
     static double ang_prev = 0;
     static double offset = 1.0809;
 
 //    double ang = 0.7367*get_angle_raw() - offset;
     double ang = 0.2631 * get_angle_raw() - offset;
     /* MORTENS HACK */
-   if(fabs(ang_prev - ang) < 0.005) count++;
+
+
+    if(fabs(ang) < .005){
+        ang = 0;
+    }
+
+   if(fabs(ang_prev - ang) < 0.001) count++;
     else count = 0;
 
     if(count > 10) {
