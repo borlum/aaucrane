@@ -44,7 +44,7 @@ double angle_controller(double error){
 
  k = 3; 
 
- tp = 4;
+ tp = 4*0.01;
 
  td = .01;
 
