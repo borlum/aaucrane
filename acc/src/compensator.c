@@ -20,7 +20,6 @@ double angle_controller(double error){
 
 #ifdef NEW
   /* Alternate Design */  
-  
   k = 20; 
   
   tp = 4;
@@ -90,7 +89,11 @@ double get_controller_output(double ref){
 
   /*STEP or RAMP?*/
   if (RAMP == 0) {
+#ifdef NEW
     out += position_controller_x(ref - get_xpos() );
+#else
+    out += position_controller_x(ref - get_xpos() );	
+#endif
   } else {
     out = position_controller_x( out + ref_arr[current_index] - get_xpos() );
   }
