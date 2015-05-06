@@ -27,8 +27,12 @@ dC2 = c2d(C2*k, .001, 'tustin');
 % Tuning, lav settle time, lav overshoot
 C1 = 3.75;
 
+tp = 4;
+
+td = 1;
+
 % Dæmp 4 rad/s
-C2 = (s+4);
+C2 = (s*td+tp);
 
 % Tuning - lav vinkel
 k = 10;
