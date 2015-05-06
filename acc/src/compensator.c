@@ -95,7 +95,7 @@ double get_controller_output(double ref){
 #ifdef NEW
     out += position_controller_x(ref - get_xpos() );
 #else
-    out = position_controller_x(ref - get_xpos() );	
+    out = position_controller_x(out + ref - get_xpos() );	
 #endif
   } else {
     out = position_controller_x( out + ref_arr[current_index] - get_xpos() );
