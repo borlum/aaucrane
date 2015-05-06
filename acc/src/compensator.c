@@ -43,7 +43,7 @@ double angle_controller(double error){
 
 double position_controller_x(double error){
   /*W. container*/
-  double k_p = 5.0;
+  double k_p = 3;
 
   /*printf("[C1] error = %lf \n", error);*/
   printf("=====================\n");
