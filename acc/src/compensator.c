@@ -55,7 +55,7 @@ double angle_controller(double error){
   pre_error = error;
   pre_out = out;
 
-if (fabs(out) > 10) out = 10 * sign; 
+if (fabs(out) > 5) out = 5 * sign; 
 
   return out;
 }
