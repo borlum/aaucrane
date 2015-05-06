@@ -47,7 +47,7 @@ int libcrane_is_loaded()
 double libcrane_truncate(double stuff_oreo)
 {
     int stupid_tmp = (int) (round(stuff_oreo * 1000));
-    double tmp_d = stupid_tmp / 1000.0;
+    double tmp_d = (stupid_tmp / 1000.0);
     return tmp_d;    
 }
 
@@ -163,14 +163,15 @@ int run_motor(double voltage, int axis)
  */
 double get_angle()
 {
-    static int count = 0;
+    static int count = 0, sign;
     static double ang_prev = 0;
     static double offset = 1.0809;
 
 //    double ang = 0.7367*get_angle_raw() - offset;
     double ang = 0.2631 * get_angle_raw() - offset;
     /* MORTENS HACK */
-    if(ang_prev == ang) count++;
+
+   if(fabs(ang_prev - ang) < 0.001) count++;
     else count = 0;
 
     if(count > 10) {
