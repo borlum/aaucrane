@@ -22,11 +22,11 @@ double angle_controller(double error){
 
   printf("=====================\n");
   printf("[C2] pre_error = %lf \n", pre_error);
-  printf("[C2] pre_out   = %lf \n", pre_out);
   printf("[C2] error     = %lf \n", error);
+  printf("[C2] P         = %lf \n", k*tp * error);
+  printf("[C2] D         = %lf \n", k*td * (error - pre_error) / 0.1);
 
-
-  out = k*tp * error + k*td * (error - pre_error);
+  out = k*tp * error + k*td * (error - pre_error) / 0.1;
   //out = error*240 - 160 * pre_error - pre_out;
 
   printf("[C2] OUT   = %lf \n", out);
@@ -46,7 +46,10 @@ double position_controller_x(double error){
   double k_p = 3.75;
 
   /*printf("[C1] error = %lf \n", error);*/
+  printf("=====================\n");
+  printf("[C1] error     = %lf \n", error);
   printf("[C1] OUT     = %lf \n", k_p*error);
+  printf("=====================\n");
 
   return error * k_p;
 }
