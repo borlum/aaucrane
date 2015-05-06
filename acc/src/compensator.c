@@ -18,8 +18,27 @@ double angle_controller(double error){
   int sign;
   double out, k, td, tp;
 
-  /* After Kirsten */
-/*  
+#ifdef NEW
+  /* Alternate Design */  
+  
+  k = 20; 
+  
+  tp = 4;
+  
+  td = 1;
+ 
+  out = k * (error * tp + ((error-pre_error) * td) / (0.01) );
+
+  if (out < 0) sign = -1;
+  else if (out >= 0) sign = 1;
+
+  pre_error = error;
+  pre_out = out;
+  if(fabs(out) > ang_lim){
+    out = ang_lim * sign; 
+  }
+#else
+  /* After Kirsten */  
   k  =  7.5;
   tp =  1;
   td =  0.1;
@@ -38,28 +57,7 @@ double angle_controller(double error){
 
   /*Skip, and run proportional instead!*/
   //out = error * 10;
-
-
- /* Alternate Design */
-
- k = 20; 
-
- tp = 4;
-
- td = 1;
-
- out = k * (error * tp + ((error-pre_error) * td) / (0.01) );
-
- if (out < 0) sign = -1;
- else if (out >= 0) sign = 1;
-
-  pre_error = error;
-  pre_out = out;
-  if(fabs(out) > ang_lim){
-    out = ang_lim * sign; 
-  }
-  
-
+#endif
   return out;
 }
 
