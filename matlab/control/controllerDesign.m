@@ -9,8 +9,12 @@ run('../model/cranemodel');
 % Tuning, lav settle time, lav overshoot
 C1 = 3.75;
 
+tp = .75;
+
+td = 0;
+
 % Dæmp 4 rad/s
-C2 = (s+4);
+C2 = (td * s+ tp);
 
 % Tuning - lav vinkel
 k = 10;
@@ -25,18 +29,18 @@ dC2 = c2d(C2*k, .001, 'tustin');
 %			Uden container
 %====================================
 % Tuning, lav settle time, lav overshoot
-C1 = 3.75;
+% C1 = 3.75;
 
-tp = 4;
+% tp = .4;
 
-td = 1;
+% td = 1;
 
-% Dæmp 4 rad/s
-C2 = (s*td+tp);
+% % Dæmp 4 rad/s
+% C2 = (s*td+tp);
 
-% Tuning - lav vinkel
-k = 10;
+% % Tuning - lav vinkel
+% k = 10;
 
-XXu = feedback(C1 * Xu, 1-Wu*C2*k);
+% XXu = feedback(C1 * Xu, 1-Wu*C2*k);
 
-XVu = feedback(feedback(C1 * Xu, 1) * - Wu, C2 * k);
+% XVu = feedback(feedback(C1 * Xu, 1) * - Wu, C2 * k);
