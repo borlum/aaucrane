@@ -16,7 +16,7 @@ double angle_controller(double error){
   double out, k, td, tp;
 
   /* After Kirsten */
-  k  =  7.5;
+  k  =  5;
   tp =  1.0;
   td =  0.1;
 
