@@ -20,7 +20,7 @@ double angle_controller(double error){
 
   //out =  k*td * ( ( (1/td) * (error - pre_error) / SAMPLE_TIME_S ) + 1);
 
-  out = k*td*error + k * (error - pre_error) / SAMPLE_TIME_S;
+  out = k*td*error + k * (error - pre_error);
 
   /*Skip, and run proportional instead!*/
   //out = error * 10;
