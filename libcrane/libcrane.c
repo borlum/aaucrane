@@ -46,8 +46,8 @@ int libcrane_is_loaded()
  */
 double libcrane_truncate(double stuff_oreo)
 {
-    int stupid_tmp = (int) (round(stuff_oreo * 100));
-    double tmp_d = (stupid_tmp / 100.0);
+    int stupid_tmp = (int) (round(stuff_oreo * 1000));
+    double tmp_d = (stupid_tmp / 1000.0);
     return tmp_d;    
 }
 
@@ -171,7 +171,7 @@ double get_angle()
     double ang = 0.2631 * get_angle_raw() - offset;
     /* MORTENS HACK */
 
-   if(fabs(ang_prev - ang) < 0.001) count++;
+   /*if(fabs(ang_prev - ang) < 0.001) count++;
     else count = 0;
 
     if(count > 10) {
@@ -179,7 +179,7 @@ double get_angle()
         count = 0;
     }
 
-    ang_prev = ang;
+    ang_prev = ang; */
 
     return libcrane_truncate(ang);
 }
