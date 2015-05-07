@@ -60,16 +60,13 @@ int main(int argc, char *argv[]){
   initialize_crane();
   run_motorx(0);
 
-  init_logger("/var/www/html/data/simple", sizeof("/var/www/html/data/simple"));
-  pthread_create(&thread_logger, NULL, task_logger, NULL);  
-
   printf ("Enter desired position: <x>:\n");
   scanf("%lf", &ref);
-
+  
+  init_logger("/var/www/html/data/simple", sizeof("/var/www/html/data/simple"));
+  pthread_create(&thread_logger, NULL, task_logger, NULL);  
   enable_logger();
   
-  usleep(20000);
-
   pthread_create(&thread_simple_controller, NULL, simple_controller, &ref);
 
   while(1){
