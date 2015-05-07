@@ -14,7 +14,7 @@ pthread_t thread_simple_controller, thread_logger;
 
 void init_rtai(){
   RTIME period = nano2count(SAMPLE_TIME_NS); 
-  if(!(rt_logger = rt_task_init_schmod(nam2num("controller"), 1, 0, 0, SCHED_FIFO, 0))){
+  if(!(rt_simple_controller = rt_task_init_schmod(nam2num("controller"), 1, 0, 0, SCHED_FIFO, 0))){
     printf("Could not start task\n");
     exit(42);
   }
