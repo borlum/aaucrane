@@ -7,7 +7,7 @@
 #include <controller.h>
 
 
-#define SAMPLE_TIME_NS 1E6;
+#define SAMPLE_TIME_NS 1E6
 
 RT_TASK *rt_simple_controller;
 pthread_t thread_simple_controller, thread_logger;
@@ -25,11 +25,11 @@ void init_rtai(){
 
 void *simple_controller(void *arg){
   void init_rtai();
-  double pos_ref = *arg;
+  double pos_ref = (double) *arg;
   double angle_ref = 0;
 
   double angle_err, pos_err;
-  double angle_out, pos_out;
+  double angle_out, out;
 
   double angle_kp = 20;
   double pos_kp = 5;
