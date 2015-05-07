@@ -20,7 +20,7 @@ kt = 0.03;
 % Motor modstand
 ra = 0.43;
 
-CONTAINER = 1;
+CONTAINER = -1;
 UP        = 1;
 
 if CONTAINER == 1
@@ -29,12 +29,17 @@ if CONTAINER == 1
     Mx.I = 0.0012;
     W.b  = 0.0315;
     W.I  = 0.0890;
-else
+elseif CONTAINER == 0
     % UDEN CONTAINER
     Mx.b = 0.0015;
     Mx.I = 0.0011;
     W.b  = 0.0136;
     W.I  = 0.0423;
+elseif CONTAINER == -1
+    Mx.b = 0.0018;
+    Mx.I = 0.0012;
+    W.b  = 0.27;
+    W.I  = 0.4;
 end
 
 if UP == 1
