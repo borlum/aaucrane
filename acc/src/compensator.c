@@ -3,6 +3,7 @@
 #include "compensator.h"
 #include <math.h>
 
+#define NEW
 #define RAMP 0
 
 /*RAMP STUFF*/
