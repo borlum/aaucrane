@@ -40,7 +40,7 @@ void *simple_controller(void *arg){
     angle_err = angle_ref - get_angle();
     pos_err = pos_ref - get_xpos();
     
-    angle_out = angle_kp * angle_err + angle_kd * ((anglre_err - prev_angle_err) / 0.01);
+    angle_out = angle_kp * angle_err + angle_kd * ((angle_err - prev_angle_err) / 0.01);
     out = pos_kp * (pos_err - angle_out);
     
     printf("===================\n");
