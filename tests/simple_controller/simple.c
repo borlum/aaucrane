@@ -33,6 +33,8 @@ void *simple_controller(void *arg){
 
   double angle_kp = 20;
   double pos_kp = 5;
+
+  printf("REF: %lf\n", pos_ref);
   
   while(1){
     angle_err = angle_ref - get_angle();
