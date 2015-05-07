@@ -59,8 +59,8 @@ void *simple_controller(void *arg){
 int main(int argc, char *argv[]){
   double ref;
   
-  init_logger();
-  pthread_create(&thread_logger, NULL, task_logger, NULL);
+  //init_logger();
+  //pthread_create(&thread_logger, NULL, task_logger, NULL);
 
   printf ("Enter desired position: <x>:\n");
   scanf("%lf", &ref);
