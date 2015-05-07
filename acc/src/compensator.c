@@ -16,8 +16,8 @@ double angle_controller(double error){
   static double pre_out = 0;
   double out, k, td, tp;
 
-  k  =  9;
-  tp =  1;
+  k  =  15.0;
+  tp =  1.00;
   td =  0.00;
 
   printf("=====================\n");
