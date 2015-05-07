@@ -54,10 +54,12 @@ void *simple_controller(void *arg){
 int main(int argc, char *argv[]){
   double ref;
 
+  initialize_crane();
+  
   init_logger("/var/www/html/data/simple", sizeof("/var/www/html/data/simple"));
   pthread_create(&thread_logger, NULL, task_logger, NULL);
 
-  printf("Angle: %f\n", (float) get_angle());
+  printf("Angle: %lf\n", (float) get_angle());
   
   printf ("Enter desired position: <x>:\n");
   scanf("%lf", &ref);
