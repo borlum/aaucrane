@@ -24,9 +24,9 @@ double angle_controller(double error){
   printf("[C2] pre_error = %lf \n", pre_error);
   printf("[C2] error     = %lf \n", error);
   printf("[C2] P         = %lf \n", k*tp * error);
-  printf("[C2] D         = %lf \n", k*td * (error - pre_error) / 0.01);
+  printf("[C2] D         = %lf \n", k*td * (error - pre_error) / 0.02);
 
-  out = k*tp * error + k*td * (error - pre_error) / 0.01;
+  out = k*tp * error + k*td * (error - pre_error) / 0.02;
   //out = error*240 - 160 * pre_error - pre_out;
 
   printf("[C2] OUT   = %lf \n", out);
@@ -60,7 +60,7 @@ double get_controller_output(double ref){
   angle = get_angle();
   out   = angle_controller(angle);
 
-  printf("Angle_out: %lf\n", out);
+  printf("Angle: %lf\n", angle);
 
   /*STEP or RAMP?*/
   if (RAMP == 0) {
