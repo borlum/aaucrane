@@ -38,8 +38,8 @@ double angle_controller(double error){
   }
 #else
   /* After Kirsten */  
-  k  =  15;
-  tp =  1;
+  k  =  10;
+  tp =  4;
   td =  0.00;
 
   printf("=====================\n");
@@ -68,7 +68,7 @@ double position_controller_x(double error){
   if(error < 0.1)
     k_p = 3 * k_p;
 #else
-  double k_p = 10;
+  double k_p = 3.75;
 #endif
   /*printf("[C1] error = %lf \n", error);*/
  /* printf("=====================\n");
