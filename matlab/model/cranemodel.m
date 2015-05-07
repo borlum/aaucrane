@@ -7,13 +7,18 @@ s = tf('s');
 %------------------------------------------------------------------------------
 % GLOBALS
 %------------------------------------------------------------------------------
-mt = 0.3; % Kan ikke vejes / el. findes i dokumentation
-mm = 0.8; % Magnet + krog
-mp = 2.866 + mm; % Container
-l  = 0.65; % længde af wire
-g  = 9.82; % tyngdekraften
-kt = 0.03; % motor konstant
-ra = 0.43; % motor modstand
+% Magnet + krog
+mm = 0.8;
+% Container + magnet + krog (Hele 'pendul' massen)
+mp = 2.866 + mm;
+% Længde af wire
+l  = 0.65;
+% Tyngdekraften
+g  = 9.82;
+% Tyngdekraften
+kt = 0.03;
+% Motor modstand
+ra = 0.43;
 
 %------------------------------------------------------------------------------
 % MED CONTAINER

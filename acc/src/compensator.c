@@ -38,7 +38,7 @@ double angle_controller(double error){
   }
 #else
   /* After Kirsten */  
-  k  =  15;
+  k  =  9;
   tp =  1;
   td =  0.00;
 
