@@ -30,7 +30,6 @@ void *simple_controller(void *arg){
   }
   rt_task_make_periodic(rt_simple_controller, rt_get_time() + period, period);
   rt_make_hard_real_time();
-
   
   while(1){
     angle_err = angle_ref - get_angle();
@@ -55,12 +54,11 @@ void *simple_controller(void *arg){
 int main(int argc, char *argv[]){
   double ref;
 
-  printf("Before init\n");
   init_logger("/var/www/html/data/simple", sizeof("/var/www/html/data/simple"));
-  printf("After init\n");
   pthread_create(&thread_logger, NULL, task_logger, NULL);
-  printf("After pthread\n");
 
+  printf("Angle: %lf\n", get_angle());
+  
   printf ("Enter desired position: <x>:\n");
   scanf("%lf", &ref);
 
