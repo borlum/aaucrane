@@ -42,20 +42,14 @@ double angle_controller(double error){
   tp =  1;
   td =  0.00;
 
+  out = (k*tp * error) + (k*td * (error - pre_error) / SAMPLE_TIME_S);
   printf("=====================\n");
   printf("[C2] pre_error = %lf \n", pre_error);
   printf("[C2] error     = %lf \n", error);
   printf("[C2] P         = %lf \n", k*tp * error);
-  printf("[C2] D         = %lf \n", k*td * (error - pre_error) / 0.01);
-
-  out = k*tp * error + k*td * (error - pre_error) / 0.01;
-  //out = error*240 - 160 * pre_error - pre_out;
-
-  printf("[C2] OUT   = %lf \n", out);
+  printf("[C2] D         = %lf \n", k*td * (error - pre_error) / SAMPLE_TIME_S);
+  printf("[C2] OUT       = %lf \n", out);
   printf("=====================\n");
-
-  /*Skip, and run proportional instead!*/
-  out = error * k;
 #endif
   return out;
 }
@@ -70,11 +64,10 @@ double position_controller_x(double error){
 #else
   double k_p = 5;
 #endif
-  /*printf("[C1] error = %lf \n", error);*/
- /* printf("=====================\n");
-  printf("[C1] error     = %lf \n", error);
-  printf("[C1] OUT     = %lf \n", k_p*error);
-  printf("=====================\n");*/
+  /* printf("=====================\n"); */
+  /* printf("[C1] error     = %lf \n", error); */
+  /* printf("[C1] OUT     = %lf \n", k_p*error); */
+  /* printf("=====================\n"); */
 
   return error * k_p;
 }
@@ -85,22 +78,22 @@ double position_controller_y(double error){
 }
 
 double get_controller_output(double ref){
-  double out, angle;
+  double out, angle_out, x_pos_out;
   
-  angle = get_angle();
-  out   = angle_controller(angle);
-
-  printf("Angle_out: %lf\n", out);
+  angle_out = angle_controller(get_angle());
+  
+  printf("Angle_out: %lf\n", angle_out);
 
   /*STEP or RAMP?*/
   if (RAMP == 0) {
 #ifdef NEW
-    out += position_controller_x(ref - get_xpos() );
+    x_pos_out = position_controller_x(ref - get_xpos());
+    out = angle_out + x_pos_out;
 #else
-    out = position_controller_x(out + ref - get_xpos() );	
+    out = position_controller_x( angle_out + (ref_arr[current_index] - get_xpos()) );	
 #endif
   } else {
-    out = position_controller_x( out + ref_arr[current_index] - get_xpos() );
+    out = position_controller_x( angle_out + (ref_arr[current_index] - get_xpos()) );
   }
 
   printf("Final Out: %lf\n", out);
