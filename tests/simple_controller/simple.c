@@ -25,7 +25,7 @@ void init_rtai(){
 
 void *simple_controller(void *arg){
   void init_rtai();
-  double pos_ref = (double) *arg;
+  double pos_ref = *((double*)arg);
   double angle_ref = 0;
 
   double angle_err, pos_err;
@@ -48,7 +48,7 @@ void *simple_controller(void *arg){
     printf("out         : %.3lf\n", out);
     printf("===================\n");
 
-    run_moterx(out);
+    run_motorx(out);
     
     rt_task_wait_period();
   }
