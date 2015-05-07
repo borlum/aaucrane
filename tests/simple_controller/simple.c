@@ -34,7 +34,6 @@ void *simple_controller(void *arg){
 
   printf("REF: %lf\n", pos_ref);
 
-  
   while(1){
     angle_err = angle_ref - get_angle();
     pos_err = pos_ref - get_xpos();
@@ -62,15 +61,15 @@ int main(int argc, char *argv[]){
   run_motorx(0);
 
   init_logger("/var/www/html/data/simple", sizeof("/var/www/html/data/simple"));
-  pthread_create(&thread_logger, NULL, task_logger, NULL);
+  pthread_create(&thread_logger, NULL, task_logger, NULL);  
 
-  printf("Angle: %lf\n", (float) get_angle());
-  
   printf ("Enter desired position: <x>:\n");
   scanf("%lf", &ref);
 
   enable_logger();
   
+  usleep(20000);
+
   pthread_create(&thread_simple_controller, NULL, simple_controller, &ref);
 
   while(1){
