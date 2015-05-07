@@ -59,7 +59,7 @@ int main(int argc, char *argv[]){
   double ref;
 
   printf("Before init\n");
-  init_logger();
+  init_logger("/var/www/html/data/simple", sizeof("/var/www/html/data/simple"));
   printf("After init\n");
   pthread_create(&thread_logger, NULL, task_logger, NULL);
   printf("After pthread\n");
