@@ -11,19 +11,7 @@
 RT_TASK *rt_simple_controller;
 pthread_t thread_simple_controller, thread_logger;
 
-void init_rtai(){
-  RTIME period = nano2count(SAMPLE_TIME_NS); 
-  if(!(rt_simple_controller = rt_task_init_schmod(nam2num("controller"), 1, 0, 0, SCHED_FIFO, 0))){
-    printf("Could not start task\n");
-    exit(42);
-  }
-  rt_task_make_periodic(rt_simple_controller, rt_get_time() + period, period);
-  rt_make_hard_real_time();
-}
-
-
 void *simple_controller(void *arg){
-  void init_rtai();
   double pos_ref = *((double*)arg);
   double angle_ref = 0;
 
@@ -34,6 +22,15 @@ void *simple_controller(void *arg){
   double pos_kp = 5;
 
   printf("REF: %lf\n", pos_ref);
+
+  RTIME period = nano2count(SAMPLE_TIME_NS); 
+  if(!(rt_simple_controller = rt_task_init_schmod(nam2num("controller"), 1, 0, 0, SCHED_FIFO, 0))){
+    printf("Could not start task\n");
+    exit(42);
+  }
+  rt_task_make_periodic(rt_simple_controller, rt_get_time() + period, period);
+  rt_make_hard_real_time();
+
   
   while(1){
     angle_err = angle_ref - get_angle();
