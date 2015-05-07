@@ -12,7 +12,7 @@ C1 = 3.75;
 
 tp = 4;
 
-td = .1;
+td = 0;
 
 % Dæmp 4 rad/s
 C2 = (td * s+ tp);
