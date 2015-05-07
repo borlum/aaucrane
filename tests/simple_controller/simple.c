@@ -6,6 +6,9 @@
 #include <libcrane.h>
 #include <controller.h>
 
+#define SAMPLE_TIME_NS 1E6
+#define SAMPLE_TIME_S SAMPLE_TIME_NS * 1E-9
+
 RT_TASK *rt_simple_controller;
 pthread_t thread_simple_controller, thread_logger;
 
