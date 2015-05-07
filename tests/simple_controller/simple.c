@@ -6,8 +6,6 @@
 #include <libcrane.h>
 #include <controller.h>
 
-#define SAMPLE_TIME_NS 1E6
-
 RT_TASK *rt_simple_controller;
 pthread_t thread_simple_controller, thread_logger;
 
@@ -40,7 +38,7 @@ void *simple_controller(void *arg){
     angle_err = angle_ref - get_angle();
     pos_err = pos_ref - get_xpos();
     
-    angle_out = angle_kp * angle_err + angle_kd * ((angle_err - prev_angle_err) / 0.01);
+    angle_out = angle_kp * angle_err + angle_kd * ((angle_err - prev_angle_err) / SAMPLE_TIME_S);
     out = pos_kp * (pos_err - angle_out);
     
     printf("===================\n");
