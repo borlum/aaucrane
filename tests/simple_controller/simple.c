@@ -6,7 +6,6 @@
 #include <libcrane.h>
 #include <controller.h>
 
-
 #define SAMPLE_TIME_NS 1E6
 
 RT_TASK *rt_simple_controller;
@@ -58,9 +57,12 @@ void *simple_controller(void *arg){
 
 int main(int argc, char *argv[]){
   double ref;
-  
-  //init_logger();
-  //pthread_create(&thread_logger, NULL, task_logger, NULL);
+
+  printf("Before init\n")
+  init_logger();
+  printf("After init\n")
+  pthread_create(&thread_logger, NULL, task_logger, NULL);
+  printf("After pthread\n")
 
   printf ("Enter desired position: <x>:\n");
   scanf("%lf", &ref);
