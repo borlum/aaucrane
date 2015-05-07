@@ -58,11 +58,11 @@ void *simple_controller(void *arg){
 int main(int argc, char *argv[]){
   double ref;
 
-  printf("Before init\n")
+  printf("Before init\n");
   init_logger();
-  printf("After init\n")
+  printf("After init\n");
   pthread_create(&thread_logger, NULL, task_logger, NULL);
-  printf("After pthread\n")
+  printf("After pthread\n");
 
   printf ("Enter desired position: <x>:\n");
   scanf("%lf", &ref);
