@@ -30,7 +30,7 @@ void *simple_controller(void *arg){
   double angle_out, out;
 
   double angle_kp = 5;
-  double pos_kp = 5;
+  double pos_kp = 11.5;
 
   printf("REF: %lf\n", pos_ref);
 
