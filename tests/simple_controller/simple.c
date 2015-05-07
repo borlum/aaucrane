@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
   init_logger("/var/www/html/data/simple", sizeof("/var/www/html/data/simple"));
   pthread_create(&thread_logger, NULL, task_logger, NULL);
 
-  printf("Angle: %lf\n", get_angle());
+  printf("Angle: %f\n", (float) get_angle());
   
   printf ("Enter desired position: <x>:\n");
   scanf("%lf", &ref);
