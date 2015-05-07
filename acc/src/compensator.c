@@ -26,7 +26,7 @@ double angle_controller(double error){
   
   td = 1;
  
-  out = k * (error * tp + ((error-pre_error) * td) / (0.01) );
+  out = k * (error * tp + ((error-pre_error) * td) / (SAMPLE_TIME_S) );
 
   if (out < 0) sign = -1;
   else if (out >= 0) sign = 1;
