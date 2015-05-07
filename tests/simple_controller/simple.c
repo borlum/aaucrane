@@ -29,8 +29,8 @@ void *simple_controller(void *arg){
   double angle_err, pos_err;
   double angle_out, out;
 
-  double angle_kp = 5;
-  double pos_kp = 11.5;
+  double angle_kp = 2;
+  double pos_kp = 10;
 
   printf("REF: %lf\n", pos_ref);
 
