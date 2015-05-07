@@ -14,37 +14,60 @@ int current_index = 0;
 double angle_controller(double error){
   static double pre_error = 0;
   static double pre_out = 0;
+  static double ang_lim = 10;
+  int sign;
   double out, k, td, tp;
 
-  k  =  5.00;
-  tp =  1.00;
+#ifdef NEW
+  /* Alternate Design */  
+  k = 20; 
+  
+  tp = 4;
+  
+  td = 1;
+ 
+  out = k * (error * tp + ((error-pre_error) * td) / (0.01) );
+
+  if (out < 0) sign = -1;
+  else if (out >= 0) sign = 1;
+
+  pre_error = error;
+  pre_out = out;
+  if(fabs(out) > ang_lim){
+    out = ang_lim * sign; 
+  }
+#else
+  /* After Kirsten */  
+  k  =  20;
+  tp =  1;
   td =  0.00;
 
+  out = (k*tp * error) + (k*td * (error - pre_error) / SAMPLE_TIME_S);
   printf("=====================\n");
   printf("[C2] pre_error = %lf \n", pre_error);
   printf("[C2] error     = %lf \n", error);
   printf("[C2] P         = %lf \n", k*tp * error);
   printf("[C2] D         = %lf \n", k*td * (error - pre_error) / SAMPLE_TIME_S);
-
-  out = k*tp * error + k*td * (error - pre_error) / SAMPLE_TIME_S;
-  //out = error*240 - 160 * pre_error - pre_out;
-
-  printf("[C2] OUT   = %lf \n", out);
+  printf("[C2] OUT       = %lf \n", out);
   printf("=====================\n");
-
+#endif
   return out;
 }
 
 double position_controller_x(double error){
   /*W. container*/
-
-  double k_p = 3.75;
-
-  printf("[C1] error = %lf \n", error);
-  printf("=====================\n");
-  printf("[C1] error     = %lf \n", error);
-  printf("[C1] OUT     = %lf \n", k_p*error);
-  printf("=====================\n");
+//  double k_p = 4.75;
+#ifdef NEW
+  double k_p = 5;
+  if(error < 0.1)
+    k_p = 3 * k_p;
+#else
+  double k_p = 5;
+#endif
+  /* printf("=====================\n"); */
+  /* printf("[C1] error     = %lf \n", error); */
+  /* printf("[C1] OUT     = %lf \n", k_p*error); */
+  /* printf("=====================\n"); */
 
   return error * k_p;
 }
@@ -55,18 +78,22 @@ double position_controller_y(double error){
 }
 
 double get_controller_output(double ref){
-  double out, angle;
+  double out, angle_out, x_pos_out;
   
-  angle = get_angle();
-  out   = angle_controller(angle);
-
-  printf("Angle: %lf\n", angle);
+  angle_out = angle_controller(get_angle());
+  
+  printf("Angle_out: %lf\n", angle_out);
 
   /*STEP or RAMP?*/
   if (RAMP == 0) {
-    out = position_controller_x(out + ref - get_xpos() );
+#ifdef NEW
+    x_pos_out = position_controller_x(ref - get_xpos());
+    out = angle_out + x_pos_out;
+#else
+    out = position_controller_x( angle_out + (ref_arr[current_index] - get_xpos()) );	
+#endif
   } else {
-    out = position_controller_x( out + ref_arr[current_index] - get_xpos() );
+    out = position_controller_x( angle_out + (ref_arr[current_index] - get_xpos()) );
   }
 
   printf("Final Out: %lf\n", out);
