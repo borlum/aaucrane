@@ -25,5 +25,7 @@ assignin('base', 'B', b);
 
 %assignin('base', 'W', W);
 
+set_param('anglesimu','AlgebraicLoopSolver','LineSearch');
+
 sim('anglesimu');
 y = ysimu;
