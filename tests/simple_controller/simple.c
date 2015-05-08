@@ -6,7 +6,7 @@
 #include <libcrane.h>
 #include <controller.h>
 
-#define SAMPLE_TIME_NS 1E6
+#define SAMPLE_TIME_NS 10E6
 #define SAMPLE_TIME_S SAMPLE_TIME_NS * 1E-9
 
 RT_TASK *rt_simple_controller;
@@ -31,12 +31,14 @@ void *simple_controller(void *arg){
   double angle_out, pos_out, out;
 
   double prev_angle_err = 0;
+  double prev_angle_out = 0;
   double velocity_sum   = 0;
   
   
   double angle_kp = 2.5;
   double pos_kp   = 5;
   double vel_kp   = 10;
+  double vel;
 /*
   double angle_kp = 1;
   double angle_kd = 0;
@@ -45,6 +47,33 @@ void *simple_controller(void *arg){
   double vel_kp   = 3;
 */
   printf("REF: %lf\n", pos_ref);
+
+  /* Morten Tester */
+  while(1){
+    angle_err = angle_ref - get_angle();
+    vel = get_x_velocity();
+
+    vel_kp = 5;
+
+    angle_out = prev_angle_err * -70.55 + 74.99 * angle_err + prev_angle_out * 0.8182;
+
+    prev_angle_err = angle_err;
+    prev_angle_out = angle_out;
+
+    out = (angle_out - vel ) * vel_kp;
+
+   printf("===================\n");
+    printf("angle_err   : %.3lf\n", angle_err);
+    printf("angle_out   : %.3lf\n", angle_out);
+    printf("out         : %.3lf\n", out);
+    printf("===================\n");
+
+
+    run_motorx(out);
+
+    rt_task_wait_period();
+
+  }
 
   while(1){
     angle_err = angle_ref - get_angle();
