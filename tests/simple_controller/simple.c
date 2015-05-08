@@ -38,7 +38,7 @@ void *simple_controller(void *arg){
   int pos_sign;
   
   double angle_kp = 2.5;
-  double pos_kp   = 10;
+  double pos_kp   = 2.5;
   double vel_kp   = 10;
   double vel;
 /*
@@ -85,7 +85,7 @@ void *simple_controller(void *arg){
 
     if(fabs(pos_err) < .8 && fabs(pos_err) > 0.08) pos_err = pos_sign* .8;
     */
-    
+
     out = (angle_out - vel + pos_out) * vel_kp;
 
 /*    if(get_ctrlpad_ctrl_switch()){
