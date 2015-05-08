@@ -57,6 +57,8 @@ void *simple_controller(void *arg){
 
     angle_out = prev_angle_err * -70.55 + 74.99 * angle_err + prev_angle_out * 0.8182;
 
+    angle_out *= -1;
+
     prev_angle_err = angle_err;
     prev_angle_out = angle_out;
 
