@@ -20,7 +20,7 @@ kt = 0.03;
 % Motor modstand
 ra = 0.43;
 
-CONTAINER = -1;
+CONTAINER = 1;
 UP        = 1;
 
 if CONTAINER == 1
@@ -35,11 +35,6 @@ elseif CONTAINER == 0
     Mx.I = 0.0011;
     W.b  = 0.0136;
     W.I  = 0.0423;
-elseif CONTAINER == -1
-    Mx.b = 0.0018;
-    Mx.I = 0.0012;
-    W.b  = 0.27;
-    W.I  = 0.4;
 end
 
 if UP == 1
@@ -50,6 +45,8 @@ else
     My.I = 0.0067;
 end
 
+B  = W.b;
+Ip  = W.I;
 
 %------------------------------------------------------------------------------
 % Mx(s): Motor X (Uin,x [V] -> Omega [rad/s])

@@ -7,9 +7,9 @@ run('../model/cranemodel');
 %			Med container
 %====================================
 % Tuning, lav settle time, lav overshoot
-C1 = 3.75;
+C1 = 5;
 
-tp = 4;
+tp = 1;
 
 td = 0;
 
@@ -17,7 +17,7 @@ td = 0;
 C2 = (td * s+ tp);
 
 % Tuning - lav vinkel
-k = 10;
+k = 20;
 
 XXm = feedback(C1 * Hx, 1-W*C2*k);
 
