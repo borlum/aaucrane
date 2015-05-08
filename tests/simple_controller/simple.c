@@ -36,6 +36,7 @@ void *simple_controller(void *arg){
   /*double angle_kp = 0.5;
   double angle_kd = 0;
   double pos_kp   = 2.5;
+<<<<<<< HEAD
   double vel_kp   = 1;*/
     /*SG controller*/
     double angle_kp = 1.45;
@@ -44,6 +45,11 @@ void *simple_controller(void *arg){
     double vel_kp   = 0.15;
     double vel_ki   = 10;
     
+=======
+  double vel_kp   = 50;
+
+
+>>>>>>> 272bb9ff470401d0dcca6d7f135eb16303763dfc
   printf("REF: %lf\n", pos_ref);
 
   while(1){
