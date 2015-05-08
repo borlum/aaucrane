@@ -82,7 +82,7 @@ double position_controller_y(double error){
 double get_controller_output(double ref){
   double out, angle_out, x_pos_out;
   
-  angle_out = angle_controller(get_angle();
+  angle_out = angle_controller(get_angle());
   
   printf("Angle_out: %lf\n", angle_out);
 
