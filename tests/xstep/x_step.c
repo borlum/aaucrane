@@ -26,7 +26,7 @@ void *sampler(void *args)
 
 #ifdef RTAI
     /*Transform to RTAI task*/
-    RTIME period = nano2count(1E6);
+    RTIME period = nano2count(1E7);
     if(!(rt_sampler = rt_task_init_schmod(nam2num("rt_sampler"), 1, 0, 0, SCHED_FIFO, 0))){
       printf("rt_sampler\n");
       exit(42);
@@ -48,12 +48,12 @@ void *sampler(void *args)
         fprintf(fp, "%ld,",  (t_sample - t_0));
 
         /*SAMPLE SENSORS*/
-        fprintf(fp, "%f,", get_old_angle_raw());
-        fprintf(fp, "%f,", get_angle_raw());
-        fprintf(fp, "%f,", get_xpos_raw());
-        fprintf(fp, "%f,", get_ypos_raw());
-        fprintf(fp, "%f,", get_motorx_velocity_raw());
-        fprintf(fp, "%f,", get_motory_velocity_raw());
+        fprintf(fp, "%f,", -1.0);
+        fprintf(fp, "%f,", get_angle());
+        fprintf(fp, "%f,", get_xpos());
+        fprintf(fp, "%f,", get_ypos());
+        fprintf(fp, "%f,", get_motorx_velocity());
+        fprintf(fp, "%f,", get_motory_velocity());
         fprintf(fp, "%f,", get_motorx_voltage());
         fprintf(fp, "%f,", get_motory_voltage());
         fprintf(fp, "\n");

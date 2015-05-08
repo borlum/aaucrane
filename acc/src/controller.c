@@ -8,9 +8,9 @@
 #include <pthread.h>
 #include <fcntl.h>
 #include <mqueue.h>
+#include <semaphore.h>
 
 #include <rtai_lxrt.h>
-#include <rtai_sem.h>
 
 #include <libcrane.h>
 #include <acc.h>
@@ -169,22 +169,21 @@ void *task_y_axis_controller(void * argc)
   }
 }
 
-struct rt_semaphore _logger_sem;
-int _enable_logger;
-int _new_log;
+sem_t _logger_sem;
+int _enable_logger = 0;
+int _new_log = 0;
+char *_data_path;
 
 void* task_logger(void* args){
   FILE* fp = NULL;
   unsigned long t_0, t_sample;
   int name_len = 256;
-  char data_path[] = "/var/www/html/data/acc/steps/";
   char header[] = "TIME,ANGLE1,ANGLE2,XPOS,YPOS,XTACHO,YTACHO,XVOLT,YVOLT\n";
   int action_count = 0;
 
   char file_prefix[name_len];
-  sprintf(file_prefix, "%s/%d.csv", data_path, (int)time(NULL));
+  sprintf(file_prefix, "%s/%d", _data_path, (int)time(NULL));
 
-  
   RTIME period = nano2count(SAMPLE_TIME_NS); 
   if(!(rt_logger = rt_task_init_schmod(nam2num("logger"), 1, 0, 0, SCHED_FIFO, 0))){
     printf("Could not start logger task\n");
@@ -195,72 +194,78 @@ void* task_logger(void* args){
 
   char tmp[2 * name_len];
   t_0 = get_time_micros();
-  while(_enable_logger){
 
-    if(_new_log){
-      if(!(fp == NULL))
-	fclose(fp);
-
-      sprintf(tmp, "%s-%d.csv", file_prefix, action_count++);
-      fp = fopen(tmp, "w");
-      fprintf(fp, "%s", header);
-    }
+  while(1){    
+    if(get_enable_logger()){
+      if(get_new_log()){
+	if(!(fp == NULL)){
+	  fclose(fp);
+	}
+      
+	sprintf(tmp, "%s-%d.csv", file_prefix, action_count++);
+	printf("New log in: %s\n", tmp);
+	fp = fopen(tmp, "w");
+	fprintf(fp, "%s", header);
+	_new_log = 0;
+      }
     
-    /*GRAB TIMESTAMP*/
-    t_sample = get_time_micros();
-    fprintf(fp, "%ld,",  (t_sample - t_0));
+      /*GRAB TIMESTAMP*/
+      t_sample = get_time_micros();
+      fprintf(fp, "%ld,",  (t_sample - t_0));
 
-    /*SAMPLE SENSORS*/
-    fprintf(fp, "%f,", get_old_angle_raw());
-    fprintf(fp, "%f,", get_angle());
-    fprintf(fp, "%f,", get_xpos());
-    fprintf(fp, "%f,", get_ypos());
-    fprintf(fp, "%f,", get_motorx_velocity());
-    fprintf(fp, "%f,", get_motory_velocity());
-    fprintf(fp, "%f,", get_motorx_voltage());
-    fprintf(fp, "%f",  get_motory_voltage());
-    fprintf(fp, "\n");
-
+      /*SAMPLE SENSORS*/
+      fprintf(fp, "%f,", get_old_angle_raw());
+      fprintf(fp, "%f,", get_angle());
+      fprintf(fp, "%f,", get_xpos());
+      fprintf(fp, "%f,", get_ypos());
+      fprintf(fp, "%f,", get_motorx_velocity());
+      fprintf(fp, "%f,", get_motory_velocity());
+      fprintf(fp, "%f,", get_motorx_voltage());
+      fprintf(fp, "%f",  get_motory_voltage());
+      fprintf(fp, "\n");
+    }
+    else{
+      //printf("Enable logger: %d, new log: %d\n", _enable_logger, _new_log);
+    }
     rt_task_wait_period();
   }
 }
 
-int init_logger(){
+int init_logger(const char *data_path, size_t len){
   _enable_logger = 0;
   _new_log = 1;
-  rt_sem_init(&_logger_sem, 1);
+  sem_init(&_logger_sem, 0, 1);
+  _data_path = malloc(len);
+  memcpy(_data_path, data_path, len);
 }
 
 int disable_logger(){
-  int ret = 0;
-  RTIME delay =  nano2count(1000);
-  if (rt_sem_wait_timed(&_logger_sem, delay) == 0xFFFF){
-    ret = -1;
-  }
-  else{
-    _enable_logger = 0;
-    if (rt_sem_signal(&_logger_sem) == 0xFFFF){
-      ret = -1;
-    }
-  }
-  return ret;
+  sem_wait(&_logger_sem);
+  _enable_logger = 0;
+  sem_post(&_logger_sem);
+  return 0;
 }
 
 int enable_logger(){
-  int ret = 0;
-  RTIME delay =  nano2count(1000);
-  printf("Inside enable_logger\n");
-  if (rt_sem_wait_timed(&_logger_sem, delay) == 0xFFFF){
-    printf("enable_logger did not obtain sem\n");
-    ret = -1;
-  }
-  else{
-    printf("enable_logger got sem\n");
-    _enable_logger = 1;
-    _new_log = 1;
-    if (rt_sem_signal(&_logger_sem) == 0xFFFF){
-      ret = -1;
-    }
-  }
+  sem_wait(&_logger_sem);
+  _enable_logger = 1;
+  _new_log = 1;
+  sem_post(&_logger_sem);
+  return 0;
+}
+
+int get_enable_logger(){
+  int ret = -1;
+  sem_wait(&_logger_sem);
+  ret = _enable_logger;
+  sem_post(&_logger_sem);
+  return ret;
+}
+
+int get_new_log(){
+  int ret = -1;
+  sem_wait(&_logger_sem);
+  ret = _new_log;
+  sem_post(&_logger_sem);
   return ret;
 }

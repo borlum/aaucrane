@@ -9,7 +9,7 @@ GCC=gcc -std=gnu11
 LIBS=-lm -lpthread -lcomedi
 
 SOURCE += $(TARGET).c
-SOURCE += ../../acc/src/filter.c
+SOURCE += ../../acc/src/compensator.c
 
 all: $(TARGET)
 
@@ -22,4 +22,4 @@ ANGLE: $(TARGET).c
 	$(GCC) $(SOURCE) $(INC) $(CRANELIB_PATH)/libcrane.a $(LIBS) -DANGLE -o $(TARGET)
 
 clean:
-	rm xpos_controller
+	rm $(TARGET)
