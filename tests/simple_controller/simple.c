@@ -36,7 +36,7 @@ void *simple_controller(void *arg){
   
   
   double angle_kp = 2.5;
-  double pos_kp   = 5;
+  double pos_kp   = 10;
   double vel_kp   = 10;
   double vel;
 /*
@@ -55,7 +55,7 @@ void *simple_controller(void *arg){
     pos_err   = pos_ref   - get_xpos();
 
 /*    Velo Controller   */
-    vel_kp = 10;
+    vel_kp = 5;
 
 
 /*    Angle Controller  */
