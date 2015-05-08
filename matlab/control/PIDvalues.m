@@ -17,7 +17,7 @@ zp = 1*2;
 rlocus(loop2*-W*(zp + s)); grid on; %Cm = best gain with good damping
 Cm = 1.45; PDa = Cm * (zp + s);
 %rlocus(loop2*-W); grid on;
-%Pang = 2.79;
+Pang = 2.79;
 %loop1 = feedback(loop2 * -W, PDa);
 %step(loop1*3.2); grid on;
 %loop2 = feedback(P *  X, 1-W*PD);

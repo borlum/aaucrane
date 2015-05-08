@@ -33,12 +33,17 @@ void *simple_controller(void *arg){
   double prev_angle_err = 0;
   
 
-  double angle_kp = 0.5;
+  /*double angle_kp = 0.5;
   double angle_kd = 0;
   double pos_kp   = 2.5;
-  double vel_kp   = 1;
-
-
+  double vel_kp   = 1;*/
+    /*SG controller*/
+    double angle_kp = 1.45;
+    double angle_kd = 2;
+    double pos_kp   = 700;
+    double vel_kp   = 0.15;
+    double vel_ki   = 10;
+    
   printf("REF: %lf\n", pos_ref);
 
   while(1){
@@ -49,7 +54,7 @@ void *simple_controller(void *arg){
 
     pos_out   = pos_kp * (pos_err - angle_out) ;
 
-    out = vel_kp * (pos_out - get_x_velocity());
+    out = vel_kp * (pos_out - get_x_velocity()) + 1/(vel_ki * (angle_err - prev_angle_err) * SAMPLE_TIME_S);
     
     printf("===================\n");
     printf("angle_err   : %.3lf\n", angle_err);
