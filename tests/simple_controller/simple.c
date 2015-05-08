@@ -52,9 +52,13 @@ void *simple_controller(void *arg){
   while(1){
     angle_err = angle_ref - get_angle();
     vel = get_x_velocity();
+    pos_err   = pos_ref   - get_xpos();
 
+/*    Velo Controller   */
     vel_kp = 5;
 
+
+/*    Angle Controller  */
     angle_out = prev_angle_err * -70.55 + 74.99 * angle_err + prev_angle_out * 0.8182;
 
     angle_out *= -1;
@@ -62,15 +66,20 @@ void *simple_controller(void *arg){
     prev_angle_err = angle_err;
     prev_angle_out = angle_out;
 
-    out = (angle_out - vel ) * vel_kp;
+
+/*    Pos Controller    */
+    pos_out = pos_err;
+
+    out = (angle_out - vel + pos_err) * vel_kp;
 
    printf("===================\n");
+    printf("pos_err   : %.3lf\n", pos_err);
     printf("angle_err   : %.3lf\n", angle_err);
     printf("angle_out   : %.3lf\n", angle_out);
     printf("out         : %.3lf\n", out);
     printf("===================\n");
 
-    if(get_ctrlpad_ctrl_switch()){
+/*    if(get_ctrlpad_ctrl_switch()){
     out += get_ctrlpad_x();
   } else {
     out = get_ctrlpad_x();
@@ -78,7 +87,7 @@ void *simple_controller(void *arg){
 
     run_motorx(out);
     run_motory(get_ctrlpad_y());
-
+*/
 
     rt_task_wait_period();
 
