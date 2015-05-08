@@ -12,7 +12,7 @@ size_t nr_of_ref;
 double ref_arr[REF_ARR_SZ];
 int current_index = 0;
 
-double angle_controller(double error){
+double angle_controller(double error, double x_error){
   static double pre_error = 0;
   static double pre_out = 0;
   static double ang_lim = 10;
@@ -21,7 +21,7 @@ double angle_controller(double error){
 
 #ifdef NEW
   /* Alternate Design */  
-  k = 10; 
+  k = 5; 
   
   tp = 4;
   
@@ -34,6 +34,9 @@ double angle_controller(double error){
 
   pre_error = error;
   pre_out = out;
+
+  out = out * x_error;
+
   if(fabs(out) > ang_lim){
     out = ang_lim * sign; 
   }
@@ -53,6 +56,8 @@ double angle_controller(double error){
   printf("[C2] OUT       = %lf \n", out);
   printf("=====================\n");
 #endif
+
+
   return out;
 }
 
@@ -79,7 +84,7 @@ double position_controller_y(double error){
 double get_controller_output(double ref){
   double out, angle_out, x_pos_out;
   
-  angle_out = angle_controller(get_angle());
+  angle_out = angle_controller(get_angle(), ref-get_xpos());
   
   printf("Angle_out: %lf\n", angle_out);
 
