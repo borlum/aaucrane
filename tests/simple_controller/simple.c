@@ -33,9 +33,9 @@ void *simple_controller(void *arg){
   double prev_angle_err = 0;
   
 
-  double angle_kp = 1;
+  double angle_kp = 2.5;
   double pos_kp = 2.5;
-  double vel_kp = 5;
+  double vel_kp = 2.5;
 
 
   printf("REF: %lf\n", pos_ref);
