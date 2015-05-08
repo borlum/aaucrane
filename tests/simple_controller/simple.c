@@ -71,14 +71,14 @@ void *simple_controller(void *arg){
     printf("===================\n");
 
     if(get_ctrlpad_ctrl_switch()){
-    out += get_ctrlpad_x() * 0.5;
+    out += get_ctrlpad_x();
   } else {
     out = get_ctrlpad_x();
   }
 
-
-
     run_motorx(out);
+    run_motory(get_ctrlpad_y());
+
 
     rt_task_wait_period();
 
