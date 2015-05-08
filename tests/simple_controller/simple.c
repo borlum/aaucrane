@@ -99,10 +99,9 @@ void *simple_controller(void *arg){
     out = get_ctrlpad_x();
   }
     run_motory(get_ctrlpad_y());
-    run_motorx(out);
-#elif
-    run_motorx(out);
 #endif
+
+    run_motorx(out);
 
 
     rt_task_wait_period();
