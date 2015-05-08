@@ -76,7 +76,7 @@ void *simple_controller(void *arg){
     else pos_sign = 1;
 
     if(fabs(pos_err) < .8) pos_err = pos_sign* .8;
-
+    if (fabs(pos_err) < 0.08) pos_err = 0;
 
     out = (angle_out - vel + pos_err) * vel_kp;
 
