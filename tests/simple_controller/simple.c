@@ -28,7 +28,7 @@ void *simple_controller(void *arg){
   double angle_ref = 0;
 
   double angle_err, pos_err;
-  double angle_out, out;
+  double angle_out, pos_out, out;
 
   double prev_angle_err = 0;
   
@@ -40,17 +40,20 @@ void *simple_controller(void *arg){
 
   while(1){
     angle_err = angle_ref - get_angle();
-    pos_err = pos_ref - get_xpos();
+    pos_err   = pos_ref   - get_xpos();
     
     angle_out = angle_kp * angle_err;
-    
-    out = pos_kp * (pos_err - angle_out);
-    out = vel_kp * (out - get_x_velocity());
+    pos_out   = pos_kp * (pos_err - angle_out);
+
+    out = vel_kp * (pos_out - get_x_velocity());
     
     printf("===================\n");
     printf("angle_err   : %.3lf\n", angle_err);
-    printf("pos_err     : %.3lf\n", pos_err);
     printf("angle_out   : %.3lf\n", angle_out);
+    printf("pos_err     : %.3lf\n", pos_err);
+    printf("pos_out     : %.3lf\n", pos_out);
+    printf("velocity    : %.3lf\n", get_x_velocity());
+
     printf("out         : %.3lf\n", out);
     printf("===================\n");
 
