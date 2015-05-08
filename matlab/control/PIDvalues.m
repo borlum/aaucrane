@@ -2,52 +2,51 @@
 clear all;
 close;
 run('../model/cranemodel.m');
-X = Xm;
+Mx = Mxm;
+%rlocus(Mx)
+Pvel = 0.15;
+pp = 1/(10+s);
+PIv = Pvel * pp;
+dPIv = c2d(PIv, .001, 'tustin');
+loop3 = feedback(PIv * Mx, 1);
+X = gearx*(1/s);
+%rlocus(loop3*X)
+Ppos = 700; %P = 4.5;
+loop2 = feedback(Ppos * loop3 *  X, 1);
 W = Wm;
-%rlocus(Xm)
-C1 = 11.6;
-loop2 = feedback(C1 *  X, 1);
-%------------------------------------------------------------------------------
-% PID Control
-%------------------------------------------------------------------------------
-% PID = k * ( 1*(b*R(s)-Y(s)) + 1/Ti*(R(s)-Y(s)) + Td*Y(s) );
-% I part ->
-%bode(loop2*-Wm) %Ti = freq. at -45degrees
-Ti = 4.01;
-% D part ->
-%step(loop2*4) %time below 0.01 amplitude
-Td = 0.02; 
-% P part ->
-Tp = 0.5;     %from formular 0 < Tp <= 1 
-%Gain ->
-%rlocus((Tp+1+1/(Ti*s))*loop2*-Wm)
-k = 10;     %Trail and error
-Cs = k*(1+1/(Ti*s));
+%step(loop2*3.2)
+zp = 4;
+%rlocus(loop2*-W*(zp + s)); grid on; %Cm = best gain with good damping
+%Cm = 1.22; PDa = Cm * (zp + s);
+rlocus(loop2*-W); grid on;
+Pang = 22.9;
+loop1 = feedback(loop2 * -W, PDa);
+%step(loop1*3.2); grid on;
+%loop2 = feedback(P *  X, 1-W*PD);
+%loop1 = feedback(loop2 * W, PD);
+dPDa = c2d(PDa, .001, 'tustin');
+
 %% UDEN CONTAINER
 clear all;
 close;
 run('../model/cranemodel.m');
 X = Xu;
 W = Wu;
+
 %rlocus(X)
-C1 = 15;
-loop2 = feedback(C1 * X, 1);
-%------------------------------------------------------------------------------
-% PID Control
-%------------------------------------------------------------------------------
-% PID = k * ( 1*(b*R(s)-Y(s)) + 1/Ti*(R(s)-Y(s)) + Td*Y(s) );
-% I part ->
-%bode(loop2*-Wu) %Ti = freq. at -45degrees
-Ti = 4.15;
-% D part ->
-%step(loop2*4) %time below 0.01 amplitude
-Td = 0.02; 
-% P part ->
-Tp = 0.5;     %from formular 0 < Tp <= 1 
-%Gain ->
-%rlocus(-(Tp+1+1/(Ti*s))*loop2*Wu)
-k = 10;     %Trail and error
-Cs = k*(Tp+1+1/(Ti*s));
+P = 3.75;
+loop2 = feedback(P *  X, 1);
+%bode(loop2*-W) %zp = freq. at -45degrees
+zp = 4;
+preloop1 = feedback(loop2 * -W, (zp + s));
+%rlocus(loop2*-W*(zp + s)); grid on; %C2 = best gain with good damping
+Cm = 10;
+sv = 0.1;
+PD = Cm * (zp + sv*s);
+loop1 = feedback(loop2 * -W, PD);
+%step(loop2*3.2); grid on;
+%step(loop1*3.2); grid on;
+dPD = c2d(PD, .01, 'tustin');
 %% Y-AXIS
 %------------------------------------------------------------------------------
 % Y Control UPWARDS
@@ -59,8 +58,3 @@ C3 = 49;
 %------------------------------------------------------------------------------
 %rlocus(Yd) to find C4
 C4 = 94.9;
-%%
-PID = k*(1+1/s*1/Ti+s*Td);
-% Discrete PID
-dPID = c2d(PID, .001, 'tustin');
-
