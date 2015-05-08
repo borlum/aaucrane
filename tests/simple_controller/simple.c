@@ -6,7 +6,7 @@
 #include <libcrane.h>
 #include <controller.h>
 
-#define SAMPLE_TIME_NS 5E6
+#define SAMPLE_TIME_NS 1E6
 #define SAMPLE_TIME_S SAMPLE_TIME_NS * 1E-9
 
 RT_TASK *rt_simple_controller;
@@ -54,11 +54,12 @@ void *simple_controller(void *arg){
     angle_err = angle_ref - get_angle();
     pos_err   = pos_ref   - get_xpos();
     
-    angle_out = angle_k * ((angle_kp * angle_err) + (angle_kd * (angle_err - prev_angle_err) / SAMPLE_TIME_S));
+//    angle_out = angle_k * ((angle_kp * angle_err) + (angle_kd * (angle_err - prev_angle_err) / SAMPLE_TIME_S));
+    angle_out = angle_kp * angle_err + (angle_kd * (angle_err - prev_angle_err) / SAMPLE_TIME_S);
 
     pos_out   = pos_kp * (pos_err);
 
-    vel_err = pos_out + get_motorx_velocity();
+    vel_err = pos_out - get_motorx_velocity();
 //    vel_err = pos_out - angle_out - get_x_velocity();
 
     out = vel_kp * vel_err + vel_ki * velocity_sum * SAMPLE_TIME_S;
