@@ -80,3 +80,6 @@ My = (kt/ra)/(kt^2/ra + My.b + My.I*s);
 Gry = 1/24;
 rry = 0.05;
 Hy = My * Gry * rry * (1/s);
+
+jp = 0.0890;
+B = 0.0315;
