@@ -34,6 +34,7 @@ void *simple_controller(void *arg){
   double prev_angle_out = 0;
   double velocity_sum   = 0;
   
+  int pos_sign;
   
   double angle_kp = 2.5;
   double pos_kp   = 10;
@@ -69,6 +70,12 @@ void *simple_controller(void *arg){
 
 /*    Pos Controller    */
     pos_out = pos_err * pos_kp;
+
+    if (pos_err < 0) pos_sign = -1;
+    else pos_sign = 1;
+
+    if(fabs(pos_err) < .8) pos_err = pos_sign* .8;
+
 
     out = (angle_out - vel + pos_err) * vel_kp;
 
