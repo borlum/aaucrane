@@ -34,9 +34,9 @@ void *simple_controller(void *arg){
   double velocity_sum   = 0;
   
   
-  double angle_kp = 1;
+  double angle_kp = 2.45;
   double angle_kd = .02;
-  double pos_kp   = 300;
+  double pos_kp   = 30;
   double vel_kp   = 1;
   double vel_ki   = 20;
 /*
