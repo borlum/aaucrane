@@ -32,8 +32,8 @@ void *simple_controller(void *arg){
 
   double prev_angle_err = 0;
   
-  double angle_kp = 4, angle_kd = 7;
-  double pos_kp = 7;
+  double angle_kp = 7.5, angle_kd = 7;
+  double pos_kp = 11.6;
 
   printf("REF: %lf\n", pos_ref);
 
@@ -41,9 +41,13 @@ void *simple_controller(void *arg){
     angle_err = angle_ref - get_angle();
     pos_err = pos_ref - get_xpos();
     
-    angle_out = angle_kp * angle_err + angle_kd * ((angle_err - prev_angle_err) / SAMPLE_TIME_S);
-    out = pos_kp * (pos_err - angle_out);
+    //angle_out = angle_kp * angle_err + angle_kd * ((angle_err - prev_angle_err) / SAMPLE_TIME_S);
     
+
+//    out = pos_kp * (pos_err - angle_out);
+    
+    out = (angle_err * angle_kp - pos_err) *pos_kp;
+
     printf("===================\n");
     printf("angle_err   : %.3lf\n", angle_err);
     printf("pos_err     : %.3lf\n", pos_err);
