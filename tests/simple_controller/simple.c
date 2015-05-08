@@ -33,7 +33,7 @@ void *simple_controller(void *arg){
   double prev_angle_err = 0;
   
 
-  double angle_kp = 1;
+  double angle_kp = 0.5;
   double angle_kd = 0;
   double pos_kp   = 2.5;
   double vel_kp   = 1;
