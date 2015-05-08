@@ -21,7 +21,7 @@ double angle_controller(double error, double x_error){
 
 #ifdef NEW
   /* Alternate Design */  
-  k = 1; 
+  k = 5; 
   
   tp = 4;
   
@@ -35,8 +35,8 @@ double angle_controller(double error, double x_error){
   pre_error = error;
   pre_out = out;
 
-  out = (out * (x_error * 3)); //+ out*0.1;
-
+  out = (out * (x_error * 3)); 
+  
   if(fabs(out) > ang_lim){
     out = ang_lim * sign; 
   }
