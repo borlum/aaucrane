@@ -7,6 +7,7 @@
 #include <libcrane.h>
 #include <controller.h>
 
+#define MANUAL
 #define SAMPLE_TIME_NS 10E6
 #define SAMPLE_TIME_S SAMPLE_TIME_NS * 1E-9
 
@@ -68,6 +69,7 @@ void *simple_controller(void *arg){
 /*    Pos Controller    */
     pos_out = pos_err * pos_kp;
 
+
    printf("===================\n");
     printf("pos_err     : %.3lf\n", pos_err);
     printf("pos_out     : %.3lf\n", pos_out);
@@ -84,18 +86,24 @@ void *simple_controller(void *arg){
     
 /*    Velo Controller   */
     vel_kp = 5;
+
     out = (angle_out - vel + pos_out) * vel_kp;
 
-/*    if(get_ctrlpad_ctrl_switch()){
-    out += get_ctrlpad_x();
+
+
+#ifdef MANUAL
+    out = (angle_out - vel) * vel_kp;
+    if(get_ctrlpad_ctrl_switch()){
+    out += get_ctrlpad_x() * .5;
   } else {
     out = get_ctrlpad_x();
   }
-
     run_motory(get_ctrlpad_y());
-*/
-
     run_motorx(out);
+#elif
+    run_motorx(out);
+#endif
+
 
     rt_task_wait_period();
 
