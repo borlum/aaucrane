@@ -77,11 +77,11 @@ void *simple_controller(void *arg){
     printf("===================\n");
 
 
-/*    if (pos_out < 0) pos_sign = -1;
+    if (pos_out < 0) pos_sign = -1;
     else pos_sign = 1;
 
-    if(fabs(pos_errr) < .08 && fabs(pos_err) > 0.08) pos_out = pos_sign* .8;
-  */  
+    if(fabs(pos_errr) < 0.1 && fabs(pos_err) > 0.01) pos_out = pos_sign*0.1*pos_kp;
+    
 /*    Velo Controller   */
     vel_kp = 5;
     out = (angle_out - vel + pos_out) * vel_kp;
