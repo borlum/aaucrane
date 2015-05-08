@@ -74,6 +74,7 @@ void *simple_controller(void *arg){
 
    printf("===================\n");
     printf("pos_err     : %.3lf\n", pos_err);
+    printf("pos_out     : %.3lf\n", pos_out);
     printf("angle_err   : %.3lf\n", angle_err);
     printf("angle_out   : %.3lf\n", angle_out);
     printf("out         : %.3lf\n", out);
