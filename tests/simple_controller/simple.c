@@ -71,6 +71,8 @@ void *simple_controller(void *arg){
     printf("===================\n");
 
 
+    out += get_ctrlpad_x() * 0.5;
+
     run_motorx(out);
 
     rt_task_wait_period();
