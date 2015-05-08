@@ -72,20 +72,21 @@ void *simple_controller(void *arg){
 /*    Pos Controller    */
     pos_out = pos_err * pos_kp;
 
-    if (pos_err < 0) pos_sign = -1;
-    else pos_sign = 1;
-
-    if(fabs(pos_err) < .8) pos_err = pos_sign* .8;
-    if (fabs(pos_err) < 0.08) pos_err = 0;
-
-    out = (angle_out - vel + pos_err) * vel_kp;
-
    printf("===================\n");
-    printf("pos_err   : %.3lf\n", pos_err);
+    printf("pos_err     : %.3lf\n", pos_err);
     printf("angle_err   : %.3lf\n", angle_err);
     printf("angle_out   : %.3lf\n", angle_out);
     printf("out         : %.3lf\n", out);
     printf("===================\n");
+
+
+    if (pos_err < 0) pos_sign = -1;
+    else pos_sign = 1;
+
+    if(fabs(pos_err) < .6) pos_err = pos_sign* .6;
+    if (fabs(pos_err) < 0.08) pos_err = 0;
+
+    out = (angle_out - vel + pos_err) * vel_kp;
 
 /*    if(get_ctrlpad_ctrl_switch()){
     out += get_ctrlpad_x();
