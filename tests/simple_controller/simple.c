@@ -70,8 +70,13 @@ void *simple_controller(void *arg){
     printf("out         : %.3lf\n", out);
     printf("===================\n");
 
-
+    if(get_ctrlpad_ctrl_switch()){
     out += get_ctrlpad_x() * 0.5;
+  } else {
+    out = get_ctrlpad_x();
+  }
+
+
 
     run_motorx(out);
 
