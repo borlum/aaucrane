@@ -68,7 +68,7 @@ void *simple_controller(void *arg){
 
 
 /*    Pos Controller    */
-    pos_out = pos_err;
+    pos_out = pos_err * pos_kp;
 
     out = (angle_out - vel + pos_err) * vel_kp;
 
