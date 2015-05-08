@@ -35,7 +35,7 @@ double angle_controller(double error, double x_error){
   pre_error = error;
   pre_out = out;
 
-  out = out * (x_error * .5);
+  out = (out * (x_error * 3)); //+ out*0.1;
 
   if(fabs(out) > ang_lim){
     out = ang_lim * sign; 
