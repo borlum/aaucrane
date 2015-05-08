@@ -39,11 +39,11 @@ void *simple_controller(void *arg){
   double pos_kp   = 2.5;
   double vel_kp   = 1;*/
     /*SG controller*/
-  double angle_kp = 1.45;
-  double angle_kd = 2;
-  double pos_kp   = 700;
-  double vel_kp   = 0.15;
-  double vel_ki   = 10;
+  double angle_kp = 1;
+  double angle_kd = .02;
+  double pos_kp   = 300;
+  double vel_kp   = 1;
+  double vel_ki   = 20;
 
   printf("REF: %lf\n", pos_ref);
 
@@ -55,7 +55,7 @@ void *simple_controller(void *arg){
 
     pos_out   = pos_kp * (pos_err - angle_out) ;
 
-    vel_err = pos_out - get_motorx_velocity();
+    vel_err = pos_out + get_motorx_velocity();
 
     out = vel_kp * vel_err + vel_ki * velocity_sum * SAMPLE_TIME_S;
     
@@ -65,7 +65,6 @@ void *simple_controller(void *arg){
     printf("pos_err     : %.3lf\n", pos_err);
     printf("pos_out     : %.3lf\n", pos_out);
     printf("velocity    : %.3lf\n", get_motorx_velocity());
-
     printf("out         : %.3lf\n", out);
     printf("===================\n");
 
