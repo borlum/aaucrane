@@ -83,9 +83,8 @@ void *simple_controller(void *arg){
     if (pos_err < 0) pos_sign = -1;
     else pos_sign = 1;
 
-    if(fabs(pos_err) < .6) pos_err = pos_sign* .6;
-    if (fabs(pos_err) < 0.08) pos_err = 0;
-
+    if(fabs(pos_err) < .6 && fabs(pos_err) > 0.08) pos_err = pos_sign* .6;
+    
     out = (angle_out - vel + pos_err) * vel_kp;
 
 /*    if(get_ctrlpad_ctrl_switch()){
