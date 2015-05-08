@@ -56,16 +56,16 @@ void *simple_controller(void *arg){
 
     pos_out   = pos_kp * (pos_err);
 
-    vel_err = pos_out + angle_out - get_motorx_velocity();
+    vel_err = pos_out + angle_out - get_x_velocity();
 
-    out = vel_kp * vel_err + vel_ki * velocity_sum * SAMPLE_TIME_S;
+    out = vel_kp * vel_err; // + vel_ki * velocity_sum * SAMPLE_TIME_S;
     
     printf("===================\n");
     printf("angle_err   : %.3lf\n", angle_err);
     printf("angle_out   : %.3lf\n", angle_out);
     printf("pos_err     : %.3lf\n", pos_err);
     printf("pos_out     : %.3lf\n", pos_out);
-    printf("velocity    : %.3lf\n", get_motorx_velocity());
+    printf("velocity    : %.3lf\n", get_x_velocity());
 
     printf("out         : %.3lf\n", out);
     printf("===================\n");
