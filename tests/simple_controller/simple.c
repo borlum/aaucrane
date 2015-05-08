@@ -81,11 +81,11 @@ void *simple_controller(void *arg){
     printf("===================\n");
 
 
-   /* if (pos_err < 0) pos_sign = -1;
+    if (pos_out < 0) pos_sign = -1;
     else pos_sign = 1;
 
-    if(fabs(pos_err) < .8 && fabs(pos_err) > 0.08) pos_err = pos_sign* .8;
-    */
+    if(fabs(pos_out) < .8 && fabs(pos_out) > 0.08) pos_out = pos_sign* .8;
+    
 
     out = (angle_out - vel + pos_out) * vel_kp;
 
