@@ -56,7 +56,7 @@ void *simple_controller(void *arg){
 
     pos_out   = pos_kp * (pos_err);
 
-    vel_err = pos_out + angle_out - get_x_velocity();
+    vel_err = pos_out - angle_out - get_x_velocity();
 
     out = vel_kp * vel_err; // + vel_ki * velocity_sum * SAMPLE_TIME_S;
     
