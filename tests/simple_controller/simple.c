@@ -7,6 +7,7 @@
 #include <controller.h>
 
 #define SAMPLE_TIME_NS 1E6
+#define SAMPLE_TIME_S SAMPLE_TIME_NS * 1E-9
 
 RT_TASK *rt_simple_controller;
 pthread_t thread_simple_controller, thread_logger;
@@ -29,8 +30,10 @@ void *simple_controller(void *arg){
   double angle_err, pos_err;
   double angle_out, out;
 
-  double angle_kp = 1;
-  double pos_kp = 10;
+  double prev_angle_err = 0;
+  
+  double angle_kp = 4, angle_kd = 7;
+  double pos_kp = 7;
 
   printf("REF: %lf\n", pos_ref);
 
@@ -38,7 +41,7 @@ void *simple_controller(void *arg){
     angle_err = angle_ref - get_angle();
     pos_err = pos_ref - get_xpos();
     
-    angle_out = angle_kp * angle_err;
+    angle_out = angle_kp * angle_err + angle_kd * ((angle_err - prev_angle_err) / SAMPLE_TIME_S);
     out = pos_kp * (pos_err - angle_out);
     
     printf("===================\n");
@@ -49,6 +52,8 @@ void *simple_controller(void *arg){
     printf("===================\n");
 
     run_motorx(out);
+
+    prev_angle_err = angle_err;
     
     rt_task_wait_period();
   }
@@ -60,16 +65,13 @@ int main(int argc, char *argv[]){
   initialize_crane();
   run_motorx(0);
 
-  init_logger("/var/www/html/data/simple", sizeof("/var/www/html/data/simple"));
-  pthread_create(&thread_logger, NULL, task_logger, NULL);  
-
   printf ("Enter desired position: <x>:\n");
   scanf("%lf", &ref);
-
+  
+  init_logger("/var/www/html/data/simple", sizeof("/var/www/html/data/simple"));
+  pthread_create(&thread_logger, NULL, task_logger, NULL);  
   enable_logger();
   
-  usleep(20000);
-
   pthread_create(&thread_simple_controller, NULL, simple_controller, &ref);
 
   while(1){
