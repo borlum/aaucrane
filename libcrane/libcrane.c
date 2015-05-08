@@ -7,7 +7,7 @@ comedi_t *NI_card;
 int *NI_card;
 #endif
 
-static const double MAX_MOTOR_OUTPUT = 7;
+static const double MAX_MOTOR_OUTPUT = 6;
 static const double MIN_MOTOR_OUTPUT = 0;
 static const double epsilon = 0.2;
 
