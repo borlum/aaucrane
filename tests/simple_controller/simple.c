@@ -77,7 +77,7 @@ void *simple_controller(void *arg){
     printf("===================\n");
 
 
-    if (pos_out < 0) pos_sign = -1.2;
+    if (pos_out < 0) pos_sign = -1.5;
     else pos_sign = 1;
 
     if(fabs(pos_err) < 0.1 && fabs(pos_err) > 0.005) pos_out = pos_sign*0.15*pos_kp;
