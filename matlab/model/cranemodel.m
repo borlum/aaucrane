@@ -8,13 +8,13 @@ s = tf('s');
 % GLOBALS
 %------------------------------------------------------------------------------
 % Magnet + krog
-mm = 1;
+mm = 0.92;
 % Container + magnet + krog (Hele 'pendul' massen)
 mp = 2.866 + mm;
 % Længde af wire
 l  = 0.65;
 % Tyngdekraften
-g  = 9.82;
+g  = 9.816;
 % Tyngdekraften
 kt = 0.03;
 % Motor modstand
