@@ -35,6 +35,9 @@ void *simple_controller(void *arg){
 
   
   double pos_out, out;
+
+  /* for hack */
+  int sign;
   
   printf("REF: %lf\n", pos_ref);
 
@@ -53,8 +56,15 @@ void *simple_controller(void *arg){
 
 
     /* Pos Controller */
-    pos_out = pos_err * 1.2;
+    pos_out = pos_err * 1;
 
+    if(fabs(pos_err) < 0.15 && fabs(pos_err)> 0.005){
+      if(pos_out < 0)
+	sign = -1;
+      else
+	sign = 1;
+      pos_out = 0.15 * sign;
+    }	
     /* Vel out */
     out = (pos_out + angle_out - vel) * 5;
 
