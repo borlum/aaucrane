@@ -176,6 +176,7 @@ double get_angle()
         count = 0;
 
     if(count > 3) {
+        printf("=> APPLY MORTEN HACK! \n\n");
         offset = offset + ang;
         count = 0;
     }
