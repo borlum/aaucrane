@@ -38,7 +38,7 @@ void *simple_controller(void *arg){
   int pos_sign;
   
   double angle_kp = 2.5;
-  double pos_kp   = 1;
+  double pos_kp   = 1.6;
   double vel_kp   = 10;
   double vel;
 /*
@@ -84,7 +84,7 @@ void *simple_controller(void *arg){
     if(fabs(pos_err) < 0.15 && fabs(pos_err) > 0.005) pos_out = pos_sign*0.15*pos_kp;
     
 /*    Velo Controller   */
-    vel_kp = 5;
+    vel_kp = 3;
 
     out = (angle_out - vel + pos_out) * vel_kp;
 
