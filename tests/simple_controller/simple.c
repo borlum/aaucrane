@@ -57,15 +57,17 @@ void *simple_controller(void *arg){
     pos_err   = pos_ref   - get_xpos();
 
     /* Angle Controller */
-    angle_out = 207.8 * angle_err - 192.3 * prev_angle_err - 1 * prev_angle_out;
+    angle_out = 347 * angle_err - 326.8 * prev_angle_err + 0.5385 * prev_angle_out;
 
     prev_angle_err = angle_err;
     prev_angle_out = angle_out;
 
 
     /* Pos Controller */
-    out = (angle_out + pos_err) * 10;
+    pos_out = pos_err * 1.2;
 
+    /* Vel out */
+    out = (pos_out + angle_out) * 5;
 
     printf("===================\n");
     printf("pos_err     : %.3lf\n", pos_err);
