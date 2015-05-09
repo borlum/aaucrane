@@ -1,5 +1,5 @@
  clear;
-%close all;
+x%close all;
 
 run('../model/cranemodel');
 

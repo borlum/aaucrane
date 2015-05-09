@@ -3,8 +3,7 @@
 #include "compensator.h"
 #include <math.h>
 
-#define NEW
-#define RAMP 0
+#define RAMP
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -12,104 +11,68 @@ size_t nr_of_ref;
 double ref_arr[REF_ARR_SZ];
 int current_index = 0;
 
-double angle_controller(double error){
-  static double pre_error = 0;
-  static double pre_out = 0;
-  static double ang_lim = 10;
-  int sign;
-  double out, k, td, tp;
+double angle_controller(double angle_err){
+  static double prev_angle_err;
+  static double prev_angle_out;
 
-#ifdef NEW
-  /* Alternate Design */  
-  k = 5; 
+  double angle_out;
   
-  tp = 4;
-  
-  td = 1;
- 
-  out = k * (error * tp + ((error-pre_error) * td) / (SAMPLE_TIME_S) );
+  angle_out = 74.91 * angle_err - 70.55 * prev_angle_err + 0.8182 * prev_angle_out;
+  angle_out *= -1;
 
-  if (out < 0) sign = -1;
-  else if (out >= 0) sign = 1;
+  prev_angle_err = angle_err;
+  prev_angle_out = angle_out;
 
-  pre_error = error;
-  pre_out = out;
-
-  if(fabs(out) > ang_lim){
-    out = ang_lim * sign; 
-  }
-
-#else
-  /* After Kirsten */  
-  k  =  20;
-  tp =  1;
-  td =  0.00;
-
-  out = (k*tp * error) + (k*td * (error - pre_error) / SAMPLE_TIME_S);
-  printf("=====================\n");
-  printf("[C2] pre_error = %lf \n", pre_error);
-  printf("[C2] error     = %lf \n", error);
-  printf("[C2] P         = %lf \n", k*tp * error);
-  printf("[C2] D         = %lf \n", k*td * (error - pre_error) / SAMPLE_TIME_S);
-  printf("[C2] OUT       = %lf \n", out);
-  printf("=====================\n");
-#endif
-
-
-  return out;
+  return angle_out;
 }
 
 double position_controller_x(double error){
-  /*W. container*/
-  double k_p = 4.75;
-#ifdef NEW
-  k_p = 5;
-  printf("Pos out: %lf\n", error*k_p);
-#endif
-  /* printf("=====================\n"); */
-  /* printf("[C1] error     = %lf \n", error); */
-  /* printf("[C1] OUT     = %lf \n", k_p*error); */
-  /* printf("=====================\n"); */
-
+  static double k_p = 1.5;
+  int sign;
+  if(fabs(error) < 0.10 && fabs(error) > 0.002){
+    if(error < 0)
+      sign = -1;
+    else
+      sign = 1;
+    error = 0.10 * sign;
+  }
   return error * k_p;
 }
+
+double velocity_controller_x(double error){
+  static double k_p = 5;
+  return error * k_p;
+}
+
 
 double position_controller_y(double error){
   double k_p = 49.3;
   return error * k_p;
 }
 
+
+
 double get_controller_output(double ref){
-  double out, angle_out, x_pos_out;
+  double out, angle_out, pos_out;
   
-  angle_out = angle_controller(get_angle());
-  
-  printf("Angle_out: %lf\n", angle_out);
-
+  angle_out = angle_controller(-get_angle());
   /*STEP or RAMP?*/
-  if (RAMP == 0) {
-#ifdef NEW
-    x_pos_out = position_controller_x(ref - get_xpos());
-    out = angle_out + x_pos_out;
-#else
-    out = position_controller_x( angle_out + (ref_arr[current_index] - get_xpos()) );	
-#endif
-  } else {
-    out = position_controller_x( angle_out + (ref_arr[current_index] - get_xpos()) );
-  }
-
- // printf("Final Out: %lf\n", out);
-
-  /*Update RAMP*/
+#ifdef RAMP
+  pos_out = position_controller_x(ref_arr[current_index] - get_xpos());
   if(current_index < (nr_of_ref - 1)) {
     current_index++;
   }
+#else
+  x_pos_out = position_controller_x(ref - get_xpos());
+#endif
 
+  out = velocity_controller_x(angle_out + pos_out - get_x_velocity());
+  
   return out;
 }
 
 int ramp_maker(double step){
-  double i,  speed = .0005, off_set = get_xpos(); //speed is in m/ms
+  double i,  speed = .01, off_set = get_xpos(); //speed is in m/ms
   int j = 0;
 
   if(step>0){
