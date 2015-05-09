@@ -166,7 +166,7 @@ double get_angle()
 {
     static int count = 0, sign;
     static double ang_prev = 0;
-    static double offset = 1.088;
+    static double offset = 1.095;
 
 //    double ang = 0.7367*get_angle_raw() - offset;
     double ang = 0.2631 * get_angle_raw() - offset;
