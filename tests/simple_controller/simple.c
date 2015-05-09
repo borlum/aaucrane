@@ -54,7 +54,7 @@ void *simple_controller(void *arg){
   /* Morten Tester */
   while(1){
     angle_err = angle_ref + get_angle();
-    vel = get_x_velocity();
+   // vel = get_x_velocity();
     pos_err   = pos_ref   - get_xpos();
 
 /*    Angle Controller  */
@@ -86,7 +86,7 @@ void *simple_controller(void *arg){
     if(fabs(pos_err) < 0.15 && fabs(pos_err) > 0.005) pos_out = pos_sign*0.15*pos_kp;
     
 /*    Velo Controller   */
-    vel_kp = 5;
+   // vel_kp = 5;
 
     //out = (angle_out - vel + pos_out) * vel_kp;
 
