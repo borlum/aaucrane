@@ -82,7 +82,8 @@ int initialize_crane()
 int run_motorx(double voltage)
 {
 	int sign;
-    if (voltage < 0.075 && voltage > -0.075) voltage = 0;
+    /*if (voltage < 0.075 && voltage > -0.075) voltage = 0;
+
 
     if (voltage) {
 
@@ -91,7 +92,7 @@ int run_motorx(double voltage)
         else if (voltage == 0) sign = 0;
 
         voltage = sign * (sign * voltage + 4.2);
-    }
+    }*/
 
     /* Change X motor direction */
     return run_motor(-voltage, 0);
@@ -298,7 +299,7 @@ double get_motory_velocity_raw()
  */
 double get_motorx_voltage()
 {
-    return get_sensor_raw(CHAN_XIN_IN) * 2 * 0.984 - 0.2230;
+    return get_sensor_raw(CHAN_XIN_IN) * 2 * 1.125 - 0.85;
 }
 
 /**
