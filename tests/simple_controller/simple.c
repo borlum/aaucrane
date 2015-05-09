@@ -57,7 +57,7 @@ void *simple_controller(void *arg){
     pos_err   = pos_ref   - get_xpos();
 
     /* Angle Controller */
-    angle_out = 250 * angle_err - 150 * prev_angle_err - prev_angle_out;
+    angle_out = 214 * angle_err - 186 * prev_angle_err - 1 * prev_angle_out;
 
     prev_angle_err = angle_err;
     prev_angle_out = angle_out;
