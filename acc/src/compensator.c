@@ -56,7 +56,7 @@ double get_controller_output(double ref){
   angle_out = angle_controller(-get_angle());
   /*STEP or RAMP?*/
 #ifdef RAMP
-  printf("RAMP\n\n\n")
+  printf("RAMP\n\n\n");
   pos_out = position_controller_x(ref_arr[current_index] - get_xpos());
   if(current_index < (nr_of_ref - 1)) {
     current_index++;
