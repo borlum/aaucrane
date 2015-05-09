@@ -8,7 +8,7 @@ s = tf('s');
 % GLOBALS
 %------------------------------------------------------------------------------
 % Magnet + krog
-mm = 0.8;
+mm = 1;
 % Container + magnet + krog (Hele 'pendul' massen)
 mp = 2.866 + mm;
 % Længde af wire

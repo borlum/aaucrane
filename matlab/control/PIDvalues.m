@@ -3,23 +3,20 @@ clear all;
 close;
 run('../model/cranemodel.m');
 %rlocus(Grx*rrx*Mx)
-Pvel = 10;
-%pp = 1/(4+s);
-%PIv = Pvel * pp;
-%dPIv = c2d(PIv, .01, 'tustin');
-loop3 = feedback(Pvel * Grx*rrx*Mx, 1);
-X = (1/s);
-%rlocus(loop3*X)
-Ppos = 5; %P = 4.5;
-loop2 = feedback(Ppos * loop3 *  X, 1);
-%step(loop2*3.2)
-%zp = 4;
-%rlocus(loop2*-W*(zp + s); grid on; %Cm = best gain with good damping
-Cm = 1; PDa = Cm * (1 + s);
-%rlocus(loop2*-W); grid on;
-Pang = 2.5;
-%loop1 = feedback(loop2 * -W, PDa);
+Pvel = 3;
+%loop3 = feedback(Pvel * Grx*rrx*Mx, 1);
+%step(loop3*3.2);
+X = Mx*Grx*rrx*(1/s);
+%rlocus(X)
+Ppos = 9;
+loop2 = feedback(Ppos *  X, 1);
+%margin(loop2*3)
+zp = 2;
+%rlocus(loop2*-W*(zp + s)); grid on; %Cm = best gain with good damping
+Cm = 2; PDa = Cm * (zp + s);
+%rlocus(loop2*-W*(4+s)); grid on;
+Pang = 9;
+%loop1 = feedback(loop2 * -W, Pang);
 %step(loop1*3.2); grid on;
 %loop2 = feedback(P *  X, 1-W*PD);
-%loop1 = feedback(loop2 * W, PD);
 dPDa = c2d(PDa, .01, 'tustin');
