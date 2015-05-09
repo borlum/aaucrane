@@ -55,7 +55,7 @@ void *simple_controller(void *arg){
     pos_out = pos_err * 1.2;
 
     /* Vel out */
-    out = (vel - pos_out + angle_out) * 5;
+    out = (pos_out + angle_out -vel) * 5;
 
     printf("===================\n");
     printf("pos_err     : %.3lf\n", pos_err);
