@@ -166,12 +166,11 @@ double get_angle()
 {
     static int count = 0, sign;
     static double ang_prev = 0;
-    static double offset = 1.095;
+    static double offset = 1.088;
 
 //    double ang = 0.7367*get_angle_raw() - offset;
     double ang = 0.2631 * get_angle_raw() - offset;
     /* MORTENS HACK */
-/*
    if(fabs(ang_prev - ang) < 0.001) count++;
     else count = 0;
 
@@ -181,7 +180,7 @@ double get_angle()
     }
 
     ang_prev = ang; 
-*/
+
     return libcrane_truncate(ang);
 }
 
