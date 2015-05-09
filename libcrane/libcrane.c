@@ -85,14 +85,14 @@ int run_motorx(double voltage)
   if (voltage < 0.075 && voltage > -0.075) voltage = 0;
   
   
-  if (voltage) {
+  if (voltage != 0) {
     
     if(voltage < 0)
       sign = -1;
     else
       sign = 1;
 
-    voltage = sign * (sign * voltage + 4.2);		    
+    voltage = sign * (fabs(voltage) + 4.2);		    
   }
 
   /* Change X motor direction */
@@ -171,7 +171,6 @@ double get_angle()
     /* MORTENS HACK */
   
     if(!(libcrane_is_loaded())){
-      printf("NO CONTAINER\n");
       if(fabs(ang_prev - ang) < 0.001)
     	count++;
       else
