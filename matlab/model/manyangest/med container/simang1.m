@@ -2,13 +2,12 @@ function y = simang1(u,t,par)
 
 s = tf('s');
 
-mp = 2.866 + 0.8;
-l  = 0.65;
+mp = 2.866 + 1;
+l  = 0.48;
 g  = 9.82;
 
 b = par(1);
-Ip = par(2);
 
-W = (-mp*l*s^2)/((Ip + mp*l^2)*s^2 - b*s + mp*g*l);
+W = (-1/l*s^2)/(s^2 + (b/(mp*l^2)*s + g/l));
 
 y = lsim(W, u, t);
