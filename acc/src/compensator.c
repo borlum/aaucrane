@@ -27,7 +27,7 @@ double angle_controller(double angle_err){
 }
 
 double position_controller_x(double error){
-  static double k_p = 1.4;
+  static double k_p = 2;
   int sign;
   if(fabs(error) < 0.10 && fabs(error) > 0.005){
     if(error < 0)
@@ -70,7 +70,7 @@ double get_controller_output(double ref){
 }
 
 int ramp_maker(double step){
-  double i,  speed = .008, off_set = get_xpos(); //speed is in m/ms
+  double i,  speed = .0025, off_set = get_xpos(); //speed is in m/ms
   int j = 0;
 
   if(step>0){
