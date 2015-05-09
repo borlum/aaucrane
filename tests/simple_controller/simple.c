@@ -54,20 +54,16 @@ void *simple_controller(void *arg){
   /* Morten Tester */
   while(1){
     angle_err = angle_ref + get_angle();
-   // vel = get_x_velocity();
     pos_err   = pos_ref   - get_xpos();
 
-/*    Angle Controller  */
-    //angle_out = prev_angle_err * -70.55 + 74.99 * angle_err + prev_angle_out * 0.8182;
-    
-    //angle_out *= -1;
+    /* Angle Controller */
     angle_out = 250 * angle_err - 150 * prev_angle_err - prev_angle_out;
 
     prev_angle_err = angle_err;
     prev_angle_out = angle_out;
 
 
-/*    Pos Controller    */
+    /* Pos Controller */
     out = (angle_out + pos_err) * pos_kp;
 
 
@@ -79,64 +75,9 @@ void *simple_controller(void *arg){
     printf("out         : %.3lf\n", out);
     printf("===================\n");
 
-
-    if (pos_out < 0) pos_sign = -1;
-    else pos_sign = 1;
-
-    if(fabs(pos_err) < 0.15 && fabs(pos_err) > 0.005) pos_out = pos_sign*0.15*pos_kp;
-    
-/*    Velo Controller   */
-   // vel_kp = 5;
-
-    //out = (angle_out - vel + pos_out) * vel_kp;
-
-
-
-#ifdef MANUAL
-    out = (angle_out - vel) * vel_kp;
-    if(get_ctrlpad_ctrl_switch()){
-    out += get_ctrlpad_x() * .5;
-  } else {
-    out = get_ctrlpad_x();
-  }
-    run_motory(get_ctrlpad_y());
-#endif
-
     run_motorx(out);
-
-
     rt_task_wait_period();
 
-  }
-
-  while(1){
-    angle_err = angle_ref - get_angle();
-    pos_err   = pos_ref   - get_xpos();
-    
-    angle_out = angle_kp * angle_err;
-//    angle_out = angle_kp * angle_err + (angle_kd * (angle_err - prev_angle_err) / SAMPLE_TIME_S);
-
-    out   = pos_kp * (pos_err - angle_out);
-    //vel_err = pos_out - get_x_velocity();
-//    vel_err = pos_out - angle_out - get_x_velocity();
-
-    //out = vel_kp * vel_err ; //+ vel_ki * velocity_sum * SAMPLE_TIME_S;
-    
-    printf("===================\n");
-    printf("angle_err   : %.3lf\n", angle_err);
-    printf("angle_out   : %.3lf\n", angle_out);
-    printf("pos_err     : %.3lf\n", pos_err);
-    printf("pos_out     : %.3lf\n", pos_out);
-    printf("velocity    : %.3lf\n", get_motorx_velocity());
-    printf("out         : %.3lf\n", out);
-    printf("===================\n");
-
-    run_motorx(out);
-
-    prev_angle_err = angle_err;
-    velocity_sum = velocity_sum + vel_err;
-    
-    rt_task_wait_period();
   }
 }
 
