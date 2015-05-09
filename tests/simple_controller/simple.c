@@ -68,7 +68,7 @@ void *simple_controller(void *arg){
 
 
 /*    Pos Controller    */
-    pos_out = (angle_out + pos_err) * pos_kp;
+    out = (angle_out + pos_err) * pos_kp;
 
 
     printf("===================\n");
@@ -116,11 +116,11 @@ void *simple_controller(void *arg){
     angle_out = angle_kp * angle_err;
 //    angle_out = angle_kp * angle_err + (angle_kd * (angle_err - prev_angle_err) / SAMPLE_TIME_S);
 
-    pos_out   = pos_kp * (pos_err - angle_out);
-    vel_err = pos_out - get_x_velocity();
+    out   = pos_kp * (pos_err - angle_out);
+    //vel_err = pos_out - get_x_velocity();
 //    vel_err = pos_out - angle_out - get_x_velocity();
 
-    out = vel_kp * vel_err ; //+ vel_ki * velocity_sum * SAMPLE_TIME_S;
+    //out = vel_kp * vel_err ; //+ vel_ki * velocity_sum * SAMPLE_TIME_S;
     
     printf("===================\n");
     printf("angle_err   : %.3lf\n", angle_err);
