@@ -85,7 +85,7 @@ int run_motorx(double voltage)
   if (voltage < 0.075 && voltage > -0.075) voltage = 0;
   
   
-  if (voltage != 0) {
+  if (voltage) {
     
     if(voltage < 0)
       sign = -1;
