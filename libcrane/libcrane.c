@@ -169,19 +169,20 @@ double get_angle()
     /* double ang = 0.7367*get_angle_raw() - offset; */
     double ang = 0.2631 * get_angle_raw() - offset;
     /* MORTENS HACK */
-    if(!(libcrane_is_loaded())){
-      if(fabs(ang_prev - ang) < 0.001)
-	count++;
-      else
-	count = 0;
+  
+    /* if(!(libcrane_is_loaded())){ */
+    /*   if(fabs(ang_prev - ang) < 0.001) */
+    /* 	count++; */
+    /*   else */
+    /* 	count = 0; */
       
-      if(count > 10) {
-        offset = offset + ang;
-        count = 0;
-      }
+    /*   if(count > 10) { */
+    /*     offset = offset + ang; */
+    /*     count = 0; */
+    /*   } */
       
-      ang_prev = ang; 
-    }
+    /*   ang_prev = ang;  */
+    /* } */
 
     return libcrane_truncate(ang);
 }
