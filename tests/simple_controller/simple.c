@@ -38,7 +38,7 @@ void *simple_controller(void *arg){
   int pos_sign;
   
   double angle_kp = 2.5;
-  double pos_kp   = 1.6;
+  double pos_kp   = 1;
   double vel_kp   = 10;
   double vel;
 /*
@@ -59,6 +59,9 @@ void *simple_controller(void *arg){
 /*    Angle Controller  */
     angle_out = prev_angle_err * -70.55 + 74.99 * angle_err + prev_angle_out * 0.8182;
 
+    angle_out = angle_err * 80;
+
+    
     angle_out *= -1;
 
     prev_angle_err = angle_err;
@@ -69,7 +72,7 @@ void *simple_controller(void *arg){
     pos_out = pos_err * pos_kp;
 
 
-   printf("===================\n");
+    printf("===================\n");
     printf("pos_err     : %.3lf\n", pos_err);
     printf("pos_out     : %.3lf\n", pos_out);
     printf("angle_err   : %.3lf\n", angle_err);
@@ -84,7 +87,7 @@ void *simple_controller(void *arg){
     if(fabs(pos_err) < 0.15 && fabs(pos_err) > 0.005) pos_out = pos_sign*0.15*pos_kp;
     
 /*    Velo Controller   */
-    vel_kp = 3;
+    vel_kp = 5;
 
     out = (angle_out - vel + pos_out) * vel_kp;
 
