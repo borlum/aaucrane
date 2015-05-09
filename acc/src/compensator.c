@@ -22,7 +22,7 @@ double angle_controller(double angle_err){
     angle_out *= -1;
   }
   else{
-    angle_err = 0;
+    angle_out = 0;
   }
 
   prev_angle_err = angle_err;
