@@ -14,7 +14,11 @@ RT_TASK *rt_simple_controller;
 pthread_t thread_simple_controller, thread_logger;
 
 int current_index = 0;
+int nr_of_ref = 0;
 double ref_arr[10000];
+
+void init_ramp(double x_ref);
+int ramp_maker(double step);
 
 void init_rtai(){
   RTIME period = nano2count(SAMPLE_TIME_NS); 
@@ -98,7 +102,7 @@ void init_ramp(double x_ref){
 }
 
 int ramp_maker(double step){
-  double i,  speed = .0005, off_set = get_xpos(); //speed is in m/ms
+  double i,  speed = .01, off_set = get_xpos(); //speed is in m/ms
   int j = 0;
 
   if(step>0){
