@@ -13,7 +13,6 @@ LIBS=-lm -lpthread -lrt -lcomedi
 
 SOURCE += $(TARGET).c
 SOURCE += ../../acc/src/controller.c
-SOURCE += ../../acc/src/compensator.c
 
 
 all: $(TARGET)
