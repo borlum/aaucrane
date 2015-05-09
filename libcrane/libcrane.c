@@ -162,7 +162,7 @@ int run_motor(double voltage, int axis)
  */
 double get_angle()
 {
-    static int count = 0, sign;
+    static int count = 0;
     static double ang_prev = 0;
     static double offset = 1.088;
 
