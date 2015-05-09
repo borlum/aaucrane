@@ -26,35 +26,15 @@ void init_rtai(){
 void *simple_controller(void *arg){
   init_rtai();
   double pos_ref = *((double*)arg);
-  double angle_ref = 0;
-
-  double angle_err, pos_err, vel_err;
-  double angle_out, pos_out, out;
-
-  double prev_angle_err = 0;
-  double prev_angle_out = 0;
-  double velocity_sum   = 0;
-  
-  int pos_sign;
-  
-  double angle_kp = 3.75;
-  double angle_kd = 40;
-  double pos_kp   = 3.75;
-/*  double vel_kp   = 10;
+  double angle_ref = 0;  
   double vel;
-
-  double angle_kp = 1;
-  double angle_kd = 0;
-  double angle_k  = 10;
-  double pos_kp   = 2;
-  double vel_kp   = 3;
-*/
   printf("REF: %lf\n", pos_ref);
 
   /* Morten Tester */
   while(1){
     angle_err = angle_ref + get_angle();
     pos_err   = pos_ref   - get_xpos();
+    vel       = get_x_velocity();
 
     /* Angle Controller */
     angle_out = 74.91 * angle_err - 70.55 * prev_angle_err + 0.8182 * prev_angle_out;
@@ -67,7 +47,7 @@ void *simple_controller(void *arg){
     pos_out = pos_err * 1.2;
 
     /* Vel out */
-    out = (pos_out + angle_out) * 5;
+    out = (vel - pos_out + angle_out) * 5;
 
     printf("===================\n");
     printf("pos_err     : %.3lf\n", pos_err);
