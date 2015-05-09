@@ -28,6 +28,12 @@ void *simple_controller(void *arg){
   double pos_ref = *((double*)arg);
   double angle_ref = 0;  
   double vel;
+  
+  double angle_out, prev_angle_out;
+  double angle_err, prev_angle_err;
+
+  double pos_out, out;
+  
   printf("REF: %lf\n", pos_ref);
 
   /* Morten Tester */
