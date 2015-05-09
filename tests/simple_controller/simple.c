@@ -7,7 +7,6 @@
 #include <libcrane.h>
 #include <controller.h>
 
-#define MANUAL
 #define SAMPLE_TIME_NS 10E6
 #define SAMPLE_TIME_S SAMPLE_TIME_NS * 1E-9
 
