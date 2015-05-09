@@ -38,7 +38,7 @@ void *simple_controller(void *arg){
   int pos_sign;
   
   double angle_kp = 2.5;
-  double pos_kp   = 1.2;
+  double pos_kp   = 0.75;
   double vel_kp   = 10;
   double vel;
 /*
