@@ -91,8 +91,8 @@ int run_motorx(double voltage)
       sign = -1;
     else
       sign = 1;
-    
-    voltage = sign * (fabs(voltage) + 4.2);
+
+    voltage = sign * (sign * voltage + 4.2);		    
   }
 
   /* Change X motor direction */
