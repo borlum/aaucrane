@@ -182,7 +182,7 @@ double get_angle()
       
       ang_prev = ang; 
     }
-    
+
     return libcrane_truncate(ang);
 }
 
