@@ -29,9 +29,9 @@ double angle_controller(double angle_err){
 double position_controller_x(double error){
   static double k_p = 1.5;
   int sign;
-  if(fabs(error) < 0.10 && fabs(error) > 0.002){
+  if(fabs(error) < 0.10 && fabs(error) > 0.005){
     if(error < 0)
-      sign = -1;
+      sign = -1.5;
     else
       sign = 1;
     error = 0.10 * sign;
