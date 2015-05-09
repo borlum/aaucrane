@@ -46,7 +46,7 @@ int libcrane_is_loaded()
  */
 double libcrane_truncate(double stuff_oreo)
 {
-    int stupid_tmp = (int) (round(stuff_oreo * 1000));
+    int stupid_tmp = (int) (round(stuff_oreo * 1000.0));
     double tmp_d = (stupid_tmp / 1000.0);
     return tmp_d;    
 }
@@ -81,21 +81,22 @@ int initialize_crane()
  */
 int run_motorx(double voltage)
 {
-	int sign;
-    if (voltage < 0.075 && voltage > -0.075) voltage = 0;
+  int sign;
+  if (voltage < 0.075 && voltage > -0.075) voltage = 0;
+  
+  
+  if (voltage) {
+    
+    if(voltage < 0)
+      sign = -1;
+    else
+      sign = 1;
+    
+    voltage = sign * (fabs(voltage) + 4.2);
+  }
 
-
-    if (voltage) {
-
-        if(voltage < 0) sign = -1;
-        else if (voltage > 0) sign = 1;
-        else if (voltage == 0) sign = 0;
-
-        voltage = sign * (sign * voltage + 4.2);
-    }
-
-    /* Change X motor direction */
-    return run_motor(-voltage, 0);
+  /* Change X motor direction */
+  return run_motor(-voltage, 0);
 }
 
 /**
@@ -124,9 +125,6 @@ int run_motory(double voltage)
  */
 int run_motor(double voltage, int axis)
 {
-    /* int old_val, new_val; */
-    /* int old_range, new_range, old_max, old_min, new_max, new_min; */
-
     int output;
 
     if (voltage > MAX_MOTOR_OUTPUT) {
@@ -168,19 +166,23 @@ double get_angle()
     static double ang_prev = 0;
     static double offset = 1.088;
 
-//    double ang = 0.7367*get_angle_raw() - offset;
+    /* double ang = 0.7367*get_angle_raw() - offset; */
     double ang = 0.2631 * get_angle_raw() - offset;
     /* MORTENS HACK */
-   if(fabs(ang_prev - ang) < 0.001) count++;
-    else count = 0;
-
-    if(count > 10) {
+    if(!(libcrane_is_loaded())){
+      if(fabs(ang_prev - ang) < 0.001)
+	count++;
+      else
+	count = 0;
+      
+      if(count > 10) {
         offset = offset + ang;
         count = 0;
+      }
+      
+      ang_prev = ang; 
     }
-
-    ang_prev = ang; 
-
+    
     return libcrane_truncate(ang);
 }
 
@@ -256,11 +258,6 @@ double get_motorx_velocity()
 {
   double D; /* b00bs */
   D = (get_motorx_velocity_raw() * 34.18 ) + 0.007721;
-
-  /*if (D < 0.33) {
-    D = 0;
-    }*/
-
   return D;
 }
 
@@ -399,6 +396,7 @@ void enable_magnet()
 #ifndef TESTING
     comedi_dio_write(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, 1);
 #endif
+    libcrane_load();
 }
 
 /**
@@ -409,6 +407,7 @@ void disable_magnet()
 #ifndef TESTING
     comedi_dio_write(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, 0);
 #endif
+    libcrane_unload();
 }
 
 /**
