@@ -13,6 +13,9 @@
 RT_TASK *rt_simple_controller;
 pthread_t thread_simple_controller, thread_logger;
 
+int current_index = 0;
+double ref_arr[10000];
+
 void init_rtai(){
   RTIME period = nano2count(SAMPLE_TIME_NS); 
   if(!(rt_simple_controller = rt_task_init_schmod(nam2num("controller"), 1, 0, 0, SCHED_FIFO, 0))){
@@ -38,13 +41,13 @@ void *simple_controller(void *arg){
 
   /* for hack */
   int sign;
-  
+  init_ramp(pos_ref);
   printf("REF: %lf\n", pos_ref);
 
   /* Morten Tester */
   while(1){
     angle_err = angle_ref - get_angle();
-    pos_err   = pos_ref   - get_xpos();
+    pos_err   = ref_arr[current_index] - get_xpos();
     vel       = get_x_velocity();
 
     /* Angle Controller */
@@ -58,7 +61,7 @@ void *simple_controller(void *arg){
     /* Pos Controller */
     pos_out = pos_err * 1;
 
-    if(fabs(pos_err) < 0.15 && fabs(pos_err)> 0.005){
+    if(fabs(pos_err) < 0.2 && fabs(pos_err)> 0.005){
       if(pos_out < 0)
 	sign = -1;
       else
@@ -67,6 +70,11 @@ void *simple_controller(void *arg){
     }	
     /* Vel out */
     out = (pos_out + angle_out - vel) * 5;
+
+
+    if(current_index < (nr_of_ref - 1)) {
+      current_index++;
+    }
 
     printf("===================\n");
     printf("pos_err     : %.3lf\n", pos_err);
@@ -81,6 +89,33 @@ void *simple_controller(void *arg){
 
   }
 }
+
+void init_ramp(double x_ref){
+  double step;
+  step = x_ref-get_xpos();
+  nr_of_ref = ramp_maker(step);
+  current_index = 0;
+}
+
+int ramp_maker(double step){
+  double i,  speed = .0005, off_set = get_xpos(); //speed is in m/ms
+  int j = 0;
+
+  if(step>0){
+    for(i = 0; i<=step; i += speed){
+      ref_arr[j] = i + off_set;
+      j++;
+    }
+  } else if(step < 0){
+    for(i = 0; i>=step; i -= speed){
+      ref_arr[j] = i + off_set;
+      j++;
+    }
+  }
+
+  return j;
+}
+
 
 int main(int argc, char *argv[]){
   double ref;
