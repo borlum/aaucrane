@@ -40,13 +40,14 @@ void *simple_controller(void *arg){
 
   /* Morten Tester */
   while(1){
-    angle_err = angle_ref + get_angle();
+    angle_err = angle_ref - get_angle();
     pos_err   = pos_ref   - get_xpos();
     vel       = get_x_velocity();
 
     /* Angle Controller */
     angle_out = 74.91 * angle_err - 70.55 * prev_angle_err + 0.8182 * prev_angle_out;
-
+    angle_out *= -1;
+    
     prev_angle_err = angle_err;
     prev_angle_out = angle_out;
 
@@ -55,7 +56,7 @@ void *simple_controller(void *arg){
     pos_out = pos_err * 1.2;
 
     /* Vel out */
-    out = (pos_out + angle_out -vel) * 5;
+    out = (pos_out + angle_out - vel) * 5;
 
     printf("===================\n");
     printf("pos_err     : %.3lf\n", pos_err);
