@@ -13,7 +13,7 @@ FILE * fp;
 RT_TASK *rt_sampler;
 #endif
 
-const static float step_size = 12.5*0;
+const static float step_size = 6.5;
 
 void *sampler(void *args)
 {
@@ -26,7 +26,7 @@ void *sampler(void *args)
 
 #ifdef RTAI
     /*Transform to RTAI task*/
-    RTIME period = nano2count(1E7);
+    RTIME period = nano2count(1E6);
     if(!(rt_sampler = rt_task_init_schmod(nam2num("rt_sampler"), 1, 0, 0, SCHED_FIFO, 0))){
       printf("rt_sampler\n");
       exit(42);
@@ -60,7 +60,7 @@ void *sampler(void *args)
     
         sample_nr++;
 
-        if (sample_nr == 2000) {
+        if (sample_nr == 3000) {
             run_motorx(0);
         }
 	
