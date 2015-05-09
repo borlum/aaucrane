@@ -70,8 +70,8 @@ double get_controller_output(double ref){
 #endif
 
   printf("==================== \n");
-  printf("ANGLE CTRL. OUT: &lf \n", angle_out);
-  printf("POS   CTRL. OUT: &lf \n", pos_out);
+  printf("ANGLE CTRL. OUT: %lf \n", angle_out);
+  printf("POS   CTRL. OUT: %lf \n", pos_out);
   printf("==================== \n");
 
   out = velocity_controller_x(angle_out + pos_out - get_x_velocity());
