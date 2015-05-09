@@ -88,7 +88,7 @@ void *simple_controller(void *arg){
 /*    Velo Controller   */
     vel_kp = 5;
 
-    out = (angle_out - vel + pos_out) * vel_kp;
+    //out = (angle_out - vel + pos_out) * vel_kp;
 
 
 
