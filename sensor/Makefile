@@ -1,5 +1,5 @@
 FILE=sensor.ino
-TARGET=arduino:sam:arduino_due_x_dbg
+TARGET=arduino:sam:due
 PORT=/dev/ttyACM0
 
 verify: $(FILE)
