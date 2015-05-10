@@ -43,8 +43,8 @@ int main(int argc, char* argv[])
     if( fabs((manual_y = get_ctrlpad_y())) < 2 )
       manual_y = 0;
     
-    run_motorx(manual_x + angle);
-    run_motory(manual_y);
+    run_motorx(0.5 * manual_x + angle);
+    run_motory(0.5 * manual_y);
 
     if (get_ctrlpad_magnet_switch()) {
         enable_magnet();

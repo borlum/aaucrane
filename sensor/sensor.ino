@@ -208,12 +208,10 @@ void loop()
   Serial.print(',');
   Serial.println(wire_loc.pixel_id);*/
   get_wire_location(&wire_loc);
-  Serial.println(wire_loc.pixel_id);
-
   //wire_loc.pixel_id = 285;
   
   analogWrite(DAC1, map(wire_loc.pixel_id, 0, 3 * NR_PIXELS_W_DEADBAND, 0, 1024));
-  Serial.write(wire_loc.pixel_id);
+  Serial.println(wire_loc.pixel_id);
 }
 
 /**
