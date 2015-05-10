@@ -213,6 +213,7 @@ double get_angle()
     static double offset = 1.088;
 
     double ang = 0.2631 * get_angle_raw() - offset;
+    printf("ANG: %lf\n", ang);
 
 #ifdef MORTEN_HACK
     static int count = 0;
