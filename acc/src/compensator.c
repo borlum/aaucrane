@@ -17,16 +17,10 @@ double angle_controller(double angle_err){
 
   double angle_out;
 
-  if(angle_err > 0.01){
-    angle_out = 74.91 * angle_err - 70.55 * prev_angle_err + 0.8182 * prev_angle_out;
-    /* NEW */
-    //angle_out = 146 * angle_err - 137.5 * prev_angle_err + 0.7391 * prev_angle_out;
-
-    angle_out *= -1;
-  }
-  else{
-    angle_out = 0;
-  }
+  angle_out = 74.91 * angle_err - 70.55 * prev_angle_err + 0.8182 * prev_angle_out;
+  /* NEW */
+  //angle_out = 146 * angle_err - 137.5 * prev_angle_err + 0.7391 * prev_angle_out;
+  angle_out *= -1;
 
   prev_angle_err = angle_err;
   prev_angle_out = angle_out;
