@@ -2,7 +2,12 @@
 #define _LIBCRANE_H_
 
 #include <stdio.h>
+#include <unistd.h>
 #include <time.h>
+#include <fcntl.h>
+#include <termios.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifndef TESTING
 #include <comedilib.h>
@@ -17,7 +22,7 @@
 
 #define DEVICE "/dev/comedi0"
 
-#define SERIAL_PORT "/dev/ttyS0"
+#define SERIAL_PORT "/dev/ttyACM0"
 
 #define CHAN_MAGNET_OUT 7
 #define CHAN_MAGNET_BTN 3
