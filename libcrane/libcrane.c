@@ -96,7 +96,7 @@ int initialize_crane()
      toptions.c_cc[VTIME] = 0;
  
      /* commit the options */
-     tcsetattr(fd, TCSANOW, &toptions);
+     tcsetattr(FD_serial, TCSANOW, &toptions);
  
      /* Wait for the Arduino to reset */
      usleep(1000*1000);
