@@ -2,6 +2,7 @@
 #define _LIBCRANE_H_
 
 #include <stdio.h>
+#include <unistd.h>
 #include <time.h>
 #include <fcntl.h>
 #include <termios.h>
