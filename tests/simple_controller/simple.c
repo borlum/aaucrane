@@ -69,6 +69,12 @@ void *simple_controller(void *arg){
     /* Vel out */
     out = (pos_out + angle_out - vel) * 5;
 
+    if( fabs((manual_x = get_ctrlpad_x())) < 2 )
+      manual_x = 0;      
+    
+    if( fabs((manual_y = get_ctrlpad_y())) < 2 )
+      manual_y = 0;
+    
 
     if(current_index < (nr_of_ref - 1)) {
       current_index++;
@@ -82,7 +88,8 @@ void *simple_controller(void *arg){
     printf("out         : %.3lf\n", out);
     printf("===================\n");
 
-    run_motorx(out);
+    run_motorx( (manual_x * 0.5) + out);
+    run_motory(manual_y * 0.5);
     rt_task_wait_period();
 
   }

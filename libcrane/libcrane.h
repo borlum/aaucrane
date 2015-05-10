@@ -46,7 +46,7 @@
 #define CHAN_CTRLPAD_X_IN 14
 #define CHAN_CTRLPAD_Y_IN 15
 
-#define SERIAL_PORT "/dev/ttyACM0"
+#define SERIAL_PORT "/dev/ttyACM1"
 struct termios termiosv;
 
 double libcrane_truncate(double sutff_oreo);

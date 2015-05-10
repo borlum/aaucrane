@@ -45,9 +45,9 @@ struct sensor_t {
 typedef struct sensor_t sensor_t;
 
 struct wire_location_t {
-  int pixel_value;
-  int sensor_id;
-  int pixel_id;
+  uint16_t pixel_value;
+  uint16_t sensor_id;
+  uint16_t pixel_id;
 };
 
 typedef struct wire_location_t wire_location_t;
@@ -208,8 +208,6 @@ void loop()
   Serial.print(',');
   Serial.println(wire_loc.pixel_id);*/
   get_wire_location(&wire_loc);
-  Serial.println(wire_loc.pixel_id);
-
   //wire_loc.pixel_id = 285;
   
   analogWrite(DAC1, map(wire_loc.pixel_id, 0, 3 * NR_PIXELS_W_DEADBAND, 0, 1024));
