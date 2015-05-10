@@ -42,8 +42,10 @@ int main(int argc, char* argv[])
 
     if( fabs((manual_y = get_ctrlpad_y())) < 2 )
       manual_y = 0;
+
+
     
-    run_motorx(0.5 * manual_x + velocity_controller_x(angle));
+    run_motorx( velocity_controller_x(angle + manual_x*0.5 - get_x_velocity()));
     run_motory(manual_y);
 
     if (get_ctrlpad_magnet_switch()) {
