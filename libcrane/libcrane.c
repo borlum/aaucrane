@@ -463,10 +463,15 @@ double get_sensor_raw(int channel)
  * @return pixel at which wire is located
  */
 int get_sensor_pixel() {
-    static char buffer[8];
+    char buffer[8];
+    char output[8];
     int n = read(FD_serial, buffer, sizeof(buffer));
     if (n < 0)
         fputs("read failed!\n", stderr);
+    else {
+      
+    }
+      
 
     return atoi(buffer);
 }

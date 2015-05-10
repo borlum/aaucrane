@@ -211,7 +211,7 @@ void loop()
   //wire_loc.pixel_id = 285;
   
   analogWrite(DAC1, map(wire_loc.pixel_id, 0, 3 * NR_PIXELS_W_DEADBAND, 0, 1024));
-  Serial.println(wire_loc.pixel_id);
+  Serial.write(&(wire_loc.pixel_id) , 2);
 }
 
 /**
