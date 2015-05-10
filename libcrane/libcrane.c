@@ -1,5 +1,4 @@
 #include "libcrane.h"
-#include <math.h>
 
 #ifndef TESTING
 comedi_t *NI_card;
@@ -72,6 +71,12 @@ int initialize_crane()
     if (NI_card == NULL) {
         return 0;
     }
+
+    tcgetattr(FD_serial, &termiosv);
+    termiosv.c_cc[VMIN] = 4;
+    tcsetattr(FD_serial, TCSANOW, &termiosv);
+    usleep(1000000 * 2);
+    tcflush(FD_serial, TCIOFLUSH);
 
     FD_serial = open(SERIAL_PORT, O_RDONLY | O_NOCTTY | O_NDELAY);
     if (FD_serial == -1) {
@@ -463,10 +468,12 @@ double get_sensor_raw(int channel)
  * @return pixel at which wire is located
  */
 int get_sensor_pixel() {
-    static char buffer[8];
-    int n = read(FD_serial, buffer, sizeof(buffer));
-    if (n < 0)
-        fputs("read failed!\n", stderr);
+    static char buffer[5] = {0};
+    read(FD_serial, buffer, 4);
+    
+    if (buffer[3] != ';') {
+        tcflush(FD_serial, TCIOFLUSH);
+    }
 
     return atoi(buffer);
 }
