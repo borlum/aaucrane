@@ -7,6 +7,8 @@ comedi_t *NI_card;
 int *NI_card;
 #endif
 
+int FD_serial;
+
 static const double MAX_MOTOR_OUTPUT = 12.5;
 static const double MIN_MOTOR_OUTPUT = 0;
 static const double epsilon = 0.2;
@@ -70,6 +72,12 @@ int initialize_crane()
     if (NI_card == NULL) {
         return 0;
     }
+
+    FD_serial = open(SERIAL_PORT, O_RDONLY | O_NOCTTY | O_NDELAY);
+    if (FD_serial == -1) {
+        perror("open_port: Unable to open port");
+    }
+
 
     return 1;
 }
@@ -162,14 +170,16 @@ int run_motor(double voltage, int axis)
  */
 double get_angle()
 {
+    /*
     static int count = 0;
     static double ang_prev = 0;
     static double offset = 1.088;
 
-    /* double ang = 0.7367*get_angle_raw() - offset; */
     double ang = 0.2631 * get_angle_raw() - offset;
+    */
     
     /* MORTENS HACK */
+    /*
     if(fabs(ang_prev - ang) < 0.001)
         count++;
     else
@@ -184,6 +194,14 @@ double get_angle()
       ang_prev = ang;
 
     return libcrane_truncate(ang);
+    */
+   
+    /*Use sensor pixel instead*/
+    static const int zero_pixel = 275;
+    static const int ppmm       =  15;
+    static const int dist       =  25;
+
+    return asin( ( (get_sensor_pixel() - zero_pixel) / ppmm ) / dist );
 }
 
 /**
@@ -433,6 +451,19 @@ double get_sensor_raw(int channel)
 #endif
 
     return physical_value;
+}
+
+/**
+ * Get sensor pixel via serial interface
+ * @return pixel at which wire is located
+ */
+int get_sensor_pixel() {
+    static char buffer[8];
+    int n = read(FD_serial, buffer, sizeof(buffer));
+    if (n < 0)
+        fputs("read failed!\n", stderr);
+
+    return atoi(buffer);
 }
 
 /**
