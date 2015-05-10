@@ -1,3 +1,5 @@
+#include <DueTimer.h>
+
 /**
  * ============================================================================
  * AAU CRANE SENSOR
@@ -12,6 +14,7 @@
  * - How do we find the wire when only some of the "dip" is visible?
  * - Translate the found falling edge into an actual position of the wire. Maybe using the width?
  */
+
 #define NR_SENSORS 3
 #define NR_PIXELS  128
 #define WIRE_WIDTH_PX 30
@@ -93,6 +96,8 @@ void setup()
   DEAD_PIXELS[2][6] = 1;
   DEAD_PIXELS[2][7] = 1;
   DEAD_PIXELS[2][8] = 1;
+
+  Timer.getAvailable().attachInterrupt(callback).setPeriod(10000).start();
   
   Serial.begin(9600);
 
@@ -207,11 +212,20 @@ void loop()
   Serial.print(wire_loc.sensor_id);
   Serial.print(',');
   Serial.println(wire_loc.pixel_id);*/
+  cli();
   get_wire_location(&wire_loc);
+  sei();
   //wire_loc.pixel_id = 285;
   
   analogWrite(DAC1, map(wire_loc.pixel_id, 0, 3 * NR_PIXELS_W_DEADBAND, 0, 1024));
-  Serial.write(wire_loc.pixel_id);
+}
+
+void callback(){
+  char buffer[4];
+  int tmp;
+  sprintf(buffer, "%3d;", wire_loc.pixel_id);
+  if( (tmp = Serial.print(buffer)) != 4)
+    Serial.println("ERROR");
 }
 
 /**
@@ -286,8 +300,7 @@ void dio(Pio *port, uint32_t mask, uint8_t state)
 
 
 int get_wire_location(wire_location_t* wire_loc) {
-  int start = -1, wire_end = -1, diff;
-  
+  int start = -1, wire_end = -1, diff;    
   for(int i = 0; i < NR_SENSORS; i++){
     for(int j = 5; j < NR_PIXELS; j++){
       if(is_dead_pixel(i,j) || is_dead_pixel(i,j-5) )
