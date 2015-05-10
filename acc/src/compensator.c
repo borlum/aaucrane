@@ -3,7 +3,7 @@
 #include "compensator.h"
 #include <math.h>
 
-#define RAMP 42
+//#define RAMP
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -19,6 +19,9 @@ double angle_controller(double angle_err){
 
   if(angle_err > 0.01){
     angle_out = 74.91 * angle_err - 70.55 * prev_angle_err + 0.8182 * prev_angle_out;
+    /* NEW */
+    //angle_out = 146 * angle_err - 137.5 * prev_angle_err + 0.7391 * prev_angle_out;
+
     angle_out *= -1;
   }
   else{
