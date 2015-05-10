@@ -6,6 +6,7 @@
 
 double angle_controller(double error);
 double position_controller_x(double error);
+double velocity_controller_x(double error);
 double position_controller_y(double error);
 
 double get_controller_output();
