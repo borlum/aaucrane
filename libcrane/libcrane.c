@@ -59,60 +59,62 @@ double libcrane_truncate(double stuff_oreo)
  */
 int initialize_crane()
 {
-    struct termios toptions;
-    FD_serial = open(SERIAL_PORT, O_RDONLY | O_NOCTTY);
-    if (FD_serial == -1) {
-        perror("open_port: Unable to open port");
-    }
+  
+  /* NI stuff */
+  NI_card = comedi_open(DEVICE);
+  /*Global config*/
+  comedi_set_global_oor_behavior(COMEDI_OOR_NUMBER);
+  comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, COMEDI_OUTPUT);
+  comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, COMEDI_INPUT);
+  if (NI_card == NULL) {
+    return 0;
+  }
 
-     tcgetattr(FD_serial, &toptions);
- 
-     /* Set custom options */
- 
-     /* 9600 baud */
-     cfsetispeed(&toptions, B9600);
-     cfsetospeed(&toptions, B9600);
-     /* 8 bits, no parity, no stop bits */
-     toptions.c_cflag &= ~PARENB;
-     toptions.c_cflag &= ~CSTOPB;
-     toptions.c_cflag &= ~CSIZE;
-     toptions.c_cflag |= CS8;
-     /* no hardware flow control */
-     toptions.c_cflag &= ~CRTSCTS;
-     /* enable receiver, ignore status lines */
-     toptions.c_cflag |= CREAD | CLOCAL;
-     /* disable input/output flow control, disable restart chars */
-     toptions.c_iflag &= ~(IXON | IXOFF | IXANY);
-     /* disable canonical input, disable echo,
-	disable visually erase chars,
-	disable terminal-generated signals */
-     toptions.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);
-     /* disable output processing */
-     toptions.c_oflag &= ~OPOST;
- 
-     /* wait for 4 characters to come in before read returns */
-     toptions.c_cc[VMIN] = 4;
-     /* no minimum time to wait before read returns */
-     toptions.c_cc[VTIME] = 0;
- 
-     /* commit the options */
-     tcsetattr(FD_serial, TCSANOW, &toptions);
- 
-     /* Wait for the Arduino to reset */
-     usleep(1000*1000);
-     /* Flush anything already in the serial buffer */
-     tcflush(FD_serial, TCIFLUSH);
+#ifdef SERAIL_ANGLE
+  struct termios toptions;
+  FD_serial = open(SERIAL_PORT, O_RDONLY | O_NOCTTY);
+  if (FD_serial == -1) {
+    perror("open_port: Unable to open port");
+  }
 
-
-     /* NI stuff */
-     NI_card = comedi_open(DEVICE);
-     /*Global config*/
-     comedi_set_global_oor_behavior(COMEDI_OOR_NUMBER);
-     comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, COMEDI_OUTPUT);
-     comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, COMEDI_INPUT);
-     if (NI_card == NULL) {
-       return 0;
-     }
+  tcgetattr(FD_serial, &toptions);
+ 
+  /* Set custom options */
+ 
+  /* 9600 baud */
+  cfsetispeed(&toptions, B9600);
+  cfsetospeed(&toptions, B9600);
+  /* 8 bits, no parity, no stop bits */
+  toptions.c_cflag &= ~PARENB;
+  toptions.c_cflag &= ~CSTOPB;
+  toptions.c_cflag &= ~CSIZE;
+  toptions.c_cflag |= CS8;
+  /* no hardware flow control */
+  toptions.c_cflag &= ~CRTSCTS;
+  /* enable receiver, ignore status lines */
+  toptions.c_cflag |= CREAD | CLOCAL;
+  /* disable input/output flow control, disable restart chars */
+  toptions.c_iflag &= ~(IXON | IXOFF | IXANY);
+  /* disable canonical input, disable echo,
+     disable visually erase chars,
+     disable terminal-generated signals */
+  toptions.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+  /* disable output processing */
+  toptions.c_oflag &= ~OPOST;
+ 
+  /* wait for 4 characters to come in before read returns */
+  toptions.c_cc[VMIN] = 4;
+  /* no minimum time to wait before read returns */
+  toptions.c_cc[VTIME] = 0;
+ 
+  /* commit the options */
+  tcsetattr(FD_serial, TCSANOW, &toptions);
+ 
+  /* Wait for the Arduino to reset */
+  usleep(1000*1000);
+  /* Flush anything already in the serial buffer */
+  tcflush(FD_serial, TCIFLUSH);
+#endif
 
     return 1;
 }
