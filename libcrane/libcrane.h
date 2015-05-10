@@ -6,6 +6,7 @@
 #include <time.h>
 #include <fcntl.h>
 #include <termios.h>
+#include <string.h>
 
 #ifndef TESTING
 #include <comedilib.h>
