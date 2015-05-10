@@ -212,7 +212,7 @@ double get_angle()
     static const double ppmm       =  15.0;
     static const double dist       =  25.0;
 
-    return asin( ( (get_sensor_pixel() - zero_pixel) / ppmm ) / dist );
+    return asin( ( ((double)get_sensor_pixel() - zero_pixel) / ppmm ) / dist );
 }
 
 /**
