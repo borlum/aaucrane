@@ -17,7 +17,7 @@
 
 #define DEVICE "/dev/comedi0"
 
-#define SERIAL_PORT "/dev/ttyS0"
+#define SERIAL_PORT "/dev/ttyACM0"
 
 #define CHAN_MAGNET_OUT 7
 #define CHAN_MAGNET_BTN 3
