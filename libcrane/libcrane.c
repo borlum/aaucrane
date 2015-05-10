@@ -77,9 +77,9 @@ int initialize_crane()
         perror("open_port: Unable to open port");
     }
 
-    tcgetattr(FD_serial, &termiosv);
+    /*tcgetattr(FD_serial, &termiosv);
     termiosv.c_cc[VMIN] = 4;
-    tcsetattr(FD_serial, TCSANOW, &termiosv);
+    tcsetattr(FD_serial, TCSANOW, &termiosv);*/
     usleep(1000000 * 2);
     tcflush(FD_serial, TCIOFLUSH);
 
