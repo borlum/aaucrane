@@ -3,7 +3,7 @@
 #include "compensator.h"
 #include <math.h>
 
-#define RAMP 42
+#define RAMP
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -19,6 +19,9 @@ double angle_controller(double angle_err){
 
   if(angle_err > 0.01){
     angle_out = 74.91 * angle_err - 70.55 * prev_angle_err + 0.8182 * prev_angle_out;
+    /* NEW */
+    //angle_out = 146 * angle_err - 137.5 * prev_angle_err + 0.7391 * prev_angle_out;
+
     angle_out *= -1;
   }
   else{
@@ -32,7 +35,8 @@ double angle_controller(double angle_err){
 }
 
 double position_controller_x(double error){
-  static double k_p = 2;
+  static double k_p = 1.2;
+  /*
   int sign;
   if(fabs(error) < 0.11 && fabs(error) > 0.005){
     if(error < 0)
@@ -41,6 +45,7 @@ double position_controller_x(double error){
       sign = 1;
     error = 0.10 * sign;
   }
+  */
   return error * k_p;
 }
 
@@ -66,7 +71,7 @@ double get_controller_output(double ref){
     current_index++;
   }
 #else
-  x_pos_out = position_controller_x(ref - get_xpos());
+  pos_out = position_controller_x(ref - get_xpos());
 #endif
 
 

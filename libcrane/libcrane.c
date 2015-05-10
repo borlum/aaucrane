@@ -179,7 +179,11 @@ double get_angle()
     */
     
     /* MORTENS HACK */
+    
     /*
+#ifdef MORTEN_HACK
+    static int count = 0;
+    static double ang_prev = 0;
     if(fabs(ang_prev - ang) < 0.001)
         count++;
     else
@@ -192,7 +196,8 @@ double get_angle()
     }
       
       ang_prev = ang;
-
+#endif
+      
     return libcrane_truncate(ang);
     */
    
