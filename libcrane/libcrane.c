@@ -475,6 +475,8 @@ int get_sensor_pixel() {
         tcflush(FD_serial, TCIOFLUSH);
     }
 
+    printf("BUFFER: %s \n", buffer);
+
     return atoi(buffer);
 }
 
