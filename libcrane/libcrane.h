@@ -14,7 +14,10 @@
 #define AIN_SUBDEV 0
 #define AOUT_SUBDEV 1
 #define DIO_SUBDEV 2
+
 #define DEVICE "/dev/comedi0"
+
+#define SERIAL_PORT "/dev/ttyS0"
 
 #define CHAN_MAGNET_OUT 7
 #define CHAN_MAGNET_BTN 3
@@ -79,6 +82,8 @@ void enable_magnet();
 void disable_magnet();
 
 double get_sensor_raw(int channel);
+
+int get_sensor_pixel();
 
 unsigned long get_time_micros();
 
