@@ -81,7 +81,7 @@ int initialize_crane()
     tcgetattr(FD_serial, &termiosv);
     termiosv.c_cc[VMIN] = 4;
     tcsetattr(FD_serial, TCSANOW, &termiosv);
-    
+
     usleep(1000000 * 2);
     tcflush(FD_serial, TCIOFLUSH);
 
@@ -469,7 +469,7 @@ double get_sensor_raw(int channel)
  * @return pixel at which wire is located
  */
 int get_sensor_pixel() {
-    char buffer[5];
+    char buffer[5] = {0};
     int n = read(FD_serial, buffer, 4);
 
     if (n < 0) {
