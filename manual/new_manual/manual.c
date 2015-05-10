@@ -41,9 +41,9 @@ int main(int argc, char* argv[])
     out = velocity_controller_x(angle_out - vel);
 
     if(get_ctrlpad_ctrl_switch()){
-      out += get_ctrlpad_x() * .5;
+      out += manual_x * .5;
     } else {
-      out = get_ctrlpad_x();
+      out = manual_x;
     }
     
     run_motorx(out);
