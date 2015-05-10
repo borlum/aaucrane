@@ -208,9 +208,9 @@ double get_angle()
     */
    
     /*Use sensor pixel instead*/
-    static const int zero_pixel = 275;
-    static const int ppmm       =  15;
-    static const int dist       =  25;
+    static const double zero_pixel = 275.0;
+    static const double ppmm       =  15.0;
+    static const double dist       =  25.0;
 
     return asin( ( (get_sensor_pixel() - zero_pixel) / ppmm ) / dist );
 }
