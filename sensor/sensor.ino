@@ -72,6 +72,7 @@ void disable_sensor_SI(sensor_t *sensor);
 uint16_t read_sensor(sensor_t sensor);
 void dio(Pio *port, uint32_t mask, uint8_t state);
 int get_wire_location(wire_location_t* wire_loc);
+int prev_id = 0;
 
 /**
  * ----------------------------------------------------------------------------
@@ -93,6 +94,7 @@ gpio_t TEST  = {PIOB, (1 << 13), 21};
  */
 void setup()
 {
+  DEAD_PIXELS[1][33] = 1;
   DEAD_PIXELS[2][6] = 1;
   DEAD_PIXELS[2][7] = 1;
   DEAD_PIXELS[2][8] = 1;
@@ -212,10 +214,13 @@ void loop()
   Serial.print(wire_loc.sensor_id);
   Serial.print(',');
   Serial.println(wire_loc.pixel_id);*/
-  cli();
+  noInterrupts();
   get_wire_location(&wire_loc);
-  sei();
+  interrupts();
   //wire_loc.pixel_id = 285;
+  
+  if(wire_loc.pixel_id == 313) wire_loc.pixel_id = prev_id;
+  prev_id = wire_loc.pixel_id;
   
   analogWrite(DAC1, map(wire_loc.pixel_id, 0, 3 * NR_PIXELS_W_DEADBAND, 0, 1024));
 }
