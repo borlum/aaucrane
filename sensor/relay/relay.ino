@@ -7,5 +7,9 @@ void loop() {
   if(Serial.readBytes(tmp, 4) != 0){
     if(tmp[3] == ';')
       Serial.print(tmp);
+     else{
+       while(Serial.available())
+         Serial.read();
+     }
   }
 }

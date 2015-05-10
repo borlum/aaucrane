@@ -59,31 +59,60 @@ double libcrane_truncate(double stuff_oreo)
  */
 int initialize_crane()
 {
-    NI_card = NULL;
-
-#ifndef TESTING
-    NI_card = comedi_open(DEVICE);
-    /*Global config*/
-    comedi_set_global_oor_behavior(COMEDI_OOR_NUMBER);
-    comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, COMEDI_OUTPUT);
-    comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, COMEDI_INPUT);
-#endif
-
-    if (NI_card == NULL) {
-        return 0;
-    }
-
+    struct termios toptions;
     FD_serial = open(SERIAL_PORT, O_RDONLY | O_NOCTTY);
     if (FD_serial == -1) {
         perror("open_port: Unable to open port");
     }
 
-    tcgetattr(FD_serial, &termiosv);
-    termiosv.c_cc[VMIN] = 4;
-    tcsetattr(FD_serial, TCSANOW, &termiosv);
+     tcgetattr(FD_serial, &toptions);
+ 
+     /* Set custom options */
+ 
+     /* 9600 baud */
+     cfsetispeed(&toptions, B9600);
+     cfsetospeed(&toptions, B9600);
+     /* 8 bits, no parity, no stop bits */
+     toptions.c_cflag &= ~PARENB;
+     toptions.c_cflag &= ~CSTOPB;
+     toptions.c_cflag &= ~CSIZE;
+     toptions.c_cflag |= CS8;
+     /* no hardware flow control */
+     toptions.c_cflag &= ~CRTSCTS;
+     /* enable receiver, ignore status lines */
+     toptions.c_cflag |= CREAD | CLOCAL;
+     /* disable input/output flow control, disable restart chars */
+     toptions.c_iflag &= ~(IXON | IXOFF | IXANY);
+     /* disable canonical input, disable echo,
+	disable visually erase chars,
+	disable terminal-generated signals */
+     toptions.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+     /* disable output processing */
+     toptions.c_oflag &= ~OPOST;
+ 
+     /* wait for 4 characters to come in before read returns */
+     toptions.c_cc[VMIN] = 4;
+     /* no minimum time to wait before read returns */
+     toptions.c_cc[VTIME] = 0;
+ 
+     /* commit the options */
+     tcsetattr(fd, TCSANOW, &toptions);
+ 
+     /* Wait for the Arduino to reset */
+     usleep(1000*1000);
+     /* Flush anything already in the serial buffer */
+     tcflush(fd, TCIFLUSH);
 
-    usleep(1000000 * 2);
-    tcflush(FD_serial, TCIOFLUSH);
+
+     /* NI stuff */
+     NI_card = comedi_open(DEVICE);
+     /*Global config*/
+     comedi_set_global_oor_behavior(COMEDI_OOR_NUMBER);
+     comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, COMEDI_OUTPUT);
+     comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, COMEDI_INPUT);
+     if (NI_card == NULL) {
+       return 0;
+     }
 
     return 1;
 }
