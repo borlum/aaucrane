@@ -468,8 +468,12 @@ double get_sensor_raw(int channel)
  * @return pixel at which wire is located
  */
 int get_sensor_pixel() {
-    static char buffer[5] = {0};
-    read(FD_serial, buffer, 4);
+    static char buffer[5];
+    int n = read(FD_serial, buffer, 4);
+
+    if (n < 0) {
+        printf("Could not read!\n");
+    }
     
     if (buffer[3] != ';') {
         tcflush(FD_serial, TCIOFLUSH);
