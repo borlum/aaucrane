@@ -78,7 +78,7 @@ int initialize_crane()
     usleep(1000000 * 2);
     tcflush(FD_serial, TCIOFLUSH);
 
-    FD_serial = open(SERIAL_PORT, O_RDONLY | O_NOCTTY | O_NDELAY);
+    FD_serial = open(SERIAL_PORT, O_RDONLY | O_NOCTTY);
     if (FD_serial == -1) {
         perror("open_port: Unable to open port");
     }
