@@ -69,7 +69,7 @@ double get_controller_output(double ref){
     current_index++;
   }
 #else
-  x_pos_out = position_controller_x(ref - get_xpos());
+  pos_out = position_controller_x(ref - get_xpos());
 #endif
 
 
