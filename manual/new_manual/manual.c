@@ -54,7 +54,6 @@ int main(int argc, char* argv[])
     } else {
         disable_magnet();
     }
-#endif
 
     /*GRAB TIMESTAMP*/
     t_sample = get_time_micros();
