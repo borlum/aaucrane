@@ -31,6 +31,9 @@ double angle_controller(double angle_err){
   prev_angle_err = angle_err;
   prev_angle_out = angle_out;
 
+  printf("ANGLE CONTROLLER: %lf\n", angle_out);
+
+  
   return angle_out;
 }
 

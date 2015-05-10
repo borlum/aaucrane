@@ -240,8 +240,11 @@ double get_angle()
     static const double zero_pixel = 275.0;
     static const double ppmm       =  15.0;
     static const double dist       =  25.0;
-
-    return asin( ( ((double)get_sensor_pixel() - zero_pixel) / ppmm ) / dist );
+    double tmp = asin( ( ((double)get_sensor_pixel() - zero_pixel) / ppmm ) / dist );
+    
+    printf("ANGLE: %.3lf\n", tmp);
+    
+    return tmp;
 }
 
 /**
@@ -508,10 +511,6 @@ int get_sensor_pixel() {
     if (buffer[3] != ';') {
         tcflush(FD_serial, TCIOFLUSH);
     }
-
-    printf("BUFFER: %s \n", buffer);
-
-    printf("ATOI SIGER: %d\n", atoi(buffer));
 
     return atoi(buffer);
 }
