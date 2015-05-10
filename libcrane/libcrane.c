@@ -213,8 +213,6 @@ double get_angle()
     static double offset = 1.088;
 
     double ang = 0.2631 * get_angle_raw() - offset;
-    printf("ANG: %lf\n", ang);
-
 #ifdef MORTEN_HACK
     static int count = 0;
     static double ang_prev = 0;
@@ -231,8 +229,8 @@ double get_angle()
       
       ang_prev = ang;
       
-      return libcrane_truncate(ang);
 #endif /* MORTEN_HACK */
+      return libcrane_truncate(ang);
 #else
     /*Use sensor pixel instead*/
     static const double zero_pixel = 275.0;
