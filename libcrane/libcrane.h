@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <time.h>
+#include <fcntl.h>
+#include <termios.h>
 
 #ifndef TESTING
 #include <comedilib.h>
