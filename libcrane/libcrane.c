@@ -482,6 +482,8 @@ int get_sensor_pixel() {
 
     printf("BUFFER: %s \n", buffer);
 
+    printf("ATOI SIGER: %d\n", atoi(buffer));
+
     return atoi(buffer);
 }
 
