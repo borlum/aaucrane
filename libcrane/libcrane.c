@@ -205,17 +205,13 @@ int run_motor(double voltage, int axis)
  */
 double get_angle()
 {
-    /*
+#ifndef SERAIL_ANGLE
     static int count = 0;
     static double ang_prev = 0;
     static double offset = 1.088;
 
     double ang = 0.2631 * get_angle_raw() - offset;
-    */
-    
-    /* MORTENS HACK */
-    
-    /*
+
 #ifdef MORTEN_HACK
     static int count = 0;
     static double ang_prev = 0;
@@ -231,11 +227,10 @@ double get_angle()
     }
       
       ang_prev = ang;
-#endif
       
-    return libcrane_truncate(ang);
-    */
-   
+      return libcrane_truncate(ang);
+#endif /* MORTEN_HACK */
+#else
     /*Use sensor pixel instead*/
     static const double zero_pixel = 275.0;
     static const double ppmm       =  15.0;
@@ -245,6 +240,7 @@ double get_angle()
     printf("ANGLE: %.3lf\n", tmp);
     
     return tmp;
+#endif
 }
 
 /**
