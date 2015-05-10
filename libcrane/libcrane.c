@@ -72,17 +72,16 @@ int initialize_crane()
         return 0;
     }
 
-    tcgetattr(FD_serial, &termiosv);
-    termiosv.c_cc[VMIN] = 4;
-    tcsetattr(FD_serial, TCSANOW, &termiosv);
-    usleep(1000000 * 2);
-    tcflush(FD_serial, TCIOFLUSH);
-
     FD_serial = open(SERIAL_PORT, O_RDONLY | O_NOCTTY);
     if (FD_serial == -1) {
         perror("open_port: Unable to open port");
     }
 
+    tcgetattr(FD_serial, &termiosv);
+    termiosv.c_cc[VMIN] = 4;
+    tcsetattr(FD_serial, TCSANOW, &termiosv);
+    usleep(1000000 * 2);
+    tcflush(FD_serial, TCIOFLUSH);
 
     return 1;
 }
