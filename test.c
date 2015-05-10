@@ -18,6 +18,21 @@ void main() {
   
   tcsetattr( FD_serial, TCSANOW, &termiosv );
 
+  /* get current serial port settings */
+  tcgetattr(FD_serial, &termiosv);
+  /* set 9600 baud both ways */
+  cfsetispeed(&termiosv, B9600);
+  cfsetospeed(&termiosv, B9600);
+  /* 8 bits, no parity, no stop bits */
+  termiosv.c_cflag &= ~PARENB;
+  termiosv.c_cflag &= ~CSTOPB;
+  termiosv.c_cflag &= ~CSIZE;
+  termiosv.c_cflag |= CS8;
+  /* Canonical mode */
+  termiosv.c_lflag |= ICANON;
+  /* commit the serial port settings */
+  tcsetattr(FD_serial, TCSANOW, &termiosv);
+
   usleep(1000000 * 2);  
   tcflush(FD_serial, TCIOFLUSH);
 
