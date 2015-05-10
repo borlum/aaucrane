@@ -208,7 +208,7 @@ void loop()
   Serial.print(',');
   Serial.println(wire_loc.pixel_id);*/
   get_wire_location(&wire_loc);
-  //Serial.println(wire_loc.pixel_id);
+  Serial.println(wire_loc.pixel_id);
 
   //wire_loc.pixel_id = 285;
   
