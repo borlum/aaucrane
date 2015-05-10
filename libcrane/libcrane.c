@@ -101,7 +101,7 @@ int initialize_crane()
      /* Wait for the Arduino to reset */
      usleep(1000*1000);
      /* Flush anything already in the serial buffer */
-     tcflush(fd, TCIFLUSH);
+     tcflush(FD_serial, TCIFLUSH);
 
 
      /* NI stuff */
