@@ -83,8 +83,7 @@ double get_controller_output(double ref){
   }
 
   if (!libcrane_is_loaded()) {
-    printf("JEG ER IKKE LASTET!\n");
-    angle_out = angle_out * 0.5;
+    angle_out = angle_out * 2;
   }
 
   out = velocity_controller_x(angle_out + pos_out - get_x_velocity());
