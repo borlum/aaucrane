@@ -11,7 +11,7 @@ size_t nr_of_ref;
 double ref_arr[REF_ARR_SZ];
 int current_index = 0;
 
-double angle_controller(double angle_err){
+double angle_controller(double angle_err, double pos_err){
   static double prev_angle_err;
   static double prev_angle_out;
 
@@ -23,6 +23,12 @@ double angle_controller(double angle_err){
   }
 
   angle_out = 74.91 * angle_err - 70.55 * prev_angle_err + 0.8182 * prev_angle_out;
+
+  /*CRAZY HACKZ*/
+  if ( fabs(pos_err) < 0.05 ) {
+    angle_out = angle_out * 0.5;
+  }
+
   /* NEW */
   //angle_out = 146 * angle_err - 137.5 * prev_angle_err + 0.7391 * prev_angle_out;
   angle_out *= -1;
@@ -62,19 +68,20 @@ double position_controller_y(double error){
 }
 
 double get_controller_output(double ref){
-  double out, angle_out, pos_out;
+  double out, angle_out, pos_out, pos_error;
   
-  angle_out = angle_controller(-get_angle());
-
-  /*STEP or RAMP?*/
+/*STEP or RAMP?*/
 #ifdef RAMP
-  pos_out = position_controller_x(ref_arr[current_index] - get_xpos());
+  pos_error = ref_arr[current_index] - get_xpos();
   if(current_index < (nr_of_ref - 1)) {
     current_index++;
   }
 #else
-  pos_out = position_controller_x(ref - get_xpos());
+  pos_error = ref - get_xpos();
 #endif
+
+  angle_out = angle_controller(-get_angle(), pos_error);
+  pos_out   = position_controller_x(pos_error);
 
   printf("ANGLE CTRL. = %lf \n", angle_out);
   printf("POS   CTRL. = %lf \n", pos_out);
