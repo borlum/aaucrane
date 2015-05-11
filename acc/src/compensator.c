@@ -11,7 +11,7 @@ size_t nr_of_ref;
 double ref_arr[REF_ARR_SZ];
 int current_index = 0;
 
-double angle_controller(double angle_err, double pos_err){
+double angle_controller(double angle_err){
   static double prev_angle_err;
   static double prev_angle_out;
 
@@ -23,11 +23,6 @@ double angle_controller(double angle_err, double pos_err){
   }
 
   angle_out = 74.91 * angle_err - 70.55 * prev_angle_err + 0.8182 * prev_angle_out;
-
-  /*CRAZY HACKZ*/
-  if ( fabs(pos_err) < 0.05 ) {
-    angle_out = angle_out * 0.5;
-  }
 
   /* NEW */
   //angle_out = 146 * angle_err - 137.5 * prev_angle_err + 0.7391 * prev_angle_out;
@@ -82,8 +77,14 @@ double get_controller_output(double ref){
   pos_error = ref - get_xpos();
 #endif
 
-  angle_out = angle_controller(-get_angle(), pos_error);
+  
   pos_out   = position_controller_x(pos_error);
+  angle_out = angle_controller(-get_angle());
+
+  /*CRAZY HACKZ*/
+  if ( fabs(pos_err) < 0.05 ) {
+    angle_out = angle_out * 0.5;
+  }
 
   printf("ANGLE CTRL. = %lf \n", angle_out);
   printf("POS   CTRL. = %lf \n", pos_out);
@@ -98,12 +99,12 @@ int ramp_maker(double step){
   int j = 0;
 
   if (step > 0) {
-    for(i = 0; i <= step + 0.005; i += speed){
+    for(i = 0; i <= step + X_ERR_BAND; i += speed){
       ref_arr[j] = i + off_set;
       j++;
     }
   } else if(step < 0){
-    for(i = 0; i >= step - 0.005; i -= speed){
+    for(i = 0; i >= step - X_ERR_BAND; i -= speed){
       ref_arr[j] = i + off_set;
       j++;
     }

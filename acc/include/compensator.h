@@ -4,7 +4,7 @@
 #define SAMPLE_TIME_NS 10E6
 #define SAMPLE_TIME_S SAMPLE_TIME_NS * 1E-9
 
-double angle_controller(double error, double pos_error);
+double angle_controller(double error);
 double position_controller_x(double error);
 double velocity_controller_x(double error);
 double position_controller_y(double error);
