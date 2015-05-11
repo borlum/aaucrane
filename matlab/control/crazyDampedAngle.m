@@ -9,15 +9,17 @@ CV = 5;
 
 Vcl = feedback(CV * Mx * Grx * rrx, 1);
 
-Ctheta = 163 * (s + 6) * 1/(s+20);
+Ctheta = 163 * (s + 6) * 1/(s+30);
 
-Ctheta = (s + 6) * 1/(s+20);
+%Ctheta = (s + 6) * 1/(s+20);
 
-Ctheta = 8.84*(s+6 ); 
+%Ctheta = 8.84*(s+6); 
 
 dCtheta = c2d(Ctheta, .01, 'tustin');
 
 Acl = feedback(Ctheta * Vcl * 1/s * -W,1);
+
+PosPlant = feedback(Vcl*1/s, -W*Ctheta);
 
 C3 = 1.2;
 
