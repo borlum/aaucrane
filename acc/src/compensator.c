@@ -65,20 +65,20 @@ double position_controller_y(double error){
 }
 
 double get_controller_output(double ref){
-  double out, angle_out, pos_out, pos_error;
+  double out, angle_out, pos_out, pos_err;
   
 /*STEP or RAMP?*/
 #ifdef RAMP
-  pos_error = ref_arr[current_index] - get_xpos();
+  pos_err = ref_arr[current_index] - get_xpos();
   if(current_index < (nr_of_ref - 1)) {
     current_index++;
   }
 #else
-  pos_error = ref - get_xpos();
+  pos_err = ref - get_xpos();
 #endif
 
   
-  pos_out   = position_controller_x(pos_error);
+  pos_out   = position_controller_x(pos_err);
   angle_out = angle_controller(-get_angle());
 
   /*CRAZY HACKZ*/
