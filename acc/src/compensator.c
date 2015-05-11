@@ -36,8 +36,6 @@ double angle_controller(double angle_err){
 
 double position_controller_x(double error){
   static double k_p = 1.2;
-  
-  printf("POS ERR: %lf \n", error);
 
   int sign;
   if(fabs(error) < 0.15 && fabs(error) > 0.008){
@@ -60,7 +58,7 @@ double velocity_controller_x(double error){
 
 
 double position_controller_y(double error){
-  double k_p = 50;
+  double k_p = 100;
   return error * k_p;
 }
 
