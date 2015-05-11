@@ -24,8 +24,6 @@ double angle_controller(double angle_err){
 
   angle_out = 74.91 * angle_err - 70.55 * prev_angle_err + 0.8182 * prev_angle_out;
 
-  /* NEW */
-  //angle_out = 146 * angle_err - 137.5 * prev_angle_err + 0.7391 * prev_angle_out;
   angle_out *= -1;
 
   prev_angle_err = angle_err;
@@ -81,6 +79,10 @@ double get_controller_output(double ref){
 
   /*CRAZY HACKZ*/
   if ( fabs(pos_err) < 0.05 ) {
+    angle_out = angle_out * 0.5;
+  }
+
+  if (libcrane_is_loaded()) {
     angle_out = angle_out * 0.5;
   }
 
