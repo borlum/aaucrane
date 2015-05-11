@@ -65,7 +65,7 @@ double position_controller_y(double error){
 
   /*UP = negative error, DOWN = positive error*/
   if (error > 0) {
-    k_p = 75;
+    k_p = 47.5;
   } else if (error < 0) {
     k_p = 225;
   }
