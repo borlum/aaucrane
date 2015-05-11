@@ -17,6 +17,11 @@ double angle_controller(double angle_err){
 
   double angle_out;
 
+  if ( fabs(angle_err) < 0.03 ) {
+    angle_out = 0;
+    return angle_out;
+  }
+
   angle_out = 74.91 * angle_err - 70.55 * prev_angle_err + 0.8182 * prev_angle_out;
   /* NEW */
   //angle_out = 146 * angle_err - 137.5 * prev_angle_err + 0.7391 * prev_angle_out;
