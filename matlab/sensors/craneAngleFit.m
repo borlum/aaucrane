@@ -1,15 +1,13 @@
 % GRAB DATA FROM CRANE
-ZERO_PIXEL = 285;
+ZERO_PIXEL_M = 277;
+ZERO_PIXEL_U = 292;
 
 % PIXELS, CONVERTED TO ANGLE + RESPECTIVE COMEDI-READ VOLTAGES!
-p = [0     50    100   150   200   250   285   300   350   400   450   500   550];
+p = [188   208   228   248   268   288   308   328   348   368   376];
+u = [0.720 0.950 1.187 1.418 1.653 1.887 2.125 2.361 2.590 2.825 2.923];
 
-a = asin(((p-ZERO_PIXEL) / 15)/25);
+a = asin( ( (p-ZERO_PIXEL_M) / 15 ) / 25 );
 
-u = [0.674 0.869 1.067 1.263 1.458 1.653 1.7899 1.849 2.044 2.239 2.440 2.630 2.830];
-
-u = u.*2.8; % EFTER FORSTÆRKEREN!
-u = u - 5 + 4.115;
 
 [p, s] = polyfit(u, a, 1);
 % x = -0.4981*u + 4.7931
