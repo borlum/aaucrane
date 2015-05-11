@@ -82,7 +82,8 @@ double get_controller_output(double ref){
     angle_out = angle_out * 0.5;
   }
 
-  if (libcrane_is_loaded()) {
+  if (!libcrane_is_loaded()) {
+    printf("JEG ER IKKE LASTET!\n");
     angle_out = angle_out * 0.5;
   }
 
