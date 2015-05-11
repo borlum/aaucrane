@@ -13,8 +13,6 @@ static const double epsilon = 0.2;
 /*Container-flag*/
 static int payload = 0;
 
-#define MORTEN_HACK
-
 /**
  * Sets containers flag HIGH => we have a container attached!
  */
@@ -159,9 +157,16 @@ int run_motor(double voltage, int axis)
  */
 double get_angle()
 {
-    static double offset = 0.4206;
+    static double offset_w_container = 0.4206;
+    static double offset_wo_container = 0.4296;
+    double ang;
 
-    double ang = 0.2294 * get_angle_raw() - offset;
+    if (libcrane_is_loaded()) {
+        ang = 0.2294 * get_angle_raw() - offset_w_container;
+    } else {
+        ang = 0.2294 * get_angle_raw() - offset_wo_container;
+    }
+
 #ifdef MORTEN_HACK
 
     static int count = 0;
