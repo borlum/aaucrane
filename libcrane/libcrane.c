@@ -210,9 +210,9 @@ double get_angle()
 #ifndef SERAIL_ANGLE
     static int count = 0;
     static double ang_prev = 0;
-    static double offset = 1.088;
+    static double offset = 0.4036;
 
-    double ang = 0.2631 * get_angle_raw() - offset;
+    double ang = 0.2294 * get_angle_raw() - offset;
 #ifdef MORTEN_HACK
     static int count = 0;
     static double ang_prev = 0;
