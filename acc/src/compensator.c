@@ -88,13 +88,13 @@ int ramp_maker(double step){
   double i,  speed = .008, off_set = get_xpos(); //speed is in m/ms
   int j = 0;
 
-  if(step>0){
-    for(i = 0; i<=step; i += speed){
+  if (step > 0) {
+    for(i = 0; i <= step + 0.005; i += speed){
       ref_arr[j] = i + off_set;
       j++;
     }
   } else if(step < 0){
-    for(i = 0; i>=step; i -= speed){
+    for(i = 0; i >= step - 0.005; i -= speed){
       ref_arr[j] = i + off_set;
       j++;
     }
