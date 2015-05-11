@@ -45,7 +45,7 @@ double position_controller_x(double error){
   printf("POS ERR: %lf \n", error);
 
   int sign;
-  if(fabs(error) < 0.15 && fabs(error) > 0.015){
+  if(fabs(error) < 0.15 && fabs(error) > 0.008){
     if(error < 0)
       sign = -1;
     else
