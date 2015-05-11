@@ -24,24 +24,22 @@ double angle_controller(double angle_err){
 
   prev_angle_err = angle_err;
   prev_angle_out = angle_out;
-
-  printf("ANGLE CONTROLLER: %lf\n", angle_out);
   
   return angle_out;
 }
 
 double position_controller_x(double error){
   static double k_p = 1.2;
-  /*
+  
   int sign;
-  if(fabs(error) < 0.11 && fabs(error) > 0.005){
+  if(fabs(error) < 0.15 && fabs(error) > 0.005){
     if(error < 0)
-      sign = -1.5;
+      sign = -1;
     else
       sign = 1;
-    error = 0.10 * sign;
+    error = 0.15 * sign;
   }
-  */
+
   return error * k_p;
 }
 
@@ -60,6 +58,7 @@ double get_controller_output(double ref){
   double out, angle_out, pos_out;
   
   angle_out = angle_controller(-get_angle());
+
   /*STEP or RAMP?*/
 #ifdef RAMP
   pos_out = position_controller_x(ref_arr[current_index] - get_xpos());
@@ -70,6 +69,8 @@ double get_controller_output(double ref){
   pos_out = position_controller_x(ref - get_xpos());
 #endif
 
+  printf("ANGLE CTRL. = %lf \n", angle_out);
+  printf("POS   CTRL. = %lf \n", pos_out);
 
   out = velocity_controller_x(angle_out + pos_out - get_x_velocity());
   
