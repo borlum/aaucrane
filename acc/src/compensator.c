@@ -99,12 +99,12 @@ int ramp_maker(double step){
   int j = 0;
 
   if (step > 0) {
-    for(i = 0; i <= step + X_ERR_BAND; i += speed){
+    for(i = 0; i <= step + 0.005; i += speed){
       ref_arr[j] = i + off_set;
       j++;
     }
   } else if(step < 0){
-    for(i = 0; i >= step - X_ERR_BAND; i -= speed){
+    for(i = 0; i >= step - 0.005; i -= speed){
       ref_arr[j] = i + off_set;
       j++;
     }
