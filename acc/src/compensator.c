@@ -17,7 +17,12 @@ double angle_controller(double angle_err){
 
   double angle_out;
 
-  if ( fabs(angle_err) < 0.03 ) {
+  if (libcrane_is_loaded() && fabs(angle_err) < 0.03 ) {
+    angle_out = 0;
+    return angle_out;
+  }
+
+  if (!libcrane_is_loaded() && fabs(angle_err) < 0.04 ) {
     angle_out = 0;
     return angle_out;
   }
@@ -56,7 +61,15 @@ double velocity_controller_x(double error){
 
 
 double position_controller_y(double error){
-  double k_p = 100;
+  double k_p = 0;
+
+  /*UP = negative error, DOWN = positive error*/
+  if (error > 0) {
+    k_p = 47.4;
+  } else if (error < 0) {
+    k_p = 225;
+  }
+
   return error * k_p;
 }
 
@@ -82,6 +95,7 @@ double get_controller_output(double ref){
     angle_out = angle_out * 0.5;
   }
 
+  /*MERE GAIN U. CONTAINER*/
   if (!libcrane_is_loaded()) {
     angle_out = angle_out * 2;
   }
