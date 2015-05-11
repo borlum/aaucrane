@@ -19,6 +19,7 @@ static int payload = 0;
 void libcrane_load()
 {
     payload = 1;
+    printf(">>>> LOAD!\n");
 }
 
 /**
@@ -27,6 +28,7 @@ void libcrane_load()
 void libcrane_unload()
 {
     payload = 0;
+    printf(">>>> UNLOAD!\n");
 }
 
 /**
