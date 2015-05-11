@@ -51,6 +51,8 @@ double position_controller_x(double error){
     else
       sign = 1;
     error = 0.15 * sign;
+  } else if (fabs(error) < 0.005) {
+    error = 0;
   }
 
   return error * k_p;
