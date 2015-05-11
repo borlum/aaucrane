@@ -86,9 +86,6 @@ double get_controller_output(double ref){
     angle_out = angle_out * 0.5;
   }
 
-  printf("ANGLE CTRL. = %lf \n", angle_out);
-  printf("POS   CTRL. = %lf \n", pos_out);
-
   out = velocity_controller_x(angle_out + pos_out - get_x_velocity());
   
   return out;
