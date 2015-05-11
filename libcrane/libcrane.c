@@ -6,9 +6,6 @@ comedi_t *NI_card;
 int *NI_card;
 #endif
 
-int FD_serial;
-struct termios termiosv;
-
 static const double MAX_MOTOR_OUTPUT = 12.5;
 static const double MIN_MOTOR_OUTPUT = 0;
 static const double epsilon = 0.2;
@@ -69,53 +66,6 @@ int initialize_crane()
   if (NI_card == NULL) {
     return 0;
   }
-
-#ifdef SERAIL_ANGLE
-  struct termios toptions;
-  FD_serial = open(SERIAL_PORT, O_RDONLY | O_NOCTTY);
-  if (FD_serial == -1) {
-    perror("open_port: Unable to open port");
-  }
-
-  tcgetattr(FD_serial, &toptions);
- 
-  /* Set custom options */
- 
-  /* 9600 baud */
-  cfsetispeed(&toptions, B9600);
-  cfsetospeed(&toptions, B9600);
-  /* 8 bits, no parity, no stop bits */
-  toptions.c_cflag &= ~PARENB;
-  toptions.c_cflag &= ~CSTOPB;
-  toptions.c_cflag &= ~CSIZE;
-  toptions.c_cflag |= CS8;
-  /* no hardware flow control */
-  toptions.c_cflag &= ~CRTSCTS;
-  /* enable receiver, ignore status lines */
-  toptions.c_cflag |= CREAD | CLOCAL;
-  /* disable input/output flow control, disable restart chars */
-  toptions.c_iflag &= ~(IXON | IXOFF | IXANY);
-  /* disable canonical input, disable echo,
-     disable visually erase chars,
-     disable terminal-generated signals */
-  toptions.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);
-  /* disable output processing */
-  toptions.c_oflag &= ~OPOST;
- 
-  /* wait for 4 characters to come in before read returns */
-  toptions.c_cc[VMIN] = 4;
-  /* no minimum time to wait before read returns */
-  toptions.c_cc[VTIME] = 0;
- 
-  /* commit the options */
-  tcsetattr(FD_serial, TCSANOW, &toptions);
- 
-  /* Wait for the Arduino to reset */
-  usleep(1000*1000);
-  /* Flush anything already in the serial buffer */
-  tcflush(FD_serial, TCIFLUSH);
-#endif
-
     return 1;
 }
 
@@ -137,7 +87,7 @@ int run_motorx(double voltage)
     else
       sign = 1;
 
-    voltage = sign * (fabs(voltage) + 4.2);		    
+    voltage = sign * (fabs(voltage) + 4.1);		    
   }
 
   /* Change X motor direction */
@@ -207,7 +157,6 @@ int run_motor(double voltage, int axis)
  */
 double get_angle()
 {
-#ifndef SERAIL_ANGLE
     static int count = 0;
     static double ang_prev = 0;
     static double offset = 0.4206;
@@ -230,18 +179,7 @@ double get_angle()
       ang_prev = ang;
       
 #endif /* MORTEN_HACK */
-      return libcrane_truncate(ang);
-#else
-    /*Use sensor pixel instead*/
-    static const double zero_pixel = 275.0;
-    static const double ppmm       =  15.0;
-    static const double dist       =  25.0;
-    double tmp = asin( ( ((double)get_sensor_pixel() - zero_pixel) / ppmm ) / dist );
-    
-    printf("ANGLE: %.3lf\n", tmp);
-    
-    return tmp;
-#endif
+    return libcrane_truncate(ang);
 }
 
 /**
@@ -491,25 +429,6 @@ double get_sensor_raw(int channel)
 #endif
 
     return physical_value;
-}
-
-/**
- * Get sensor pixel via serial interface
- * @return pixel at which wire is located
- */
-int get_sensor_pixel() {
-    static char buffer[5] = {0};
-    int n = read(FD_serial, buffer, 4);
-
-    if (n < 0) {
-        printf("Could not read!\n");
-    }
-    
-    if (buffer[3] != ';') {
-        tcflush(FD_serial, TCIOFLUSH);
-    }
-
-    return atoi(buffer);
 }
 
 /**

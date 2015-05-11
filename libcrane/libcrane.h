@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <time.h>
-#include <fcntl.h>
-#include <termios.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -45,8 +43,6 @@
 
 #define CHAN_CTRLPAD_X_IN 14
 #define CHAN_CTRLPAD_Y_IN 15
-
-#define SERIAL_PORT "/dev/ttyACM0"
 
 double libcrane_truncate(double sutff_oreo);
 
