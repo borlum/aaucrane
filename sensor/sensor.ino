@@ -1,5 +1,3 @@
-#include <DueTimer.h>
-
 /**
  * ============================================================================
  * AAU CRANE SENSOR
@@ -99,8 +97,6 @@ void setup()
   DEAD_PIXELS[2][7] = 1;
   DEAD_PIXELS[2][8] = 1;
 
-  Timer.getAvailable().attachInterrupt(callback).setPeriod(10000).start();
-  
   Serial.begin(9600);
 
   sensor_t sensor1, sensor2, sensor3;
@@ -214,24 +210,26 @@ void loop()
   Serial.print(wire_loc.sensor_id);
   Serial.print(',');
   Serial.println(wire_loc.pixel_id);*/
-  noInterrupts();
   get_wire_location(&wire_loc);
-  interrupts();
-  //wire_loc.pixel_id = 285;
   
-  if(wire_loc.pixel_id == 313) wire_loc.pixel_id = prev_id;
-  prev_id = wire_loc.pixel_id;
+ /* Serial.println(wire_loc.pixel_id) ;   */
+ /*  Serial.println(wire_loc.sensor_id) ; */
+
+  if(wire_loc.pixel_id < NR_PIXELS_W_DEADBAND) wire_loc.pixel_id = NR_PIXELS_W_DEADBAND;
+  else if(wire_loc.pixel_id > NR_PIXELS_W_DEADBAND*2) wire_loc.pixel_id = NR_PIXELS_W_DEADBAND*2;
+
+// Serial.println(wire_loc.pixel_id);  
+
+
+  int out;
+  out = map(wire_loc.pixel_id, NR_PIXELS_W_DEADBAND, NR_PIXELS_W_DEADBAND*2, 1, 1023);
   
-  analogWrite(DAC1, map(wire_loc.pixel_id, 0, 3 * NR_PIXELS_W_DEADBAND, 0, 1024));
+ /* Serial.print("out: "); */
+  
+  
+  analogWrite(DAC1, out);
 }
 
-void callback(){
-  char buffer[4];
-  int tmp;
-  sprintf(buffer, "%3d;", wire_loc.pixel_id);
-  if( (tmp = Serial.print(buffer)) != 4)
-    Serial.println("ERROR");
-}
 
 /**
  * ----------------------------------------------------------------------------
