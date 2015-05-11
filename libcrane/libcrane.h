@@ -46,6 +46,10 @@
 
 double libcrane_truncate(double sutff_oreo);
 
+int libcrane_is_loaded();
+void libcrane_unload();
+void libcrane_load();
+
 int initialize_crane();
 
 int run_motorx(double voltage);
