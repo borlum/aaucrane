@@ -103,13 +103,23 @@ int run_motorx(double voltage)
  */
 int run_motory(double voltage)
 {
-    if (voltage > -5.5 && voltage < 0 - epsilon) {
-        voltage = -5.5;
-    }
+    int sign;
+  if (voltage < 0.085 && voltage > -0.085) voltage = 0;
+  
+  
+  if (voltage != 0) {
+    
+    if(voltage < 0)
+      sign = -1;
+    else
+      sign = 1;
 
-    if (voltage < 3 && voltage > 0 + epsilon) {
-        voltage = 3;
-    }
+    if (voltage > 0) {
+        voltage = sign * (fabs(voltage) + 3);
+    } else {
+        voltage = sign * (fabs(voltage) + 5.5);
+    }       
+  }
 
     return run_motor(voltage, 1);
 }
