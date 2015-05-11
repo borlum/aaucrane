@@ -5,13 +5,15 @@ run('../model/cranemodel');
 
 % Angle control, as damped as possible!
 
-CV = 10;
+CV = 5;
 
 Vcl = feedback(CV * Mx * Grx * rrx, 1);
 
-Ctheta = 163 * (s + 6) * 1/(s+30);
+Ctheta = 163 * (s + 6) * 1/(s+20);
 
-Ctheta = 4.64 * (s+7);
+Ctheta = (s + 6) * 1/(s+20);
+
+Ctheta = 8.84*(s+6 ); 
 
 dCtheta = c2d(Ctheta, .01, 'tustin');
 
