@@ -90,9 +90,9 @@ int main(int argc,char* argv[]){
     }
 
     enable_logger();
-    
+
     /*Disable for NO CONTAINER*/
-    enable_magnet();
+    //enable_magnet();
     
     if (mq_send(to_x, (char *) &x, sizeof(x), 0) == -1)
       printf("ERROR: send: %s\n", strerror(errno));
