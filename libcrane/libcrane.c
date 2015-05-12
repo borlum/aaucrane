@@ -89,7 +89,7 @@ int run_motorx(double voltage)
     else
       sign = 1;
 
-    voltage = sign * (fabs(voltage) + 4.1);		    
+    voltage = sign * (fabs(voltage) + 4.3);		    
   }
 
   /* Change X motor direction */
@@ -179,8 +179,8 @@ double get_angle()
         ang = 0.2294 * get_angle_raw() - offset_wo_container;
     }
 
+    /*#01: CRAZY MORTEN HACKZ*/
 #ifdef MORTEN_HACK
-
     static int count = 0;
     static double ang_prev = 0;
     if(fabs(ang_prev - ang) < 0.001)
@@ -194,9 +194,9 @@ double get_angle()
         count = 0;
     }
       
-      ang_prev = ang;
-      
+      ang_prev = ang;      
 #endif /* MORTEN_HACK */
+
     return libcrane_truncate(ang);
 }
 
@@ -281,7 +281,7 @@ double get_motorx_velocity()
  */
 double get_motorx_velocity_raw()
 {
-    return get_sensor_raw(CHAN_XVEL_IN)-.115;
+    return get_sensor_raw(CHAN_XVEL_IN);
 }
 
 /**

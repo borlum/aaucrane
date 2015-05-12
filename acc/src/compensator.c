@@ -11,35 +11,32 @@ size_t nr_of_ref;
 double ref_arr[REF_ARR_SZ];
 int current_index = 0;
 
-double angle_controller(double angle_err){
-  static double prev_angle_err;
-  static double prev_angle_out;
+double angle_controller(double error){
+  static double prev_err;
+  static double prev_out;
 
-  double angle_out;
+  double out;
 
-  if (libcrane_is_loaded() && fabs(angle_err) < 0.03 ) {
-    angle_out = 0;
-    return angle_out;
+  /*#31: CRAZY ANG HACKZ 2*/
+  if ( libcrane_is_loaded() && fabs(error) < 0.03 ) {
+    out = 0;
+    return out;
   }
 
-  if (!libcrane_is_loaded() && fabs(angle_err) < 0.04 ) {
-    angle_out = 0;
-    return angle_out;
-  }
-
-  angle_out = 74.91 * angle_err - 70.55 * prev_angle_err + 0.8182 * prev_angle_out;
+  angle_out = 74.91 * error - 70.55 * prev_angle_err + 0.8182 * prev_angle_out;
 
   angle_out *= -1;
 
-  prev_angle_err = angle_err;
-  prev_angle_out = angle_out;
+  prev_err = error;
+  prev_out = out;
   
-  return angle_out;
+  return out;
 }
 
 double position_controller_x(double error){
   static double k_p = 1.2;
 
+  /*#27: CRAZY POS. HACKZ*/
   int sign;
   if(fabs(error) < 0.15 && fabs(error) > 0.008){
     if(error < 0)
@@ -74,7 +71,7 @@ double position_controller_y(double error){
 }
 
 double get_controller_output(double ref){
-  double out, angle_out, pos_out, pos_err;
+  double out, ang_out, pos_out, pos_err;
   
 /*STEP or RAMP?*/
 #ifdef RAMP
@@ -87,20 +84,15 @@ double get_controller_output(double ref){
 #endif
 
   
-  pos_out   = position_controller_x(pos_err);
-  angle_out = angle_controller(-get_angle());
+  pos_out = position_controller_x(pos_err);
+  ang_out = angle_controller(-get_angle());
 
-  /*CRAZY HACKZ*/
+  /*#23: CRAZY ANG. HACKZ*/
   if ( fabs(pos_err) < 0.05 ) {
-    angle_out = angle_out * 0.5;
+    ang_out = ang_out * 0.5;
   }
 
-  /*MERE GAIN U. CONTAINER*/
-  if (!libcrane_is_loaded()) {
-    angle_out = angle_out * 2;
-  }
-
-  out = velocity_controller_x(angle_out + pos_out - get_x_velocity());
+  out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
   
   return out;
 }
@@ -114,7 +106,7 @@ int ramp_maker(double step){
       ref_arr[j] = i + off_set;
       j++;
     }
-  } else if(step < 0){
+  } else if (step < 0) {
     for(i = 0; i >= step - 0.005; i -= speed){
       ref_arr[j] = i + off_set;
       j++;
@@ -126,7 +118,7 @@ int ramp_maker(double step){
 
 void init_ramp(double x_ref){
   double step;
-  step = x_ref-get_xpos();
+  step = x_ref - get_xpos();
   nr_of_ref = ramp_maker(step);
   current_index = 0;
 }
