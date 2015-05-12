@@ -62,8 +62,10 @@ double position_controller_y(double error){
 
   /*UP = negative error, DOWN = positive error*/
   if (error > 0) {
+    printf(">>>>NED!\n");
     k_p = 47.4;
   } else if (error < 0) {
+    printf(">>>>OP!\n");
     k_p = 225;
   }
 
