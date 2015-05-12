@@ -62,14 +62,12 @@ double position_controller_y(double error){
 
   /*UP = negative error, DOWN = positive error*/
   if (error > 0) {
-    printf(">>>>NED!\n");
     if (libcrane_is_loaded()) {
       k_p = 15;
     } else {
       k_p = 30;
     }
   } else if (error < 0) {
-    printf(">>>>OP!\n");
     if (libcrane_is_loaded()) {
       k_p = 150;
     } else {
