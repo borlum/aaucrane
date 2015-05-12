@@ -66,7 +66,7 @@ double position_controller_y(double error){
     k_p = 25;
   } else if (error < 0) {
     printf(">>>>OP!\n");
-    k_p = 150;
+    k_p = 100;
   }
 
   return error * k_p;
