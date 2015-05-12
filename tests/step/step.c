@@ -61,9 +61,12 @@ int init(){
 
 
 int main(int argc,char* argv[]){
+
   if( init() == -1)
     exit(-1);
+
   init_logger("/var/www/html/data/acc/steps/", sizeof("/var/www/html/data/acc/steps/"));
+
   mqd_t to_x, from_x, to_y, from_y;
   to_x = mq_open(Q_TO_X, O_WRONLY);
   from_x = mq_open(Q_FROM_X, O_RDONLY);
@@ -81,19 +84,21 @@ int main(int argc,char* argv[]){
     printf ("Enter a step size: <x>:\n");
     scanf("%lf", &x);
     
-    if(t_xcontroller == NULL && t_logger == NULL){
+    if (t_xcontroller == NULL && t_logger == NULL) {
       pthread_create(&t_xcontroller, NULL, task_x_axis_controller, NULL);
       pthread_create(&t_logger, NULL, task_logger, NULL);
     }
 
     enable_logger();
+    
+    /*Disable for NO CONTAINER*/
     enable_magnet();
     
-    if(mq_send(to_x, (char *) &x, sizeof(x), 0) == -1)
+    if (mq_send(to_x, (char *) &x, sizeof(x), 0) == -1)
       printf("ERROR: send: %s\n", strerror(errno));
-    if(mq_receive(from_x, stupid_buffer, len, 0) == -1)
+    if (mq_receive(from_x, stupid_buffer, len, 0) == -1)
       printf("ERROR: recv: %s\n", strerror(errno));
-    else{
+    else {
       memcpy(&tmp, stupid_buffer, sizeof(int));
       printf("Read: %lf", tmp);
     }
