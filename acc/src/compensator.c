@@ -23,11 +23,6 @@ double angle_controller(double error){
     return out;
   }
 
-  if ( !libcrane_is_loaded() && fabs(error) < 0.1 ) {
-    out = 0;
-    return out;
-  }
-
   out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
 
   out *= -1;
@@ -84,7 +79,7 @@ double position_controller_y(double error){
 }
 
 double get_controller_output(double ref){
-  double out, ang_out, pos_out, pos_err;
+  double out, ang_out, ang_err, pos_out, pos_err;
   
 /*STEP or RAMP?*/
 #ifdef RAMP
@@ -96,13 +91,14 @@ double get_controller_output(double ref){
   pos_err = ref - get_xpos();
 #endif
 
+  ang_err = 0 - get_angle();
   
   pos_out = position_controller_x(pos_err);
-  ang_out = angle_controller(-get_angle());
+  ang_out = angle_controller(ang_err);
 
   /*#23: CRAZY ANG. HACKZ*/
-  if ( fabs(pos_err) < 0.05 ) {
-    ang_out = ang_out * 0.5;
+  if ( fabs(pos_err) < 0.3 ) {
+    ang_out = ang_out * 0.25;
   }
 
   out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
