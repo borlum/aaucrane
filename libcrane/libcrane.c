@@ -223,13 +223,13 @@ double get_xpos()
     int NR_OF_SAMPLES = 10;
     double avg, tmp =0;
     int i;
-    /*
-    for(i =0; 0<NR_OF_SAMPLES; i++){
+
+    for(i = 0; i < NR_OF_SAMPLES; i++){
         tmp += get_xpos_raw();
     }
 
     avg = tmp / ( (double)NR_OF_SAMPLES );
-    */
+    
     return  (-0.4981)*get_xpos_raw() + 4.7931;
 }
 
