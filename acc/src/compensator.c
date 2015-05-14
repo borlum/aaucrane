@@ -35,7 +35,7 @@ double angle_controller(double error){
 }
 
 double position_controller_x(double error){
-  static double k_p = 2.2;
+  static double k_p = 2.1;
   
   /*#27: CRAZY POS. HACKZ*/
  /* int sign;
