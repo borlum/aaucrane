@@ -106,7 +106,7 @@ double get_controller_output(double ref){
   
     printf("ANG OUT = %lf \n", ang_out);
     printf("POS OUT = %lf \n", pos_out);
-  
+    printf("Ramp Goal %d \n", ref_arr[nr_of_ref])
   return out;
 }
 
@@ -125,7 +125,7 @@ int ramp_maker(double step){
       j++;
     }
   }
-
+  ref_arr[j++] = step+off_set;
   return j;
 }
 
