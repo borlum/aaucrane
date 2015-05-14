@@ -91,9 +91,7 @@ void *task_x_axis_controller(void * argc)
     } else {
       hit_count = 0;
       run_motorx(out);
-    }
-    
-  run_motorx(out);    
+    }   
     
     rt_task_wait_period();
   }
