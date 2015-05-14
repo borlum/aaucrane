@@ -88,7 +88,7 @@ int run_motorx(double voltage)
     else
       sign = 1;
 
-    voltage = sign * (fabs(voltage) + 4.5);		    
+    voltage = sign * (fabs(voltage) + 4.2);		    
   }
 
   /* Change X motor direction */
@@ -220,8 +220,8 @@ double get_old_angle_raw()
  */
 double get_xpos()
 {
-    int NR_OF_SAMPLES = 1000;
-    double avg, tmp =0;
+    int NR_OF_SAMPLES = 100;
+    double avg, tmp = 0;
     int i;
 
     for(i = 0; i < NR_OF_SAMPLES; i++){
