@@ -1,4 +1,4 @@
-TARGET=stepy
+TARGET=step
 CRANELIB_PATH = ../../libcrane
 
 INC += -I/usr/local/lib

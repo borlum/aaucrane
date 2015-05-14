@@ -3,7 +3,7 @@
 #include "compensator.h"
 #include <math.h>
 
-#define RAMP
+#define RAMP 
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -35,19 +35,22 @@ double angle_controller(double error){
 }
 
 double position_controller_x(double error){
-  static double k_p = 1.2;
+  static double k_p = 2.1;
   
   /*#27: CRAZY POS. HACKZ*/
-  int sign;
+ /* int sign;
   if(fabs(error) < 0.1 && fabs(error) > 0.008){
     if(error < 0)
       sign = -1;
     else
       sign = 1;
-    error = 0.10 * sign;
-  } else if (fabs(error) < 0.005) {
+    error = 0.1 * sign;
+    } else if (fabs(error) < 0.005) {
     error = 0;
-  }
+  } */
+
+  printf("POS ERR: %lf \n", error);
+
 
   return error * k_p;
 }
@@ -100,15 +103,15 @@ double get_controller_output(double ref){
   /* if(fabs(pos_err) < 0.03) ang_out *= .1; */
 
   out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
-  if(ang_out != 0 || pos_out != 0){
+  
     printf("ANG OUT = %lf \n", ang_out);
     printf("POS OUT = %lf \n", pos_out);
-  }
+  
   return out;
 }
 
 int ramp_maker(double step){
-  double i,  speed = .008, off_set = get_xpos(); //speed is in m/ms
+  double i,  speed = .005, off_set = get_xpos(); //speed is in m/ms
   int j = 0;
 
   if (step > 0) {
