@@ -19,10 +19,10 @@ double angle_controller(double error){
 
   /*#31: CRAZY ANG HACKZ 2*/
   /*Burde være løst i settle condition*/
-  /*if ( fabs(error) < 0.03 ) {
+  if ( fabs(error) < 0.025 ) {
     out = 0;
     return out;
-  }*/
+  }
 
   printf(">>>> ANGLE IS: %lf \n", -error);
 
