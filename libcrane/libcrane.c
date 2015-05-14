@@ -197,7 +197,10 @@ double get_angle()
       ang_prev = ang;      
 #endif /* MORTEN_HACK */
 
-    return libcrane_truncate(ang);
+    int stupid_tmp = (int) (round(ang * 1000.0));
+    double tmp_d = (stupid_tmp / 1000.0);
+
+    return tmp_d;
 }
 
 /**
