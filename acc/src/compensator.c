@@ -106,7 +106,7 @@ double get_controller_output(double ref){
   
     printf("ANG OUT = %lf \n", ang_out);
     printf("POS OUT = %lf \n", pos_out);
-    printf("Ramp Goal %d \n", ref_arr[nr_of_ref])
+    printf("Ramp Goal %d \n", ref_arr[nr_of_ref]);
   return out;
 }
 
