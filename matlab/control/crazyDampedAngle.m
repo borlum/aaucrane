@@ -5,11 +5,15 @@ run('../model/cranemodel');
 
 % Angle control, as damped as possible!
 
+W = -W;
+
 CV = 5;
 
 Vcl = feedback(CV * Mx * Grx * rrx, 1);
 
-Ctheta = 163 * (s + 6) * 1/(s+30);
+Ctheta = 163 * (s + 6) / (s+30);
+
+%Ctheta = 84 * (s + 6) * 1/(s+20);
 
 %Ctheta = (s + 6) * 1/(s+20);
 
@@ -17,11 +21,18 @@ Ctheta = 163 * (s + 6) * 1/(s+30);
 
 dCtheta = c2d(Ctheta, .01, 'tustin');
 
-Acl = feedback(Ctheta * Vcl * 1/s * -W,1);
+Acl = feedback(Ctheta * Vcl * 1/s * W,1);
 
-PosPlant = feedback(Vcl*1/s, -W*Ctheta);
+PP = feedback(Vcl*1/s, W*Ctheta);
 
-C3 = 1.2;
+Cx = 1.15;
+
+t = linspace(0,30,100);
+
+Pcl= feedback(Cx * PP,1);
+
+lower = 3.195 * ones(100,1)';                        
+upper = 3.205 * ones(100,1)';
 
 %fprintf('Design procedure findes i kommentarerne \n');
 

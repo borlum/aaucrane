@@ -93,7 +93,7 @@ void *task_x_axis_controller(void * argc)
       run_motorx(out);
     }
     
-    
+  run_motorx(out);    
     
     rt_task_wait_period();
   }
