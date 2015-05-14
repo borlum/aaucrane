@@ -81,7 +81,10 @@ int main(int argc,char* argv[]){
   double tmp;
 
   while(1) {
-    printf ("Enter a step size: <x>:\n");
+    /*Disable for NO CONTAINER*/
+    enable_magnet();
+
+    printf ("Enter x-axis position: <x>:\n");
     scanf("%lf", &x);
     
     if (t_xcontroller == NULL && t_logger == NULL) {
@@ -90,9 +93,6 @@ int main(int argc,char* argv[]){
     }
 
     enable_logger();
-
-    /*Disable for NO CONTAINER*/
-    enable_magnet();
     
     if (mq_send(to_x, (char *) &x, sizeof(x), 0) == -1)
       printf("ERROR: send: %s\n", strerror(errno));
@@ -100,11 +100,8 @@ int main(int argc,char* argv[]){
       printf("ERROR: recv: %s\n", strerror(errno));
     else {
       memcpy(&tmp, stupid_buffer, sizeof(int));
-      printf("Read: %lf", tmp);
     }
 
     disable_logger();
-
-    printf("Done!\n");
   }
 }
