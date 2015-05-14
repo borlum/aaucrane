@@ -102,7 +102,7 @@ int run_motorx(double voltage)
  */
 int run_motory(double voltage)
 {
-    int sign;
+  int sign;
   if (voltage < 0.085 && voltage > -0.085) voltage = 0;
   
   
@@ -266,7 +266,9 @@ double get_ypos_raw()
  */
 double get_x_velocity()
 {
-    return (get_motorx_velocity()) * .0039 - 0.01533;
+    double vel = (get_motorx_velocity()) * .0039 - 0.01533;
+    if (fabs(vel) < 0.03) vel = 0;
+    return vel;
 }
 
 
