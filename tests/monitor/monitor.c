@@ -8,6 +8,6 @@ int main(int argc, char* argv[])
     
     while(1) {
     printf("\033[2J");
-    printf("(x,y,\u03B8 uden,\u03B8 med) = (%+.3lf, %+.3lf, %+.3lf, %+.3lf)\n", get_xpos(), get_ypos(), get_angle(), get_angle() + 0.021);
-    }
+
+    printf("x: %+.3lf | y: %+.3lf | \u03B8 (u): %+.3lf | \u03B8 (m): %+.3lf | U: %+.3lf \n", get_xpos(), get_ypos(), get_angle(), get_angle() + 0.021, get_motorx_voltage());
 }
