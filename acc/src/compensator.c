@@ -38,16 +38,16 @@ double position_controller_x(double error){
   static double k_p = 1.2;
   
   /*#27: CRAZY POS. HACKZ*/
-  /*int sign;
-  if(fabs(error) < 0.15 && fabs(error) > 0.008){
+  int sign;
+  if(fabs(error) < 0.1 && fabs(error) > 0.008){
     if(error < 0)
       sign = -1;
     else
       sign = 1;
-    error = 0.15 * sign;
+    error = 0.10 * sign;
   } else if (fabs(error) < 0.005) {
     error = 0;
-  }*/
+  }
 
   return error * k_p;
 }
