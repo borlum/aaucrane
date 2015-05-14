@@ -1,13 +1,10 @@
 #include "libcrane.h"
-#include <math.h>
 
 #ifndef TESTING
 comedi_t *NI_card;
 #else
 int *NI_card;
 #endif
-
-int FD_serial;
 
 static const double MAX_MOTOR_OUTPUT = 12.5;
 static const double MIN_MOTOR_OUTPUT = 0;
@@ -59,26 +56,16 @@ double libcrane_truncate(double stuff_oreo)
  */
 int initialize_crane()
 {
-    NI_card = NULL;
-
-#ifndef TESTING
-    NI_card = comedi_open(DEVICE);
-    /*Global config*/
-    comedi_set_global_oor_behavior(COMEDI_OOR_NUMBER);
-    comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, COMEDI_OUTPUT);
-    comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, COMEDI_INPUT);
-#endif
-
-    if (NI_card == NULL) {
-        return 0;
-    }
-
-    FD_serial = open(SERIAL_PORT, O_RDONLY | O_NOCTTY | O_NDELAY);
-    if (FD_serial == -1) {
-        perror("open_port: Unable to open port");
-    }
-
-
+  
+  /* NI stuff */
+  NI_card = comedi_open(DEVICE);
+  /*Global config*/
+  comedi_set_global_oor_behavior(COMEDI_OOR_NUMBER);
+  comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, COMEDI_OUTPUT);
+  comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, COMEDI_INPUT);
+  if (NI_card == NULL) {
+    return 0;
+  }
     return 1;
 }
 
@@ -100,7 +87,7 @@ int run_motorx(double voltage)
     else
       sign = 1;
 
-    voltage = sign * (fabs(voltage) + 4.2);		    
+    voltage = sign * (fabs(voltage) + 4.3);		    
   }
 
   /* Change X motor direction */
@@ -114,13 +101,23 @@ int run_motorx(double voltage)
  */
 int run_motory(double voltage)
 {
-    if (voltage > -5.5 && voltage < 0 - epsilon) {
-        voltage = -5.5;
-    }
+    int sign;
+  if (voltage < 0.085 && voltage > -0.085) voltage = 0;
+  
+  
+  if (voltage != 0) {
+    
+    if(voltage < 0)
+      sign = -1;
+    else
+      sign = 1;
 
-    if (voltage < 3 && voltage > 0 + epsilon) {
-        voltage = 3;
-    }
+    if (voltage > 0) {
+        voltage = sign * (fabs(voltage) + 3);
+    } else {
+        voltage = sign * (fabs(voltage) + 5.5);
+    }       
+  }
 
     return run_motor(voltage, 1);
 }
@@ -170,17 +167,19 @@ int run_motor(double voltage, int axis)
  */
 double get_angle()
 {
-    /*
-    static int count = 0;
-    static double ang_prev = 0;
-    static double offset = 1.088;
+    static double offset_w_container  = 0.4206;
+    static double offset_wo_container = 0.4096;
+    double ang;
 
-    double ang = 0.2631 * get_angle_raw() - offset;
-    */
-    
-    /* MORTENS HACK */
-    
-    /*
+    if (libcrane_is_loaded()) {
+        ang = 0.2294 * get_angle_raw() - offset_w_container;
+    } else {
+        ang = 0.2294 * get_angle_raw() - offset_wo_container;
+    }
+
+    ang = 0.2294 * get_angle_raw() - offset_w_container;
+
+    /*#01: CRAZY MORTEN HACKZ*/
 #ifdef MORTEN_HACK
     static int count = 0;
     static double ang_prev = 0;
@@ -195,18 +194,13 @@ double get_angle()
         count = 0;
     }
       
-      ang_prev = ang;
-#endif
-      
-    return libcrane_truncate(ang);
-    */
-   
-    /*Use sensor pixel instead*/
-    static const int zero_pixel = 275;
-    static const int ppmm       =  15;
-    static const int dist       =  25;
+      ang_prev = ang;      
+#endif /* MORTEN_HACK */
 
-    return asin( ( (get_sensor_pixel() - zero_pixel) / ppmm ) / dist );
+    int stupid_tmp = (int) (round(ang * 1000.0));
+    double tmp_d = (stupid_tmp / 1000.0);
+
+    return tmp_d;
 }
 
 /**
@@ -290,7 +284,7 @@ double get_motorx_velocity()
  */
 double get_motorx_velocity_raw()
 {
-    return get_sensor_raw(CHAN_XVEL_IN)-.115;
+    return get_sensor_raw(CHAN_XVEL_IN);
 }
 
 /**
@@ -456,19 +450,6 @@ double get_sensor_raw(int channel)
 #endif
 
     return physical_value;
-}
-
-/**
- * Get sensor pixel via serial interface
- * @return pixel at which wire is located
- */
-int get_sensor_pixel() {
-    static char buffer[8];
-    int n = read(FD_serial, buffer, sizeof(buffer));
-    if (n < 0)
-        fputs("read failed!\n", stderr);
-
-    return atoi(buffer);
 }
 
 /**

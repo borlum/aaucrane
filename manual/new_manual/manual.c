@@ -13,7 +13,7 @@ FILE * fp;
 int main(int argc, char* argv[])
 {
   double manual_x, manual_y;
-  double angle;
+  double angle_out, vel, out;
   initialize_crane();
 
   /*PREPARE FILE*/
@@ -26,32 +26,34 @@ int main(int argc, char* argv[])
 
   t_0 = get_time_micros();
   while(1){
-#ifdef ANGLE
-    printf("Raw measurement: %f | Converted to rad: %f | Converted to deg: %f\n", get_angle_raw(), get_angle(), get_angle() * (180.0/3.14));
-#else
     printf("JOYPAD: (x,y) = (%3f, %3f)\n", get_ctrlpad_x(), get_ctrlpad_y());
     printf("X_pos: %3f @ %3f| Y_pos: %3f @ %3f | ANGLE: %3f\n", get_xpos(), get_xpos_raw(), get_ypos(), get_ypos_raw(), get_angle() * (180.0/3.14));
 
-    if(get_ctrlpad_ctrl_switch())
-      angle = angle_controller(get_angle());
-    else
-      angle = 0;
-    
     if( fabs((manual_x = get_ctrlpad_x())) < 2 )
       manual_x = 0;      
-
+    
     if( fabs((manual_y = get_ctrlpad_y())) < 2 )
       manual_y = 0;
+
     
-    run_motorx(0.5 * manual_x + angle);
-    run_motory(0.5 * manual_y);
+    angle_out = angle_controller(-get_angle());
+    vel = get_x_velocity();
+    out = velocity_controller_x(angle_out - vel);
+
+    if(get_ctrlpad_ctrl_switch()){
+      out += manual_x * .5;
+    } else {
+      out = manual_x;
+    }
+    
+    run_motorx(out);
+    run_motory(manual_y);
 
     if (get_ctrlpad_magnet_switch()) {
         enable_magnet();
     } else {
         disable_magnet();
     }
-#endif
 
     /*GRAB TIMESTAMP*/
     t_sample = get_time_micros();

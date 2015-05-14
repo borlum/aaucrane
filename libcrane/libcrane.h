@@ -4,10 +4,9 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <time.h>
-#include <fcntl.h>
-#include <termios.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #ifndef TESTING
 #include <comedilib.h>
@@ -21,8 +20,6 @@
 #define DIO_SUBDEV 2
 
 #define DEVICE "/dev/comedi0"
-
-#define SERIAL_PORT "/dev/ttyACM0"
 
 #define CHAN_MAGNET_OUT 7
 #define CHAN_MAGNET_BTN 3
@@ -48,6 +45,10 @@
 #define CHAN_CTRLPAD_Y_IN 15
 
 double libcrane_truncate(double sutff_oreo);
+
+int libcrane_is_loaded();
+void libcrane_unload();
+void libcrane_load();
 
 int initialize_crane();
 

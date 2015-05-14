@@ -74,34 +74,34 @@ int main(int argc,char* argv[]){
   to_y = mq_open(Q_TO_Y, O_WRONLY);
   from_y = mq_open(Q_FROM_Y, O_RDONLY);
 
-  double x;
+  double y;
   
   size_t len = 2 * BUFFER_SIZE;
   char stupid_buffer[2 * BUFFER_SIZE];
   double tmp;
 
   while(1) {
-    /*Disable for NO CONTAINER*/
     disable_magnet();
 
-    printf ("Enter x-axis position: <x>:\n");
-    scanf("%lf", &x);
+    printf ("Enter y-axis position: <y>:\n");
+    scanf("%lf", &y);
     
     if (t_xcontroller == NULL && t_logger == NULL) {
-      pthread_create(&t_xcontroller, NULL, task_x_axis_controller, NULL);
+      pthread_create(&t_ycontroller, NULL, task_y_axis_controller, NULL);
       pthread_create(&t_logger, NULL, task_logger, NULL);
     }
 
     enable_logger();
     
-    if (mq_send(to_x, (char *) &x, sizeof(x), 0) == -1)
+    if (mq_send(to_y, (char *) &y, sizeof(y), 0) == -1)
       printf("ERROR: send: %s\n", strerror(errno));
-    if (mq_receive(from_x, stupid_buffer, len, 0) == -1)
+    if (mq_receive(from_y, stupid_buffer, len, 0) == -1)
       printf("ERROR: recv: %s\n", strerror(errno));
     else {
       memcpy(&tmp, stupid_buffer, sizeof(int));
     }
 
     disable_logger();
+
   }
 }

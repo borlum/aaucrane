@@ -1,10 +1,15 @@
-int buf;
-
 void setup() {
   Serial.begin(9600);
 }
 
 void loop() {
-  if( (buf = Serial.read()) > 0)
-    Serial.write(buf);
+  char tmp[5] = {0};
+  if(Serial.readBytes(tmp, 4) != 0){
+    if(tmp[3] == ';')
+      Serial.print(tmp);
+     else{
+       while(Serial.available())
+         Serial.read();
+     }
+  }
 }

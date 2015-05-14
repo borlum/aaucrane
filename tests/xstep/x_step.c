@@ -39,7 +39,7 @@ void *sampler(void *args)
     
     while (1) {
         if (step) {
-	  printf("Comedi out %d\n", run_motorx(step_size));
+	  printf("Comedi out %d\n", run_motory(step_size));
 	    step = 0;	    
         }
 
@@ -61,7 +61,7 @@ void *sampler(void *args)
         sample_nr++;
 
         if (sample_nr == 3000) {
-            run_motorx(0);
+            run_motory(0);
         }
 	
 #ifdef RTAI

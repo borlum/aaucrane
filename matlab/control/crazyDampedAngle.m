@@ -1,23 +1,29 @@
  clear;
-x%close all;
+%close all;
 
 run('../model/cranemodel');
 
 % Angle control, as damped as possible!
 
-C1 = 5;
+CV = 5;
 
-Vcl = feedback(C1 * Mx * Grx * rrx, 1);
+Vcl = feedback(CV * Mx * Grx * rrx, 1);
 
-C2 = 80 * (s + 6) * 1/(s+20);
+Ctheta = 163 * (s + 6) * 1/(s+30);
 
-dC2 = c2d(C2, .01, 'tustin');
+%Ctheta = (s + 6) * 1/(s+20);
 
-Acl = feedback(C2 * Vcl * 1/s * -W,1);
+%Ctheta = 8.84*(s+6); 
 
-C3 = 10;
+dCtheta = c2d(Ctheta, .01, 'tustin');
 
-fprintf('Design procedure findes i kommentarerne \n');
+Acl = feedback(Ctheta * Vcl * 1/s * -W,1);
+
+PosPlant = feedback(Vcl*1/s, -W*Ctheta);
+
+C3 = 1.2;
+
+%fprintf('Design procedure findes i kommentarerne \n');
 
 % Først vælges et gain til det indre hastigheds loop. Baseret på rlocus(Mx * Grx * rrx) er et fornuftigt gain C1 = 5
 
@@ -34,5 +40,5 @@ fprintf('Design procedure findes i kommentarerne \n');
 
 % Controlleren er testet på kranen, og selvom magnituden af vinklen ikke helt passer med simu, så er forløbet magen til, og virkelig hurtigt. :) 
 
-% Designet af positions-kontrol er lavet ud fra rlocus(feedback(Vcl * 1/s, W * C2). (feedback lægger selv det krævede minus på W).
+% Designet af positions-kontrol er lavet ud fra rlocus(feedback(Vcl * 1/s, -W * C2). 
 % Det er en ret forvirrende rlocus, men en p factor på omkring 1 eller mindre virker sane. PI er ikke undersøgt, planten er efterhånden ret kompleks..

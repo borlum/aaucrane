@@ -1,4 +1,4 @@
-function [t,x,y,theta, v] = grabData(file)
+function [t,x,y,theta, vx, vy] = grabData(file)
     TMP_FILE  = 'tmp.csv';
     websave(TMP_FILE, file);
     
@@ -7,7 +7,8 @@ function [t,x,y,theta, v] = grabData(file)
     theta = raw(:,3);
     x     = raw(:,4);
     y     = raw(:,5);
-    v     = raw(:,8);
+    vx    = raw(:,8);
+    vy    = raw(:,9);
     
     delete(TMP_FILE);
 end

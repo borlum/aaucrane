@@ -12,6 +12,7 @@
  * - How do we find the wire when only some of the "dip" is visible?
  * - Translate the found falling edge into an actual position of the wire. Maybe using the width?
  */
+
 #define NR_SENSORS 3
 #define NR_PIXELS  128
 #define WIRE_WIDTH_PX 30
@@ -45,9 +46,9 @@ struct sensor_t {
 typedef struct sensor_t sensor_t;
 
 struct wire_location_t {
-  int pixel_value;
-  int sensor_id;
-  int pixel_id;
+  uint16_t pixel_value;
+  uint16_t sensor_id;
+  uint16_t pixel_id;
 };
 
 typedef struct wire_location_t wire_location_t;
@@ -69,6 +70,7 @@ void disable_sensor_SI(sensor_t *sensor);
 uint16_t read_sensor(sensor_t sensor);
 void dio(Pio *port, uint32_t mask, uint8_t state);
 int get_wire_location(wire_location_t* wire_loc);
+int prev_id = 0;
 
 /**
  * ----------------------------------------------------------------------------
@@ -90,10 +92,11 @@ gpio_t TEST  = {PIOB, (1 << 13), 21};
  */
 void setup()
 {
+  DEAD_PIXELS[1][33] = 1;
   DEAD_PIXELS[2][6] = 1;
   DEAD_PIXELS[2][7] = 1;
   DEAD_PIXELS[2][8] = 1;
-  
+
   Serial.begin(9600);
 
   sensor_t sensor1, sensor2, sensor3;
@@ -208,11 +211,25 @@ void loop()
   Serial.print(',');
   Serial.println(wire_loc.pixel_id);*/
   get_wire_location(&wire_loc);
-  //wire_loc.pixel_id = 285;
   
-  analogWrite(DAC1, map(wire_loc.pixel_id, 0, 3 * NR_PIXELS_W_DEADBAND, 0, 1024));
-  Serial.println(wire_loc.pixel_id);
+ /* Serial.println(wire_loc.pixel_id) ;   */
+ /*  Serial.println(wire_loc.sensor_id) ; */
+
+  if(wire_loc.pixel_id < NR_PIXELS_W_DEADBAND) wire_loc.pixel_id = NR_PIXELS_W_DEADBAND;
+  else if(wire_loc.pixel_id > NR_PIXELS_W_DEADBAND*2) wire_loc.pixel_id = NR_PIXELS_W_DEADBAND*2;
+
+// Serial.println(wire_loc.pixel_id);  
+
+
+  int out;
+  out = map(wire_loc.pixel_id, NR_PIXELS_W_DEADBAND, NR_PIXELS_W_DEADBAND*2, 1, 1023);
+  
+ /* Serial.print("out: "); */
+  
+  
+  analogWrite(DAC1, out);
 }
+
 
 /**
  * ----------------------------------------------------------------------------
@@ -286,8 +303,7 @@ void dio(Pio *port, uint32_t mask, uint8_t state)
 
 
 int get_wire_location(wire_location_t* wire_loc) {
-  int start = -1, wire_end = -1, diff;
-  
+  int start = -1, wire_end = -1, diff;    
   for(int i = 0; i < NR_SENSORS; i++){
     for(int j = 5; j < NR_PIXELS; j++){
       if(is_dead_pixel(i,j) || is_dead_pixel(i,j-5) )
