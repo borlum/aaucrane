@@ -77,7 +77,8 @@ int initialize_crane()
 int run_motorx(double voltage)
 {
   int sign;
-  if (voltage < 0.085 && voltage > -0.085) voltage = 0;
+  /* #13 terrible hack */
+  //if (voltage < 0.085 && voltage > -0.085) voltage = 0;
   
   
   if (voltage != 0) {
@@ -87,7 +88,7 @@ int run_motorx(double voltage)
     else
       sign = 1;
 
-    voltage = sign * (fabs(voltage) + 4.4);		    
+    voltage = sign * (fabs(voltage) + 4.3);		    
   }
 
   /* Change X motor direction */
