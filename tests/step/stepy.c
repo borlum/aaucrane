@@ -81,6 +81,8 @@ int main(int argc,char* argv[]){
   double tmp;
 
   while(1) {
+    enable_magnet();
+    
     printf ("Enter y-axis position: <y>:\n");
     scanf("%lf", &y);
     
@@ -90,9 +92,6 @@ int main(int argc,char* argv[]){
     }
 
     enable_logger();
-
-    /*Disable for NO CONTAINER*/
-    enable_magnet();
     
     if (mq_send(to_y, (char *) &y, sizeof(y), 0) == -1)
       printf("ERROR: send: %s\n", strerror(errno));
