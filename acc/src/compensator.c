@@ -16,8 +16,6 @@ double angle_controller(double error){
   static double prev_out;
 
   double out;
-
-  printf("ANGLE ERRRRRR: %lf\n", error);
   
   /*#31: CRAZY ANG HACKZ 2*/
   /*Burde være løst i settle condition*/
