@@ -99,7 +99,7 @@ double get_controller_output(double ref){
 
   printf("POS OUT = %lf \n", pos_out);
   printf("ANG OUT = %lf \n", ang_out);
-  printf("VEL OUT = %lf \n", ang_out);
+  printf("VEL OUT = %lf \n", out);
 
   
   return out;
