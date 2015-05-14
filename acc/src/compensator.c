@@ -57,7 +57,7 @@ double position_controller_x(double error){
 double velocity_controller_x(double error){
   static double k_p = 5;
 
-  if ( fabs(error) < 0.02 ) {
+  if ( fabs(error) < 0.05 ) {
     return 0;
   }
 
