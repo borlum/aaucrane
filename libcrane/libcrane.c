@@ -168,7 +168,7 @@ int run_motor(double voltage, int axis)
 double get_angle()
 {
     static double offset_w_container  = 0.4206;
-    static double offset_wo_container = 0.4000;
+    static double offset_wo_container = 0.4296;
     double ang;
 
     if (libcrane_is_loaded()) {
