@@ -37,12 +37,18 @@ elseif CONTAINER == 0
     W.I  = 0.0423;
 end
 
-if UP == 1
+if (UP == 1 && CONTAINER == 1)
     My.b = 0.0322;
     My.I = 0.0090;
-else
+elseif(UP == 0 && CONTAINER == 1)
     My.b = 0.0115;
     My.I = 0.0067;
+elseif(UP == 1 && CONTAINER == 0)
+    My.b = 0.0051;
+    My.I = 0.0024;
+else
+    My.b = 0.0042;
+    My.I = 0.0025;
 end
 
 B  = W.b;
@@ -80,3 +86,4 @@ Hy = My * Gry * rry * (1/s);
 
 jp = 0.0890;
 B = 0.0315;
+
