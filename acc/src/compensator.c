@@ -69,7 +69,7 @@ double position_controller_y(double error){
     }
   } else if (error < 0) {
     if (libcrane_is_loaded()) {
-      k_p = 150;
+      k_p = 100;
     } else {
       k_p = 20;
     }
