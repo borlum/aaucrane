@@ -39,7 +39,7 @@ double position_controller_x(double error){
 
   /*#27: CRAZY POS. HACKZ*/
   int sign;
-  if(fabs(error) < 0.15 && fabs(error) > 0.003){
+  if(fabs(error) < 0.15 && fabs(error) > 0.01){
     if(error < 0)
       sign = -1;
     else
