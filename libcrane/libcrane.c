@@ -267,18 +267,7 @@ double get_ypos_raw()
 double get_x_velocity()
 {
     double vel = (get_motorx_velocity()) * .0039 - 0.01533;
-    
-    int NR_OF_SAMPLES = 100;
-    double avg, tmp = 0;
-    int i;
-
-    for(i = 0; i < NR_OF_SAMPLES; i++){
-        tmp += (get_motorx_velocity()) * .0039 - 0.01533;
-    }
-
-    avg = tmp / ( (double)NR_OF_SAMPLES );
-
-    return avg;
+    return vel;
 }
 
 
