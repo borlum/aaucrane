@@ -19,10 +19,10 @@ double angle_controller(double error){
 
   /*#31: CRAZY ANG HACKZ 2*/
   /*Burde være løst i settle condition*/
-  /*if ( fabs(error) < 0.025 ) {
+  if ( fabs(error) < 0.03 ) {
     out = 0;
     return out;
-  }*/
+  }
 
   out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
 
@@ -97,9 +97,9 @@ double get_controller_output(double ref){
   ang_out = angle_controller(ang_err);
 
   /*#23: CRAZY ANG. HACKZ*/
-  if ( fabs(pos_err) < 0.05 ) {
+  /*if ( fabs(pos_err) < 0.05 ) {
     ang_out = ang_out * 0.5;
-  }
+  }*/
 
   out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
   
