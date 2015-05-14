@@ -81,7 +81,7 @@ int main(int argc,char* argv[]){
   double tmp;
 
   while(1) {
-    printf ("Enter a step size: <x>:\n");
+    printf ("Enter a step size: <y>:\n");
     scanf("%lf", &y);
     
     if (t_xcontroller == NULL && t_logger == NULL) {
