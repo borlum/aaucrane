@@ -17,6 +17,8 @@ double angle_controller(double error){
 
   double out;
 
+  printf("ANGLE ERRRRRR: %lf\n", error);
+  
   /*#31: CRAZY ANG HACKZ 2*/
   /*Burde være løst i settle condition*/
   if ( fabs(error) < 0.03 ) {
@@ -36,7 +38,7 @@ double angle_controller(double error){
 
 double position_controller_x(double error){
   static double k_p = 1.2;
-
+  
   /*#27: CRAZY POS. HACKZ*/
   int sign;
   if(fabs(error) < 0.15 && fabs(error) > 0.01){
