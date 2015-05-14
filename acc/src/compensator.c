@@ -106,6 +106,7 @@ double get_controller_output(double ref){
   
     printf("ANG OUT = %lf \n", ang_out);
     printf("POS OUT = %lf \n", pos_out);
+    printf("VEL ERR = %lf \n", get_x_velocity());
     printf("VEL OUT = %lf \n", out);
 
   return out;
