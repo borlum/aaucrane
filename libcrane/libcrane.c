@@ -78,7 +78,7 @@ int run_motorx(double voltage)
 {
   int sign;
   /* #13 terrible hack */
-  if (fabs(voltage) < 0.05) voltage = 0;
+  if (fabs(voltage) < 0.01) voltage = 0;
   
   
   if (voltage != 0) {
@@ -88,7 +88,7 @@ int run_motorx(double voltage)
     else
       sign = 1;
 
-    voltage = sign * (fabs(voltage) + 4.3);		    
+    voltage = sign * (fabs(voltage) + 4.5);		    
   }
 
   /* Change X motor direction */
