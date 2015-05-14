@@ -35,7 +35,7 @@ double angle_controller(double error){
 }
 
 double position_controller_x(double error){
-  static double k_p = 3;
+  static double k_p = 5;
   
   /*#27: CRAZY POS. HACKZ*/
  /* int sign;
@@ -111,7 +111,7 @@ double get_controller_output(double ref){
 }
 
 int ramp_maker(double step){
-  double i,  speed = .008, off_set = get_xpos(); //speed is in m/ms
+  double i,  speed = .005, off_set = get_xpos(); //speed is in m/ms
   int j = 0;
 
   if (step > 0) {
