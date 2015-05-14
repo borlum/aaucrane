@@ -49,6 +49,9 @@ double position_controller_x(double error){
     error = 0;
   }
 
+  printf("POS ERR: %lf \n", error);
+
+
   return error * k_p;
 }
 
