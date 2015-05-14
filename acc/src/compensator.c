@@ -97,7 +97,7 @@ double get_controller_output(double ref){
   ang_out = angle_controller(ang_err);
 
   /* HACK #12 Even more CRAZY ang Hack */
-  if(fabs(pos_err) < 0.03) ang_out *= .1;
+  /* if(fabs(pos_err) < 0.03) ang_out *= .1; */
 
   out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
 
