@@ -220,7 +220,7 @@ double get_old_angle_raw()
  */
 double get_xpos()
 {
-    int NR_OF_SAMPLES = 100;
+    int NR_OF_SAMPLES = 1000;
     double avg, tmp =0;
     int i;
 
