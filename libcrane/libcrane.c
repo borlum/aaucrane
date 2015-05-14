@@ -406,6 +406,7 @@ int get_ctrlpad_ctrl_switch()
  */
 void enable_magnet()
 {
+  printf("enable_magnet\n");
 #ifndef TESTING
     comedi_dio_write(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, 1);
 #endif
