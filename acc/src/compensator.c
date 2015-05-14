@@ -51,12 +51,16 @@ double position_controller_x(double error){
 
   printf("POS ERR: %lf \n", error);
 
-
   return error * k_p;
 }
 
 double velocity_controller_x(double error){
   static double k_p = 5;
+
+  if ( fabs(error) < 0.02 ) {
+    return 0;
+  }
+
   return error * k_p;
 }
 
