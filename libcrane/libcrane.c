@@ -230,7 +230,7 @@ double get_xpos()
 
     avg = tmp / ( (double)NR_OF_SAMPLES );
     
-    return  (-0.4981)*get_xpos_raw() + 4.7931;
+    return  (-0.4981)*avg + 4.7931;
 }
 
 /**
