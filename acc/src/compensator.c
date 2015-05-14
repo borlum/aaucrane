@@ -63,7 +63,7 @@ double position_controller_y(double error){
   /*UP = negative error, DOWN = positive error*/
   if (error > 0) {
     if (libcrane_is_loaded()) {
-      k_p = 10;
+      k_p = 15;
     } else {
       k_p = 25;
     }
