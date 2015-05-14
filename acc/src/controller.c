@@ -75,7 +75,7 @@ void *task_x_axis_controller(void * argc)
     
     /*Settled?*/
     double err = libcrane_truncate(x_ref - get_xpos());
-    if ( (fabs(err) <= X_ERR_BAND) /* && (fabs(get_angle()) < ANGLE_ERR_BAND) */ ) {
+    if ( (fabs(err) <= X_ERR_BAND && (fabs(get_angle()) < ANGLE_ERR_BAND))) {
       /*Has this happened more than SETTLE_HITS times?*/
       if( received_new_ref && ((++hit_count) >= SETTLE_HITS) ) {
 	/*Settled! Allow for new reference and reset hit counter!*/
@@ -86,12 +86,14 @@ void *task_x_axis_controller(void * argc)
         printf("[X]: DONE @ %lf\n", get_xpos());
         if (mq_send(output, (char *)&msg, sizeof(int), 0) == -1)
           printf("%s\n", strerror(errno));
+        run_motorx(0);
       }
     } else {
       hit_count = 0;
+      run_motorx(out);
     }
     
-    run_motorx(out);
+    
     
     rt_task_wait_period();
   }

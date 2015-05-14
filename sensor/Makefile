@@ -1,6 +1,6 @@
 FILE=sensor.ino
 TARGET=arduino:sam:due
-PORT=/dev/ttyACM2
+PORT=/dev/ttyACM0
 
 verify: $(FILE)
 	@arduino $(FILE) --verify --board $(TARGET) --port $(PORT)
