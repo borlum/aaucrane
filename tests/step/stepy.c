@@ -81,7 +81,7 @@ int main(int argc,char* argv[]){
   double tmp;
 
   while(1) {
-    printf ("Enter a step size: <y>:\n");
+    printf ("Enter y-axis position: <y>:\n");
     scanf("%lf", &y);
     
     if (t_xcontroller == NULL && t_logger == NULL) {
@@ -100,11 +100,9 @@ int main(int argc,char* argv[]){
       printf("ERROR: recv: %s\n", strerror(errno));
     else {
       memcpy(&tmp, stupid_buffer, sizeof(int));
-      printf("Read: %lf", tmp);
     }
 
     disable_logger();
 
-    printf("Done!\n");
   }
 }
