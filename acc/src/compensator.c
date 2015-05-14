@@ -35,7 +35,7 @@ double angle_controller(double error){
 }
 
 double position_controller_x(double error){
-  static double k_p = 2.5;
+  static double k_p = 2.25;
   
   /*#27: CRAZY POS. HACKZ*/
  /* int sign;
@@ -55,7 +55,7 @@ double position_controller_x(double error){
 }
 
 double velocity_controller_x(double error){
-  static double k_p = 5;
+  static double k_p = 6;
 
   if ( fabs(error) < 0.05 ) {
     return 0;
