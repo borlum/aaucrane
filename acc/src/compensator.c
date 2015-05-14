@@ -39,7 +39,7 @@ double position_controller_x(double error){
   
   /*#27: CRAZY POS. HACKZ*/
   int sign;
-  if(fabs(error) < 0.15 && fabs(error) > 0.005){
+  if(fabs(error) < 0.15 && fabs(error) > 0.008){
     if(error < 0)
       sign = -1;
     else
@@ -96,6 +96,9 @@ double get_controller_output(double ref){
   pos_out = position_controller_x(pos_err);
   ang_out = angle_controller(ang_err);
   out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
+
+  printf("ANG OUT = %lf \n", ang_out);
+  printf("POS OUT = %lf \n", ang_out);
   
   return out;
 }
