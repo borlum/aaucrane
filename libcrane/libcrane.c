@@ -174,8 +174,10 @@ double get_angle()
 
     if (libcrane_is_loaded()) {
         ang = 0.2294 * get_angle_raw() - offset_w_container;
+	printf("ANGLE WITH CONTAINER: %lf\n", ang);
     } else {
         ang = 0.2294 * get_angle_raw() - offset_wo_container;
+	printf("ANGLE NO!: %lf\n", ang);
     }
 
     /*#01: CRAZY MORTEN HACKZ*/
