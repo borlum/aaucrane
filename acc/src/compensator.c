@@ -20,7 +20,7 @@ double angle_controller(double error){
   printf(">>>> ANG_ERR = %lf \n", error);
 
   /*#31: CRAZY ANG HACKZ 2*/
-  if ( libcrane_is_loaded() && fabs(error) < 0.03 ) {
+  if ( fabs(error) < 0.03 ) {
     out = 0;
     return out;
   }
