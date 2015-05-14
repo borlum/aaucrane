@@ -49,8 +49,6 @@ double position_controller_x(double error){
     error = 0;
   } */
 
-  printf("POS ERR: %lf \n", error);
-
   return error * k_p;
 }
 
@@ -108,11 +106,6 @@ double get_controller_output(double ref){
 
   out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
   
-    printf("ANG OUT = %lf \n", ang_out);
-    printf("POS OUT = %lf \n", pos_out);
-    printf("VEL ERR = %lf \n", get_x_velocity());
-    printf("VEL OUT = %lf \n", out);
-
   return out;
 }
 
