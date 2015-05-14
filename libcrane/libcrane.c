@@ -223,8 +223,8 @@ double get_xpos()
     int NR_OF_SAMPLES = 10;
     double avg, tmp =0;
     int i;
-    
-    for( =0; 0<NR_OF_SAMPLES; i++){
+
+    for(i =0; 0<NR_OF_SAMPLES; i++){
         tmp += get_xpos_raw();
     }
 
