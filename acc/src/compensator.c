@@ -24,6 +24,8 @@ double angle_controller(double error){
     return out;
   }*/
 
+  printf(">>>> ANGLE IS: %lf \n", -error);
+
   out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
 
   out *= -1;
@@ -56,7 +58,6 @@ double velocity_controller_x(double error){
   static double k_p = 5;
   return error * k_p;
 }
-
 
 double position_controller_y(double error){
   double k_p = 0;
