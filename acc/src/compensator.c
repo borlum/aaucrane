@@ -24,8 +24,6 @@ double angle_controller(double error){
     return out;
   }
 
-  printf(">>>> ANGLE IS: %lf \n", -error);
-
   out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
 
   out *= -1;
