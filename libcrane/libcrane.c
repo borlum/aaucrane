@@ -174,6 +174,7 @@ double get_angle()
     if (libcrane_is_loaded()) {
         ang = 0.2294 * get_angle_raw() - offset_w_container;
     } else {
+        printf(">> UDEN CONTAINER!");
         ang = 0.2294 * get_angle_raw() - offset_wo_container;
     }
 
