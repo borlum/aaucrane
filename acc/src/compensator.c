@@ -102,7 +102,7 @@ double get_controller_output(double ref){
   }
 
   /*#37: CRAZY ANG HACKZ 3*/
-  if ( !libcrane_is_loaded() && fabs(pos_err) < .2 && fabs(ang_err) < .075 ) {
+  if ( !libcrane_is_loaded() && fabs(pos_err) < .25 && fabs(ang_err) < .05 ) {
     ang_out = 0;
   }
 
