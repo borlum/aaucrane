@@ -170,15 +170,18 @@ double get_angle()
     static double offset_w_container  = 0.4596;
     static double offset_wo_container = 0.4386;
     
-    double ang;
+    double ang = 0.2294 * get_angle_raw() - offset_wo_container;
 
-    if (libcrane_is_loaded()) {
-        ang = 0.2294 * get_angle_raw() - offset_w_container;
-	printf("ANGLE WITH CONTAINER: %lf\n", ang);
-    } else {
-        ang = 0.2294 * get_angle_raw() - offset_wo_container;
-	printf("ANGLE NO!: %lf\n", ang);
-    }
+    if (libcrane_is_loaded())
+      ang + 0.021;
+
+    /* if (libcrane_is_loaded()) { */
+    /*     ang = 0.2294 * get_angle_raw() - offset_w_container; */
+    /* 	printf("ANGLE WITH CONTAINER: %lf\n", ang); */
+    /* } else { */
+    /*     ang = 0.2294 * get_angle_raw() - offset_wo_container; */
+    /* 	printf("ANGLE NO!: %lf\n", ang); */
+    /* } */
 
     /*#01: CRAZY MORTEN HACKZ*/
 #ifdef MORTEN_HACK
