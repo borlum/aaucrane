@@ -23,6 +23,11 @@ double angle_controller(double error){
     return out;
   }
 
+  if ( !libcrane_is_loaded() && fabs(error) < 0.05 ) {
+    out = 0;
+    return out;
+  }
+
   out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
 
   out *= -1;
