@@ -93,7 +93,7 @@ double get_controller_output(double ref){
   pos_err = ref - get_xpos();
 #endif
 
-  ang_err = 0 - get_angle();
+  ang_err = 0.0 - get_angle();
   
   pos_out = position_controller_x(pos_err);
   ang_out = angle_controller(ang_err);
