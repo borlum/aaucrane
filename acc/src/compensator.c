@@ -100,10 +100,12 @@ double get_controller_output(double ref){
   if ( fabs(pos_err) < 0.05 ) {
     ang_out = ang_out * 0.5;
   }
-  
-  if ( !libcrane_is_loaded() && fabs(pos_err) < 0.3 ) {
-    ang_out = ang_out * 0.1;
+
+  /*#37: CRAZY ANG HACKZ 3*/
+  if ( !libcrane_is_loaded() && fabs(pos_err) < .2 && fabs(ang_err) < .075 ) {
+    ang_out = 0;
   }
+
 
   out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
   
