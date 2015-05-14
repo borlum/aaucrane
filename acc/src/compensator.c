@@ -3,7 +3,7 @@
 #include "compensator.h"
 #include <math.h>
 
-#define RAMP
+/* #define RAMP */
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -39,12 +39,15 @@ double position_controller_x(double error){
   
   /*#27: CRAZY POS. HACKZ*/
   int sign;
-  if(fabs(error) < 0.1 && fabs(error) > 0.005){
+  if(fabs(error) < 0.1 && fabs(error) > 0.008){
     if(error < 0)
       sign = -1;
     else
       sign = 1;
     error = 0.1 * sign;
+    else if (fabs(error) < 0.008 && fabs(error) > 0.005){
+      eroro = 0.04 * sign;
+    }
   } else if (fabs(error) < 0.005) {
     error = 0;
   }
