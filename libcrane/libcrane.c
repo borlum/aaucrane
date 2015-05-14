@@ -78,7 +78,7 @@ int run_motorx(double voltage)
 {
   int sign;
   /* #13 terrible hack */
-  //if (voltage < 0.085 && voltage > -0.085) voltage = 0;
+  if (fabs(voltage) < 0.05) voltage = 0;
   
   
   if (voltage != 0) {
