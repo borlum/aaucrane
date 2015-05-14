@@ -103,10 +103,10 @@ double get_controller_output(double ref){
   /* if(fabs(pos_err) < 0.03) ang_out *= .1; */
 
   out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
-  if(ang_out != 0 || pos_out != 0){
+  
     printf("ANG OUT = %lf \n", ang_out);
     printf("POS OUT = %lf \n", pos_out);
-  }
+  
   return out;
 }
 
