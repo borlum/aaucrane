@@ -101,7 +101,7 @@ double get_controller_output(double ref){
 
   printf("POS ERR = %lf \n", pos_err);
   printf("POS OUT = %lf \n", pos_out);
-  printf("ANG ERR = %lf \n", ang_err);  
+  printf("ANG ERR = %lf \n", get_angle());  
   printf("ANG OUT = %lf \n", ang_out);
   printf("VEL OUT = %lf \n", out);
 
