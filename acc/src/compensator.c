@@ -45,10 +45,9 @@ double position_controller_x(double error){
     else
       sign = 1;
     error = 0.1 * sign;
-    else if (fabs(error) < 0.008 && fabs(error) > 0.005){
-      eroro = 0.04 * sign;
-    }
-  } else if (fabs(error) < 0.005) {
+    } else if (fabs(error) < 0.008 && fabs(error) > 0.005){
+      error = 0.04 * sign;
+    } else if (fabs(error) < 0.005) {
     error = 0;
   }
 
