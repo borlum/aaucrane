@@ -169,6 +169,7 @@ double get_angle()
 {
     static double offset_w_container  = 0.4596;
     static double offset_wo_container = 0.4386;
+    
     double ang;
 
     if (libcrane_is_loaded()) {
@@ -195,10 +196,7 @@ double get_angle()
       ang_prev = ang;      
 #endif /* MORTEN_HACK */
 
-    int stupid_tmp = (int) (round(ang * 1000.0));
-    double tmp_d = (stupid_tmp / 1000.0);
-
-    return tmp_d;
+    return libcrane_truncate(ang);
 }
 
 /**
