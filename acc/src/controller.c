@@ -75,7 +75,7 @@ void *task_x_axis_controller(void * argc)
     
     /*Settled?*/
     double err = libcrane_truncate(x_ref - get_xpos());
-    if ( (fabs(err) <= X_ERR_BAND && libcrane_is_loaded() && (fabs(get_angle()) < ANGLE_ERR_BAND)) || (fabs(err) <= X_ERR_BAND && !libcrane_is_loaded()) {
+    if ( (fabs(err) <= X_ERR_BAND && libcrane_is_loaded() && (fabs(get_angle()) < ANGLE_ERR_BAND)) || (fabs(err) <= X_ERR_BAND && !libcrane_is_loaded()) ) {
       /*Has this happened more than SETTLE_HITS times?*/
       if( received_new_ref && ((++hit_count) >= SETTLE_HITS) ) {
 	/*Settled! Allow for new reference and reset hit counter!*/
