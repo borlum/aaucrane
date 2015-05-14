@@ -220,7 +220,16 @@ double get_old_angle_raw()
  */
 double get_xpos()
 {
-    return  (-0.4981)*get_xpos_raw() + 4.7931;
+    int NR_OF_SAMPLES = 10;
+    double avg, tmp;
+
+    for(int i =0; 0<NR_OF_SAMPLES; i++){
+        tmp += get_xpos_raw();
+    }
+
+    avg = tmp / ( (double)NR_OF_SAMPLES );
+    tmp = 0;
+    return  (-0.4981)*avg + 4.7931;
 }
 
 /**
