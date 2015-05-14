@@ -81,7 +81,7 @@ int main(int argc,char* argv[]){
   double tmp;
 
   while(1) {
-    disable_magnet();
+    enable_magnet();
 
     printf ("Enter y-axis position: <y>:\n");
     scanf("%lf", &y);
