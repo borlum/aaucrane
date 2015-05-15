@@ -10,7 +10,7 @@ static const double MAX_MOTOR_OUTPUT = 12.5;
 static const double MIN_MOTOR_OUTPUT = 0;
 static const double epsilon = 0.2;
 
-static const double angle_offset = 0;
+static double angle_offset = 0;
 
 /*Container-flag*/
 static int payload = 0;
