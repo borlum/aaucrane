@@ -172,7 +172,7 @@ double get_angle()
 {
     static double offset_wo_container = 0.4386;
     
-    double ang = 0.2294 * get_angle_raw() - offset_wo_container - angle_offset;
+    double ang = 0.2294 * get_angle_raw() - offset_wo_container;
 
     if (libcrane_is_loaded())
       ang = ang + 0.021;
