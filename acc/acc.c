@@ -97,9 +97,6 @@ void *controller(void * args)
 
     mq_send(to_y, (char *) &reset_pos_flag, sizeof(reset_pos_flag), 0);
     mq_receive(from_y, buf, buf_len, 0);
-
-    mq_send(to_x, (char *) &reset_pos_flag, sizeof(reset_pos_flag), 0);
-    mq_receive(from_x, buf, buf_len, 0);
     mq_send(from_c, (char *) &cmd, sizeof(cmd), 0);
   }
 }
@@ -162,9 +159,10 @@ void place_containers(){
 }
 
 int main(int argc,char* argv[]){  
-  init_logger();
+  init_logger("/var/www/html/data/acc/acc/", sizeof("/var/www/html/data/acc/acc/"));
   if( init() == -1)
     exit(-1);
+  reset_angle();
 
   printf("Before enable_logger\n");
   if (enable_logger() == 0)

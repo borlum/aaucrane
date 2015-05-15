@@ -5,7 +5,7 @@
 int main(int argc, char* argv[])
 {
     initialize_crane();
-    
+    reset_angle();
     while(1) {
     printf("\033[2J");
 

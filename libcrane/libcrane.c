@@ -10,6 +10,8 @@ static const double MAX_MOTOR_OUTPUT = 12.5;
 static const double MIN_MOTOR_OUTPUT = 0;
 static const double epsilon = 0.2;
 
+static double angle_offset = 0;
+
 /*Container-flag*/
 static int payload = 0;
 
@@ -170,7 +172,7 @@ double get_angle()
 {
     static double offset_wo_container = 0.4386;
     
-    double ang = 0.2294 * get_angle_raw() - offset_wo_container;
+    double ang = 0.2294 * get_angle_raw() - offset_wo_container - angle_offset;
 
     if (libcrane_is_loaded())
       ang = ang + 0.021;
@@ -179,14 +181,14 @@ double get_angle()
 #ifdef MORTEN_HACK
     static int count = 0;
     static double ang_prev = 0;
-    if(fabs(ang_prev - ang) < 0.001)
+    if(fabs(ang_prev - ang) < 0.005)
         count++;
     else
         count = 0;
 
-    if(count > 3) {
+    if(count > 100) {
         printf("=> APPLY MORTEN HACK! \n\n");
-        offset = offset + ang;
+        offset_wo_container = offset_wo_container + ang;
         count = 0;
     }
       
@@ -194,6 +196,11 @@ double get_angle()
 #endif /* MORTEN_HACK */
 
     return libcrane_truncate(ang);
+}
+
+void reset_angle()
+{
+    angle_offset = get_angle();
 }
 
 /**
