@@ -3,7 +3,9 @@
 #include "compensator.h"
 #include <math.h>
 
-#define RAMP 
+//#define RAMP 
+
+//#define HACKZ
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -18,11 +20,12 @@ double angle_controller(double error){
   double out;
   
   /*#31: CRAZY ANG HACKZ 2*/
-  /*Burde være løst i settle condition*/
+#ifdef HACKZ
   if ( fabs(error) < 0.03 ) {
     out = 0;
     return out;
   }
+#endif
 
   out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
 
@@ -36,28 +39,17 @@ double angle_controller(double error){
 
 double position_controller_x(double error){
   static double k_p = 3.75;
-  
-  /*#27: CRAZY POS. HACKZ*/
- /* int sign;
-  if(fabs(error) < 0.1 && fabs(error) > 0.008){
-    if(error < 0)
-      sign = -1;
-    else
-      sign = 1;
-    error = 0.1 * sign;
-    } else if (fabs(error) < 0.005) {
-    error = 0;
-  } */
-
   return error * k_p;
 }
 
 double velocity_controller_x(double error){
   static double k_p = 5;
 
+#ifdef HACKZ
   if ( fabs(error) < 0.05 ) {
     return 0;
   }
+#endif
 
   return error * k_p;
 }
@@ -100,9 +92,6 @@ double get_controller_output(double ref){
   
   pos_out = position_controller_x(pos_err);
   ang_out = angle_controller(ang_err);
-
-  /* HACK #12 Even more CRAZY ang Hack */
-  /* if(fabs(pos_err) < 0.03) ang_out *= .1; */
 
   out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
   
