@@ -200,7 +200,11 @@ double get_angle()
 
 void reset_angle()
 {
-    angle_offset = get_angle();
+    if (libcrane_is_loaded()) {
+        angle_offset = get_angle() - 0.021;
+    } else {
+        angle_offset = get_angle();
+    }
 }
 
 /**
