@@ -13,6 +13,8 @@ static const double epsilon = 0.2;
 /*Container-flag*/
 static int payload = 0;
 
+#define MORTEN_HACK
+
 /**
  * Sets containers flag HIGH => we have a container attached!
  */
@@ -179,14 +181,14 @@ double get_angle()
 #ifdef MORTEN_HACK
     static int count = 0;
     static double ang_prev = 0;
-    if(fabs(ang_prev - ang) < 0.001)
+    if(fabs(ang_prev - ang) < 0.005)
         count++;
     else
         count = 0;
 
-    if(count > 3) {
+    if(count > 10) {
         printf("=> APPLY MORTEN HACK! \n\n");
-        offset = offset + ang;
+        offset_wo_container = offset_wo_container + ang;
         count = 0;
     }
       
