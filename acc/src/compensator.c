@@ -20,12 +20,10 @@ double angle_controller(double error){
   double out;
   
   /*#31: CRAZY ANG HACKZ 2*/
-#ifdef HACKZ
   if ( fabs(error) < 0.03 ) {
     out = 0;
     return out;
   }
-#endif
 
   out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
 
