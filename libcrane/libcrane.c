@@ -13,8 +13,6 @@ static const double epsilon = 0.2;
 /*Container-flag*/
 static int payload = 0;
 
-#define MORTEN_HACK
-
 /**
  * Sets containers flag HIGH => we have a container attached!
  */
