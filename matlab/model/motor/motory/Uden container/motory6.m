@@ -17,8 +17,8 @@ y = y(1:idx_end) - y(1);
 u = DATA(:,9);
 u = u(1:idx_end);
 
-save measmotory6 t u y;
+save measmotory6 t u y
 
-process = 'motory6';
+process = 'motory6'
 
 delete(TMP_FILE);
