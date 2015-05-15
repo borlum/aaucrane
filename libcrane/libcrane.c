@@ -168,7 +168,7 @@ int run_motor(double voltage, int axis)
  */
 double get_angle()
 {
-    static double offset_wo_container = 0.4386;
+    static double offset_wo_container = 0.4386 + 0.03;
     
     double ang = 0.2294 * get_angle_raw() - offset_wo_container;
 
