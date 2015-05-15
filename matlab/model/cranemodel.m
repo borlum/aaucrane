@@ -20,8 +20,8 @@ kt = 0.03;
 % Motor modstand
 ra = 0.43;
 
-CONTAINER = 0;
-UP        = 0;
+CONTAINER = 1;
+UP        = 1;
 
 if CONTAINER == 1
     % MED CONTAINER
@@ -40,11 +40,11 @@ elseif CONTAINER == 0
 end
 
 if (UP == 1 && CONTAINER == 1)
-    My.b = 0.0322;
-    My.I = 0.0090;
+    My.b = 0.0019;
+    My.I = 0.0013;
 elseif(UP == 0 && CONTAINER == 1)
-    My.b = 0.0115;
-    My.I = 0.0067;
+    My.b = 0.00078;
+    My.I = 0.0014;
 elseif(UP == 1 && CONTAINER == 0)
     My.b = 0.00105;
     My.I = 0.0011;
