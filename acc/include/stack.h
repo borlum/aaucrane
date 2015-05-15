@@ -4,13 +4,13 @@
 #include "acc.h"
 
 
-#define STACK_WIDTH 26
+#define STACK_WIDTH 23
 #define STACK_HEIGHT 5
 
 #define CONTAINER_WIDTH 0.145
 #define CONTAINER_HEIGHT 0.13
 
-#define X_OFF_SET 0.342
+#define X_OFF_SET 0.35
 #define Y_OFF_SET 1.05
 
 

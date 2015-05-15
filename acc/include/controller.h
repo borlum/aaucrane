@@ -10,7 +10,7 @@ void* task_x_axis_controller(void *);
 void* task_y_axis_controller(void *);
 void* task_logger(void *);
 
-int init_logger();
+int init_logger(const char *data_path, size_t len);
 
 int enable_logger();
 int disable_logger();

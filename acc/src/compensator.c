@@ -3,7 +3,9 @@
 #include "compensator.h"
 #include <math.h>
 
-#define RAMP 
+//#define RAMP 
+
+//#define HACKZ
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -18,7 +20,6 @@ double angle_controller(double error){
   double out;
   
   /*#31: CRAZY ANG HACKZ 2*/
-  /*Burde være løst i settle condition*/
   if ( fabs(error) < 0.03 ) {
     out = 0;
     return out;
@@ -48,16 +49,19 @@ double position_controller_x(double error){
     } else if (fabs(error) < 0.005) {
     error = 0;
   } */
-
+/* JOACHIMS STUFF */
+/*  static double k_p = 3.75;*/
   return error * k_p;
 }
 
 double velocity_controller_x(double error){
   static double k_p = 5;
 
+#ifdef HACKZ
   if ( fabs(error) < 0.05 ) {
     return 0;
   }
+#endif
 
   return error * k_p;
 }
@@ -101,16 +105,18 @@ double get_controller_output(double ref){
   pos_out = position_controller_x(pos_err);
   ang_out = angle_controller(ang_err);
 
-  /* HACK #12 Even more CRAZY ang Hack */
-  /* if(fabs(pos_err) < 0.03) ang_out *= .1; */
-
   out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
+
+  printf("POS OUT = %+lf \n", pos_out);
+  printf("ANG ERR = %+lf \n", ang_err);
+  printf("ANG OUT = %+lf \n", ang_out);
+  printf("VEL OUT = %+lf \n", out);
   
   return out;
 }
 
 int ramp_maker(double step){
-  double i,  speed = .005, off_set = get_xpos(); //speed is in m/ms
+  double i,  speed = .0035, off_set = get_xpos(); //speed is in m/ms
   int j = 0;
 
   if (step > 0) {

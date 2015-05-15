@@ -6,6 +6,8 @@ comedi_t *NI_card;
 int *NI_card;
 #endif
 
+#define ANGLE_OFFSET 0.549
+
 static const double MAX_MOTOR_OUTPUT = 12.5;
 static const double MIN_MOTOR_OUTPUT = 0;
 static const double epsilon = 0.2;
@@ -63,10 +65,12 @@ int initialize_crane()
   comedi_set_global_oor_behavior(COMEDI_OOR_NUMBER);
   comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_OUT, COMEDI_OUTPUT);
   comedi_dio_config(NI_card, DIO_SUBDEV, CHAN_MAGNET_BTN, COMEDI_INPUT);
+
   if (NI_card == NULL) {
     return 0;
   }
-    return 1;
+
+  return 1;
 }
 
 /**
@@ -168,30 +172,11 @@ int run_motor(double voltage, int axis)
  */
 double get_angle()
 {
-    static double offset_wo_container = 0.4386;
-    
-    double ang = 0.2294 * get_angle_raw() - offset_wo_container;
+
+    double ang = 0.2294 * get_angle_raw() - ANGLE_OFFSET;
 
     if (libcrane_is_loaded())
       ang = ang + 0.021;
-
-    /*#01: CRAZY MORTEN HACKZ*/
-#ifdef MORTEN_HACK
-    static int count = 0;
-    static double ang_prev = 0;
-    if(fabs(ang_prev - ang) < 0.001)
-        count++;
-    else
-        count = 0;
-
-    if(count > 3) {
-        printf("=> APPLY MORTEN HACK! \n\n");
-        offset = offset + ang;
-        count = 0;
-    }
-      
-      ang_prev = ang;      
-#endif /* MORTEN_HACK */
 
     return libcrane_truncate(ang);
 }
