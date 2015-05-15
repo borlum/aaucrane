@@ -94,6 +94,7 @@ double get_controller_output(double ref){
   out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
 
   printf("POS OUT = %+lf \n", pos_out);
+  printf("ANG ERR = %+lf \n", ang_err);
   printf("ANG OUT = %+lf \n", ang_out);
   printf("VEL OUT = %+lf \n", out);
   
