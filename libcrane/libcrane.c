@@ -186,7 +186,7 @@ double get_angle()
     else
         count = 0;
 
-    if(count > 50) {
+    if(count > 100) {
         printf("=> APPLY MORTEN HACK! \n\n");
         offset_wo_container = offset_wo_container + ang;
         count = 0;
