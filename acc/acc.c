@@ -162,7 +162,6 @@ int main(int argc,char* argv[]){
   init_logger("/var/www/html/data/acc/acc/", sizeof("/var/www/html/data/acc/acc/"));
   if( init() == -1)
     exit(-1);
-  reset_angle();
 
   printf("Before enable_logger\n");
   if (enable_logger() == 0)
