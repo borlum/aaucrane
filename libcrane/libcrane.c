@@ -70,7 +70,6 @@ int initialize_crane()
     return 0;
   }
 
-  reset_angle();
   return 1;
 }
 
