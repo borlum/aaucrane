@@ -162,7 +162,7 @@ void place_containers(){
 }
 
 int main(int argc,char* argv[]){  
-  init_logger();
+  init_logger("/var/www/html/data/acc/acc/", sizeof("/var/www/html/data/acc/acc/"));
   if( init() == -1)
     exit(-1);
 
