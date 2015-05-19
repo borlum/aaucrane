@@ -27,11 +27,11 @@ double angle_controller(double error){
     return out;
   }
 
-  /*Morten controller*/
-  //out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
-
-  /*Joakim controller*/
+#ifdef CASCADE
   out = 1428 * error - 1372 * prev_err - prev_out;
+#else
+  out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
+#endif
 
   out *= -1;
 
