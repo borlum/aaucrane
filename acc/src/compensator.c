@@ -4,7 +4,7 @@
 #include <math.h>
 
 //#define RAMP 
-#define HACKZ
+//#define HACKZ
 #define CASCADE
 
 /*RAMP STUFF*/
@@ -19,13 +19,15 @@ double angle_controller(double error){
 
   double out;
 
+#ifdef HACKZ
   if (fabs(error) < 0.01) {
     error = 0;
   }
+#endif
 
 #ifdef CASCADE
   /*In theory: 1428, 1372, 1*/
-  out = 142.8 * error - 137.2 * prev_err - 0.1 * prev_out;
+  out = 1428 * error - 1372 * prev_err - * prev_out;
 #else
   out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
 #endif
@@ -40,7 +42,7 @@ double angle_controller(double error){
 
 double position_controller_x(double error){
 #ifdef CASCADE
-  double k_p = 1.15;
+  double k_p = 0.8;
 #else
   static double k_p = 3.75; /*1.15 in theory*/
 #endif
@@ -50,14 +52,16 @@ double position_controller_x(double error){
 
 double velocity_controller_x(double error){
 #ifdef CASCADE
-  static double k_p = 5; /*10 in theory*/
+  static double k_p = 10; /*10 in theory*/
 #else
   static double k_p = 5;
 #endif
 
+#ifdef HACKZ
   if ( fabs(error) < 0.05 ) {
     return 0;
   }
+#endif
 
   return error * k_p;
 }
