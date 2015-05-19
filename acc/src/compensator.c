@@ -20,10 +20,10 @@ double angle_controller(double error){
   double out;
   
   /*#31: CRAZY ANG HACKZ 2*/
-  if ( fabs(error) < 0.03 ) {
+  /*if ( fabs(error) < 0.03 ) {
     out = 0;
     return out;
-  }
+  }*/
 
 #ifdef CASCADE
   /*In theory: 1428, 1372, 1*/
