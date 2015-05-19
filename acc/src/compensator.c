@@ -33,10 +33,10 @@ double angle_controller(double error){
   out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
 #endif
 
-  out *= -1;
-
   prev_err = error;
   prev_out = out;
+
+  out *= -1;
   
   return out;
 }
