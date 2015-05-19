@@ -252,7 +252,7 @@ double get_ypos_raw()
 double get_x_velocity()
 {
     double vel = (get_motorx_velocity()) * .0039 - 0.01533;
-    if ( fabs(vel) < 0.025 ) {
+    if ( fabs(vel) < 0.05 ) {
       return 0;
     }
     return vel;
