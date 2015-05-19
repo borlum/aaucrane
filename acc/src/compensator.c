@@ -4,7 +4,7 @@
 #include <math.h>
 
 //#define RAMP 
-//#define HACKZ
+#define HACKZ
 //#define CASCADE
 
 /*RAMP STUFF*/
