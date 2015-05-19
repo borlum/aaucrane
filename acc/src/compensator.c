@@ -18,12 +18,6 @@ double angle_controller(double error){
   static double prev_out;
 
   double out;
-  
-  /*#31: CRAZY ANG HACKZ 2*/
-  /*if ( fabs(error) < 0.03 ) {
-    out = 0;
-    return out;
-  }*/
 
 #ifdef CASCADE
   /*In theory: 1428, 1372, 1*/
@@ -42,7 +36,7 @@ double angle_controller(double error){
 
 double position_controller_x(double error){
 #ifdef CASCADE
-  static double k_p = 0.8;
+  static double k_p = 3;
 #else
   static double k_p = 3.75; /*1.15 in theory*/
 #endif
