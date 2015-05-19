@@ -35,7 +35,7 @@ double angle_controller(double error){
   prev_err = error;
   prev_out = out;
 
-  out *= -1;
+  out *= -1; /* Virkelig lækkert at vi både vender fortegnet her og nede ved ang_err :) */
   
   return out;
 }
