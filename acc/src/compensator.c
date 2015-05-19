@@ -96,6 +96,11 @@ double get_controller_output(double ref){
   
 #ifdef CASCADE
   ang_out = angle_controller(ang_err);
+
+  if (fabs(pos_err) < 0.05) {
+    ang_out = ang_out * 0.5;
+  }
+
   pos_out = position_controller_x(ang_out + pos_err);
   out = velocity_controller_x(pos_out - get_x_velocity());
 #else
