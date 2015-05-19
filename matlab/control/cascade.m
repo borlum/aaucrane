@@ -15,11 +15,11 @@ tertiary = feedback(Cv * Gx, 1);
 % =============================================================================
 % SECONDARY LOOP, POSTION CONTROLLER
 % =============================================================================
-Cx = 1.1; %0.8 when angle is applied
+Cx = 0.8; %1.1 without angle
 secondary = feedback(Cx * tertiary * (1/s), 1);
 
 % =============================================================================
 % PRIMARY LOOP, ANGLE CONTROLLER
 % =============================================================================
-Ca = 7 * (s + 4);
-primary = feedback(Ca * secondary * W, 1);
+Ca = 7 * (s + 4); %5.44 from rlocus
+primary = feedback(secondary * W, Ca);
