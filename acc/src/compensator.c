@@ -55,6 +55,10 @@ double velocity_controller_x(double error){
   static double k_p = 5;
 #endif
 
+  if ( fabs(error) < 0.05 ) {
+    return 0;
+  }
+
   return error * k_p;
 }
 
