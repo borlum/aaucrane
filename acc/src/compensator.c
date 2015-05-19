@@ -46,7 +46,7 @@ double position_controller_x(double error){
 #endif
 
   if (fabs(error) < 0.1) {
-    k_p = 2;
+    k_p = 5;
   }
 
   return error * k_p;
