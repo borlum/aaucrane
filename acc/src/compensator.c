@@ -4,10 +4,8 @@
 #include <math.h>
 
 //#define RAMP 
-
-//#define HACKZ
-
-#define CASCADE
+#define HACKZ
+//#define CASCADE
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -20,39 +18,44 @@ double angle_controller(double error){
   static double prev_out;
 
   double out;
-  
-  /*#31: CRAZY ANG HACKZ 2*/
-  if ( fabs(error) < 0.03 ) {
-    out = 0;
-    return out;
+
+#ifdef HACKZ
+  if (fabs(error) < 0.01) {
+    error = 0;
   }
+#endif
 
-  /*Morten controller*/
-  //out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
-
-  /*Joakim controller*/
-  out = 1428 * error - 1372 * prev_err - prev_out;
-
-  out *= -1;
+#ifdef CASCADE
+  /*In theory: 1428, 1372, 1*/
+  out = 1428 * error - 1372 * prev_err - 1 * prev_out;
+#else
+  out = 146 * error - 137.5 * prev_err - 0.7391 * prev_out;
+#endif
 
   prev_err = error;
   prev_out = out;
+
+  out *= -1;
   
   return out;
 }
 
 double position_controller_x(double error){
-  static double k_p = 0.8;
-  
-  /* BEST VAL. FOR MORTEN CTRL */
-  /*  static double k_p = 3.75;*/
+#ifdef CASCADE
+  double k_p = 0.8;
+#else
+  static double k_p = 5; /*3.75 in haxx, 1.15 in theory*/
+#endif
 
   return error * k_p;
 }
 
 double velocity_controller_x(double error){
-  //static double k_p = 5;
-  static double k_p = 10;
+#ifdef CASCADE
+  static double k_p = 10; /*10 in theory*/
+#else
+  static double k_p = 6; /*5 in theory*/
+#endif
 
 #ifdef HACKZ
   if ( fabs(error) < 0.05 ) {
@@ -112,6 +115,7 @@ double get_controller_output(double ref){
   printf("POS OUT = %+lf \n", pos_out);
   printf("ANG ERR = %+lf \n", ang_err);
   printf("ANG OUT = %+lf \n", ang_out);
+  printf("VEL ERR = %+lf \n", ang_out + pos_out - get_x_velocity());
   printf("VEL OUT = %+lf \n", out);
   
   return out;
