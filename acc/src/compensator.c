@@ -5,7 +5,7 @@
 
 //#define RAMP 
 //#define HACKZ
-#define CASCADE
+//#define CASCADE
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -44,7 +44,7 @@ double position_controller_x(double error){
 #ifdef CASCADE
   double k_p = 0.8;
 #else
-  static double k_p = 3.75; /*1.15 in theory*/
+  static double k_p = 1.15; /*3.75 in haxx*/
 #endif
 
   return error * k_p;
