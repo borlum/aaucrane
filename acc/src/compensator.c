@@ -27,7 +27,7 @@ double angle_controller(double error){
 
 #ifdef CASCADE
   /*In theory: 1428, 1372, 1*/
-  out = 1428 * error - 1372 * prev_err - * prev_out;
+  out = 1428 * error - 1372 * prev_err - 1 * prev_out;
 #else
   out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
 #endif
