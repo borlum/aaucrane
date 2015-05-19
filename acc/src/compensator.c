@@ -40,7 +40,7 @@ double angle_controller(double error){
 
 double position_controller_x(double error){
 #ifdef CASCADE
-  static double k_p = 1.15;
+  static double k_p = 1.5;
 #else
   static double k_p = 3.75; /*1.15 in theory*/
 #endif
@@ -54,6 +54,10 @@ double velocity_controller_x(double error){
 #else
   static double k_p = 5;
 #endif
+
+  if ( fabs(error) < 0.05 ) {
+    return 0;
+  }
 
   return error * k_p;
 }
@@ -96,11 +100,6 @@ double get_controller_output(double ref){
   
 #ifdef CASCADE
   ang_out = angle_controller(ang_err);
-
-  if (fabs(pos_err) < 0.05) {
-    ang_out = ang_out * 0.5;
-  }
-
   pos_out = position_controller_x(ang_out + pos_err);
   out = velocity_controller_x(pos_out - get_x_velocity());
 #else
