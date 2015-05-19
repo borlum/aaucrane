@@ -50,7 +50,7 @@ double position_controller_x(double error){
 
 double velocity_controller_x(double error){
 #ifdef CASCADE
-  static double k_p = 5; /*10 in theory*/
+  static double k_p = 7; /*10 in theory*/
 #else
   static double k_p = 5;
 #endif
