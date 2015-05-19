@@ -4,8 +4,8 @@
 #include <math.h>
 
 //#define RAMP 
-
-//#define HACKZ
+#define HACKZ
+//#define CASCADE
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -18,44 +18,44 @@ double angle_controller(double error){
   static double prev_out;
 
   double out;
-  
-  /*#31: CRAZY ANG HACKZ 2*/
-  if ( fabs(error) < 0.03 ) {
-    out = 0;
-    return out;
+
+#ifdef HACKZ
+  if (fabs(error) < 0.01) {
+    error = 0;
   }
+#endif
 
-  out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
-
-  out *= -1;
+#ifdef CASCADE
+  /*In theory: 1428, 1372, 1*/
+  out = 1428 * error - 1372 * prev_err - 1 * prev_out;
+#else
+  out = 146 * error - 137.5 * prev_err - 0.7391 * prev_out;
+#endif
 
   prev_err = error;
   prev_out = out;
+
+  out *= -1;
   
   return out;
 }
 
 double position_controller_x(double error){
-  static double k_p = 1.15;
-  
-  /*#27: CRAZY POS. HACKZ*/
- /* int sign;
-  if(fabs(error) < 0.1 && fabs(error) > 0.008){
-    if(error < 0)
-      sign = -1;
-    else
-      sign = 1;
-    error = 0.1 * sign;
-    } else if (fabs(error) < 0.005) {
-    error = 0;
-  } */
-/* JOACHIMS STUFF */
-/*  static double k_p = 3.75;*/
+#ifdef CASCADE
+  double k_p = 0.8;
+#else
+  static double k_p = 5; /*3.75 in haxx, 1.15 in theory*/
+#endif
+
   return error * k_p;
 }
 
 double velocity_controller_x(double error){
-  static double k_p = 5;
+#ifdef CASCADE
+  static double k_p = 10; /*10 in theory*/
+#else
+  static double k_p = 6; /*5 in theory*/
+#endif
 
 #ifdef HACKZ
   if ( fabs(error) < 0.05 ) {
@@ -72,15 +72,15 @@ double position_controller_y(double error){
   /*UP = negative error, DOWN = positive error*/
   if (error > 0) {
     if (libcrane_is_loaded()) {
-      k_p = 15;
+      k_p = 26.9; //15
     } else {
-      k_p = 25;
+      k_p = 42; //25
     }
   } else if (error < 0) {
     if (libcrane_is_loaded()) {
-      k_p = 25;
+      k_p = 64; //25
     } else {
-      k_p = 20;
+      k_p = 42; //20
     }
   }
 
@@ -102,14 +102,20 @@ double get_controller_output(double ref){
 
   ang_err =  -get_angle();
   
+#ifdef CASCADE
+  ang_out = angle_controller(ang_err);
+  pos_out = position_controller_x(ang_out + pos_err);
+  out = velocity_controller_x(pos_out - get_x_velocity());
+#else
   pos_out = position_controller_x(pos_err);
   ang_out = angle_controller(ang_err);
-
   out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
+#endif
 
   printf("POS OUT = %+lf \n", pos_out);
   printf("ANG ERR = %+lf \n", ang_err);
   printf("ANG OUT = %+lf \n", ang_out);
+  printf("VEL ERR = %+lf \n", ang_out + pos_out - get_x_velocity());
   printf("VEL OUT = %+lf \n", out);
   
   return out;
