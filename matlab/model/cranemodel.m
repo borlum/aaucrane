@@ -40,17 +40,17 @@ elseif CONTAINER == 0
 end
 
 if (UP == 1 && CONTAINER == 1)
-    My.b = 0.0322;
-    My.I = 0.0090;
+    My.b = 0.0019;
+    My.I = 0.0013;
 elseif(UP == 0 && CONTAINER == 1)
-    My.b = 0.0115;
-    My.I = 0.0067;
+    My.b = 0.00078;
+    My.I = 0.0014;
 elseif(UP == 1 && CONTAINER == 0)
-    My.b = 0.0051;
-    My.I = 0.0024;
+    My.b = 0.00105;
+    My.I = 0.0011;
 else
-    My.b = 0.0042;
-    My.I = 0.0025;
+    My.b = 0.00103;
+    My.I = 0.00085;
 end
 
 B  = W.b;
@@ -84,7 +84,7 @@ My = (kt/ra)/(kt^2/ra + My.b + My.I*s);
 %------------------------------------------------------------------------------
 Gry = 1/24;
 rry = 0.05;
-Hy = My * Gry * rry * (1/s);
+Hy = My * Gry * rry * (1/2) * (1/s);
 
 jp = 0.0890;
 B = 0.0315;

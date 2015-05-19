@@ -12,6 +12,6 @@ M = (kt/ra)/(kt^2/ra + bm + I*s);
 Gr = 1/24;
 rr = 0.05;
 
-X = M * Gr * rr * 1/s;
+X = M * Gr * rr * 1/2 * 1/s;
 
 y = lsim(X, u, t);

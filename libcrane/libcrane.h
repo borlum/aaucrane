@@ -59,8 +59,6 @@ int run_motor(double voltage, int axis);
 double get_angle();
 double get_angle_raw();
 
-void reset_angle();
-
 double get_old_angle_raw();
 
 double get_xpos();

@@ -7,7 +7,7 @@ websave(TMP_FILE, [CRANE_URL '/crane/xsteps/1431433081.csv']);
 DATA = csvread(TMP_FILE, 2, 0);
 t = DATA(:,1) * 1e-6;
 
-idx_end = find(t > 7);
+idx_end = find(t > 6);
 idx_end = idx_end(1);
 
 t = t(1:idx_end);

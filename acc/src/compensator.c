@@ -3,7 +3,11 @@
 #include "compensator.h"
 #include <math.h>
 
-#define RAMP 
+//#define RAMP 
+
+#define HACKZ
+
+#define CASCADE
 
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
@@ -18,46 +22,43 @@ double angle_controller(double error){
   double out;
   
   /*#31: CRAZY ANG HACKZ 2*/
-  /*Burde være løst i settle condition*/
   if ( fabs(error) < 0.03 ) {
     out = 0;
     return out;
   }
 
+#ifdef CASCADE
+  out = 142.8 * error - 137.2 * prev_err - prev_out;
+#else
   out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
-
-  out *= -1;
+#endif
 
   prev_err = error;
   prev_out = out;
+
+  out *= -1;
   
   return out;
 }
 
 double position_controller_x(double error){
-  static double k_p = 5;
+  static double k_p = 0.8;
   
-  /*#27: CRAZY POS. HACKZ*/
- /* int sign;
-  if(fabs(error) < 0.1 && fabs(error) > 0.008){
-    if(error < 0)
-      sign = -1;
-    else
-      sign = 1;
-    error = 0.1 * sign;
-    } else if (fabs(error) < 0.005) {
-    error = 0;
-  } */
+  /* BEST VAL. FOR MORTEN CTRL */
+  /*  static double k_p = 3.75;*/
 
   return error * k_p;
 }
 
 double velocity_controller_x(double error){
-  static double k_p = 6;
+  //static double k_p = 5;
+  static double k_p = 5;
 
+#ifdef HACKZ
   if ( fabs(error) < 0.05 ) {
     return 0;
   }
+#endif
 
   return error * k_p;
 }
@@ -68,15 +69,15 @@ double position_controller_y(double error){
   /*UP = negative error, DOWN = positive error*/
   if (error > 0) {
     if (libcrane_is_loaded()) {
-      k_p = 15;
+      k_p = 26.9; //15
     } else {
-      k_p = 25;
+      k_p = 42; //25
     }
   } else if (error < 0) {
     if (libcrane_is_loaded()) {
-      k_p = 25;
+      k_p = 64; //25
     } else {
-      k_p = 20;
+      k_p = 42; //20
     }
   }
 
@@ -98,19 +99,26 @@ double get_controller_output(double ref){
 
   ang_err =  -get_angle();
   
+#ifdef CASCADE
+  ang_out = angle_controller(ang_err);
+  pos_out = position_controller_x(ang_out + pos_err);
+  out = velocity_controller_x(pos_out - get_x_velocity());
+#else
   pos_out = position_controller_x(pos_err);
   ang_out = angle_controller(ang_err);
-
-  /* HACK #12 Even more CRAZY ang Hack */
-  /* if(fabs(pos_err) < 0.03) ang_out *= .1; */
-
   out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
+#endif
+
+  printf("POS OUT = %+lf \n", pos_out);
+  printf("ANG ERR = %+lf \n", ang_err);
+  printf("ANG OUT = %+lf \n", ang_out);
+  printf("VEL OUT = %+lf \n", out);
   
   return out;
 }
 
 int ramp_maker(double step){
-  double i,  speed = .005, off_set = get_xpos(); //speed is in m/ms
+  double i,  speed = .0035, off_set = get_xpos(); //speed is in m/ms
   int j = 0;
 
   if (step > 0) {
