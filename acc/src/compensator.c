@@ -40,7 +40,7 @@ double angle_controller(double error){
 
 double position_controller_x(double error){
 #ifdef CASCADE
-  static double k_p = 1.5;
+  static double k_p = 1.15;
 #else
   static double k_p = 3.75; /*1.15 in theory*/
 #endif
@@ -50,7 +50,7 @@ double position_controller_x(double error){
 
 double velocity_controller_x(double error){
 #ifdef CASCADE
-  static double k_p = 7; /*10 in theory*/
+  static double k_p = 5; /*10 in theory*/
 #else
   static double k_p = 5;
 #endif
@@ -111,6 +111,7 @@ double get_controller_output(double ref){
   printf("POS OUT = %+lf \n", pos_out);
   printf("ANG ERR = %+lf \n", ang_err);
   printf("ANG OUT = %+lf \n", ang_out);
+  printf("VEL ERR = %+lf \n", get_x_velocity());
   printf("VEL OUT = %+lf \n", out);
   
   return out;
