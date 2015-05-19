@@ -5,7 +5,7 @@
 
 //#define RAMP 
 
-//#define HACKZ
+#define HACKZ
 
 #define CASCADE
 
@@ -52,7 +52,7 @@ double position_controller_x(double error){
 
 double velocity_controller_x(double error){
   //static double k_p = 5;
-  static double k_p = 10;
+  static double k_p = 5;
 
 #ifdef HACKZ
   if ( fabs(error) < 0.05 ) {
