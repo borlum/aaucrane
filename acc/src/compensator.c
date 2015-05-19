@@ -7,6 +7,8 @@
 
 //#define HACKZ
 
+#define CASCADE
+
 /*RAMP STUFF*/
 #define REF_ARR_SZ 8000
 size_t nr_of_ref;
@@ -25,7 +27,11 @@ double angle_controller(double error){
     return out;
   }
 
-  out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
+  /*Morten controller*/
+  //out = 146 * error - 137.5 * prev_err + 0.7391 * prev_out;
+
+  /*Joakim controller*/
+  out = 1428 * error - 1372 * prev_err - prev_out;
 
   out *= -1;
 
@@ -36,26 +42,17 @@ double angle_controller(double error){
 }
 
 double position_controller_x(double error){
-  static double k_p = 1.15;
+  static double k_p = 0.8;
   
-  /*#27: CRAZY POS. HACKZ*/
- /* int sign;
-  if(fabs(error) < 0.1 && fabs(error) > 0.008){
-    if(error < 0)
-      sign = -1;
-    else
-      sign = 1;
-    error = 0.1 * sign;
-    } else if (fabs(error) < 0.005) {
-    error = 0;
-  } */
-/* JOACHIMS STUFF */
-/*  static double k_p = 3.75;*/
+  /* BEST VAL. FOR MORTEN CTRL */
+  /*  static double k_p = 3.75;*/
+
   return error * k_p;
 }
 
 double velocity_controller_x(double error){
-  static double k_p = 5;
+  //static double k_p = 5;
+  static double k_p = 10;
 
 #ifdef HACKZ
   if ( fabs(error) < 0.05 ) {
@@ -72,15 +69,15 @@ double position_controller_y(double error){
   /*UP = negative error, DOWN = positive error*/
   if (error > 0) {
     if (libcrane_is_loaded()) {
-      k_p = 15;
+      k_p = 26.9; //15
     } else {
-      k_p = 25;
+      k_p = 42; //25
     }
   } else if (error < 0) {
     if (libcrane_is_loaded()) {
-      k_p = 25;
+      k_p = 64; //25
     } else {
-      k_p = 20;
+      k_p = 42; //20
     }
   }
 
@@ -102,10 +99,15 @@ double get_controller_output(double ref){
 
   ang_err =  -get_angle();
   
+#ifdef CASCADE
+  ang_out = angle_controller(ang_err);
+  pos_out = position_controller_x(ang_out + pos_err);
+  out = velocity_controller_x(pos_out - get_x_velocity());
+#else
   pos_out = position_controller_x(pos_err);
   ang_out = angle_controller(ang_err);
-
   out = velocity_controller_x(ang_out + pos_out - get_x_velocity());
+#endif
 
   printf("POS OUT = %+lf \n", pos_out);
   printf("ANG ERR = %+lf \n", ang_err);
