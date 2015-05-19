@@ -44,7 +44,7 @@ double position_controller_x(double error){
 #ifdef CASCADE
   double k_p = 0.8;
 #else
-  static double k_p = 3.75; /*3.75 in haxx, 1.15 in theory*/
+  static double k_p = 5; /*3.75 in haxx, 1.15 in theory*/
 #endif
 
   return error * k_p;
@@ -54,7 +54,7 @@ double velocity_controller_x(double error){
 #ifdef CASCADE
   static double k_p = 10; /*10 in theory*/
 #else
-  static double k_p = 5;
+  static double k_p = 6; /*5 in theory*/
 #endif
 
 #ifdef HACKZ
