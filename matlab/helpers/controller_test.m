@@ -8,8 +8,8 @@
 % Fetch parallel results
 [parallel_w_container.t parallel_w_container.x parallel_w_container.y parallel_w_container.a] = grabData('http://172.26.12.144/data/acc/steps/1432050948-0.csv');
 [parallel.t parallel.x parallel.y parallel.a] = grabData('http://172.26.12.144/data/acc/steps/1432051059-0.csv');
-[parallel_w_hax.t parallel_w_hax.x parallel_w_hax.y parallel_w_hax.a] = grabData('http://172.26.12.144/data/acc/steps/1432051895-0.csv');
-[parallel_w_hax_w_container.t parallel_w_hax_w_container.x parallel_w_hax_w_container.y parallel_w_hax_w_container.a] = grabData('http://172.26.12.144/data/acc/steps/1432051821-0.csv');
+[parallel_w_hax.t parallel_w_hax.x parallel_w_hax.y parallel_w_hax.a] = grabData('http://172.26.12.144/data/acc/steps/1432107005-0.csv');
+[parallel_w_hax_w_container.t parallel_w_hax_w_container.x parallel_w_hax_w_container.y parallel_w_hax_w_container.a] = grabData('http://172.26.12.144/data/acc/steps/1432106827-0.csv');
 
 %%
 % plot stuff
@@ -17,13 +17,16 @@
 % With hax and container  - BAD
 figure;
 plot(cascade_w_hax_w_container.t, cascade_w_hax_w_container.a, parallel_w_hax_w_container.t, parallel_w_hax_w_container.a);
+grid on;
 title('With container')
 legend('Cascade design', 'Parallel design')
 xlabel('Time [s]')
 ylabel('Angle [rad]')
 print('controller_test_w_hax_w_container_angle.pdf', '-dpdf');
+
 figure;
 plot(cascade_w_hax_w_container.t, cascade_w_hax_w_container.x, parallel_w_hax_w_container.t, parallel_w_hax_w_container.x);
+grid on;
 title('With container')
 legend('Cascade design', 'Parallel design')
 xlabel('Time [s]')
@@ -33,13 +36,16 @@ print('controller_test_w_hax_w_container_pos.pdf', '-dpdf');
 % With hax, no container - BAD
 figure;
 plot(cascade_w_hax.t, cascade_w_hax.a, parallel_w_hax.t, parallel_w_hax.a);
+grid on;
 title('Without container')
 legend('Cascade design', 'Parallel design')
 xlabel('Time [s]')
 ylabel('Angle [rad]')
 print('controller_test_w_hax_wo_container_angle.pdf', '-dpdf');
+
 figure;
 plot(cascade_w_hax.t, cascade_w_hax.x, parallel_w_hax.t, parallel_w_hax.x);
+grid on;
 title('Without container')
 legend('Cascade design', 'Parallel design')
 xlabel('Time [s]')
