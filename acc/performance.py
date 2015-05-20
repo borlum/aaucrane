@@ -7,7 +7,7 @@ import random
 if __name__ == '__main__':
     random.seed(42)
     try:
-        acc = subprocess.Popen("stdbuf -oL sudo ./acc", shell = True, stdout = subprocess.PIPE)
+        acc = subprocess.Popen("stdbuf -oL sudo ./a.out", shell = True, stdout = subprocess.PIPE)
     except:
         print("....")
     else:
@@ -19,14 +19,19 @@ if __name__ == '__main__':
     
         for i in range(100):
             while(True):
-                line = acc.stdout.readline()
-                if line != b'':
+                for line in acc.stdout:
                     print(line)
-                if(line == b'Enter a crane command <row,col row,col>:\n'):
-                    break
+            
+                # line = acc.stdout.readline()
+                # if line != b'':
+                #     print(line)
+                # if(line == b'Enter a crane command <row,col row,col>:\n'):
+                #     break
 
             input("Hit enter")
             acc.stdout.write("{0},{1} {2},{3}\n", source_col, source_row, dest_col, dest_row)
             
             source_col = dest_col
             dest_col = random.randint(1, 22)
+
+        acc.communicate()
