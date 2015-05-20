@@ -58,7 +58,7 @@ double velocity_controller_x(double error){
 #endif
 
 #ifdef HACKZ
-  if ( fabs(error) < 0.03 ) {
+  if ( fabs(error) < 0.02 ) {
     return 0;
   }
 #endif
