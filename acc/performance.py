@@ -21,10 +21,10 @@ if __name__ == '__main__':
             while(True):
                 line = acc.stdout.readline()
                 print(line)
-                if(line == 'Enter a crane command <row,col row,col>:'):
+                if(line == 'Enter a crane command <row,col row,col>:\n'):
                     break
 
-            input()
+            input("Hit enter")
             acc.stdout.write("{0},{1} {2},{3}\n", source_col, source_row, dest_col, dest_row)
             
             source_col = dest_col
