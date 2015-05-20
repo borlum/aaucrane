@@ -26,7 +26,8 @@ if __name__ == '__main__':
                     break
 
             input("Hit enter")
-            acc.communicate(input=b"{0},{1} {2},{3}\n".format(source_col, source_row, dest_col, dest_row))[0]
+            msg = "{0},{1} {2},{3}\n".format(source_col, source_row, dest_col, dest_row)
+            acc.communicate(input=bytes(msg))[0]
             
             source_col = dest_col
             dest_col = random.randint(1, 22)
