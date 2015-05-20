@@ -35,7 +35,7 @@ double angle_controller(double error){
   prev_err = error;
   prev_out = out;
 
-  out *= -1;
+  out *= -1; /* Virkelig lækkert at vi både vender fortegnet her og nede ved ang_err :) */
   
   return out;
 }
@@ -72,15 +72,15 @@ double position_controller_y(double error){
   /*UP = negative error, DOWN = positive error*/
   if (error > 0) {
     if (libcrane_is_loaded()) {
-      k_p = 26.9; //15
+      k_p = 15 ;// 26.9; //15
     } else {
-      k_p = 42; //25
+      k_p = 25 ;// 42; //25
     }
   } else if (error < 0) {
     if (libcrane_is_loaded()) {
-      k_p = 64; //25
+      k_p = 25 ;// 64; //25
     } else {
-      k_p = 42; //20
+      k_p = 20 ;// 42; //20
     }
   }
 

@@ -81,7 +81,7 @@ int main(int argc,char* argv[]){
   double tmp;
 
   while(1) {
-    enable_magnet();
+    disable_magnet();
 
     printf ("Enter y-axis position: <y>:\n");
     scanf("%lf", &y);
@@ -101,7 +101,7 @@ int main(int argc,char* argv[]){
       memcpy(&tmp, stupid_buffer, sizeof(int));
     }
 
-    disable_logger();
+    //disable_logger();
 
   }
 }
