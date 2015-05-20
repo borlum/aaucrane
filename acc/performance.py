@@ -2,7 +2,7 @@
 
 import sys
 import subprocess
-import random
+import random5
 
 if __name__ == '__main__':
     random.seed(42)
@@ -18,7 +18,8 @@ if __name__ == '__main__':
         dest_col = 22
     
         for i in range(100):
-            while acc.stdout.readline() != 'Enter a crane command <row,col row,col>:':
+            while (line = acc.stdout.readline()) != 'Enter a crane command <row,col row,col>:':
+                print(line)
                 pass
 
             input()
