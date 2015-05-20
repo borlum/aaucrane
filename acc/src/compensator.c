@@ -44,7 +44,7 @@ double position_controller_x(double error){
 #ifdef CASCADE
   double k_p = 0.8;
 #else
-  static double k_p = 3; /*3.75 in haxx, 1.15 in theory*/
+  static double k_p = 5; /*3.75 in haxx, 1.15 in theory*/
 #endif
 
   return error * k_p;
