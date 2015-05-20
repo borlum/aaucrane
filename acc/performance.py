@@ -24,9 +24,9 @@ if __name__ == '__main__':
                     print(line)
                 if(line == b'Enter a crane command <row,col row,col>:\n'):
                     break
-
-            input("Hit enter")
+                
             msg = "{0},{1} {2},{3}\n".format(source_col, source_row, dest_col, dest_row)
+            print("TO CRANE", msg)
             acc.communicate(input=bytes(msg, 'ascii'))[0]
             
             source_col = dest_col
