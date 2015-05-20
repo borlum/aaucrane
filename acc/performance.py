@@ -29,7 +29,7 @@ if __name__ == '__main__':
                 
             msg = "{0},{1} {2},{3}\n".format(source_col, source_row, dest_col, dest_row)
             print("TO CRANE", msg)
-            resp = acc.communicate(input=bytes(msg, 'ascii', timeout = 30))[0]
+            resp = acc.communicate(input=bytes(msg, 'ascii'), timeout=30)[0]
             print(resp)
             
             source_col = dest_col
