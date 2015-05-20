@@ -18,9 +18,11 @@ if __name__ == '__main__':
         dest_col = 22
     
         for i in range(100):
-            while (line = acc.stdout.readline()) != 'Enter a crane command <row,col row,col>:':
+            while(True):
+                line = acc.stdout.readline()):
                 print(line)
-                pass
+                if(line == 'Enter a crane command <row,col row,col>:'):
+                    break
 
             input()
             acc.stdout.write("{0},{1} {2},{3}\n", source_col, source_row, dest_col, dest_row)
