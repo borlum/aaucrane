@@ -19,7 +19,7 @@ if __name__ == '__main__':
     
         for i in range(100):
             while(True):
-                line = acc.stdout.readline()):
+                line = acc.stdout.readline():
                 print(line)
                 if(line == 'Enter a crane command <row,col row,col>:'):
                     break
