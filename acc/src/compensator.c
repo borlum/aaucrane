@@ -20,7 +20,7 @@ double angle_controller(double error){
   double out;
 
 #ifdef HACKZ
-  if (fabs(error) < 0.01) {
+  if (fabs(error) < 0.03) {
     error = 0;
   }
 #endif
