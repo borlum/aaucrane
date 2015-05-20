@@ -2,7 +2,7 @@
 
 import sys
 import subprocess
-import random5
+import random
 
 if __name__ == '__main__':
     random.seed(42)
