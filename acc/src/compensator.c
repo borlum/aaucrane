@@ -3,7 +3,7 @@
 #include "compensator.h"
 #include <math.h>
 
-#define RAMP 
+//#define RAMP 
 #define HACKZ
 //#define CASCADE
 
