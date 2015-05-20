@@ -82,7 +82,7 @@ int main(int argc,char* argv[]){
 
   while(1) {
     /*Disable for NO CONTAINER*/
-    disable_magnet();
+    enable_magnet();
 
     printf ("Enter x-axis position: <x>:\n");
     scanf("%lf", &x);

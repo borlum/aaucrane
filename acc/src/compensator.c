@@ -3,7 +3,7 @@
 #include "compensator.h"
 #include <math.h>
 
-//#define RAMP 
+#define RAMP 
 #define HACKZ
 //#define CASCADE
 
@@ -20,7 +20,7 @@ double angle_controller(double error){
   double out;
 
 #ifdef HACKZ
-  if (fabs(error) < 0.01) {
+  if (fabs(error) < 0.03) {
     error = 0;
   }
 #endif
@@ -72,15 +72,15 @@ double position_controller_y(double error){
   /*UP = negative error, DOWN = positive error*/
   if (error > 0) {
     if (libcrane_is_loaded()) {
-      k_p = 26.9; //15
+      k_p = 15 ;// 26.9; //15
     } else {
-      k_p = 42; //25
+      k_p = 30 ;// 42; //25
     }
   } else if (error < 0) {
     if (libcrane_is_loaded()) {
-      k_p = 64; //25
+      k_p = 25 ;// 64; //25
     } else {
-      k_p = 42; //20
+      k_p = 20 ;// 42; //20
     }
   }
 
@@ -122,7 +122,7 @@ double get_controller_output(double ref){
 }
 
 int ramp_maker(double step){
-  double i,  speed = .0035, off_set = get_xpos(); //speed is in m/ms
+  double i,  speed = .0025, off_set = get_xpos(); //speed is in m/ms
   int j = 0;
 
   if (step > 0) {
