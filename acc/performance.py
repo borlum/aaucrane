@@ -7,7 +7,7 @@ import random
 if __name__ == '__main__':
     random.seed(42)
     try:
-        acc = subprocess.Popen("stdbuf -oL sudo ./a.out", shell = True, stdout = subprocess.PIPE)
+        acc = subprocess.Popen("stdbuf -oL sudo ./acc", shell = True, stdout = subprocess.PIPE, stdin = subprocess.PIPE)
     except:
         print("....")
     else:
