@@ -19,14 +19,11 @@ if __name__ == '__main__':
     
         for i in range(100):
             while(True):
-                for line in acc.stdout:
+                line = acc.stdout.readline()
+                if line != b'':
                     print(line)
-            
-                # line = acc.stdout.readline()
-                # if line != b'':
-                #     print(line)
-                # if(line == b'Enter a crane command <row,col row,col>:\n'):
-                #     break
+                if(line == b'Enter a crane command <row,col row,col>:\n'):
+                    break
 
             input("Hit enter")
             acc.stdout.write("{0},{1} {2},{3}\n", source_col, source_row, dest_col, dest_row)
