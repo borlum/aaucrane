@@ -101,7 +101,7 @@ int main(int argc,char* argv[]){
       memcpy(&tmp, stupid_buffer, sizeof(int));
     }
 
-    disable_logger();
+    //disable_logger();
 
   }
 }
