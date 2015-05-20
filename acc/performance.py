@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 import sys
-import pexpect
+import subprocess
 import random
 
 if __name__ == '__main__':
     random.seed(42)
     try:
-        acc = subprocess.Popen([["stdbuf", "-oL", "'sudo ./acc"], shell = True, stdout = subprocess.PIPE)
+        acc = subprocess.Popen("stdbuf -oL sudo ./acc", shell = True, stdout = subprocess.PIPE)
     except:
         print("....")
     else:
@@ -20,8 +20,9 @@ if __name__ == '__main__':
         for i in range(100):
             while(True):
                 line = acc.stdout.readline()
-                print(line)
-                if(line == 'Enter a crane command <row,col row,col>:\n'):
+                if line != b'':
+                    print(line)
+                if(line == b'Enter a crane command <row,col row,col>:\n'):
                     break
 
             input("Hit enter")
