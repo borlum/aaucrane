@@ -8,7 +8,7 @@
 %Ned, no cont, calval
 [t3, x3, y3, theta3] = grabData('http://172.26.12.144/data/acc/steps/1432127048-0.csv');
 %Op, no cont, fifleval
-[t4, x4, y4, theta4] = grabData('http://172.26.12.144/data/acc/steps/1432127868-0.csv'); y4 = y4+0.002;
+[t4, x4, y4, theta4] = grabData('http://172.26.12.144/data/acc/steps/1432127868-0.csv'); y4 = y4+0.003;
 %Ned, no cont, fifleval
 [t5, x5, y5, theta5] = grabData('http://172.26.12.144/data/acc/steps/1432127815-0.csv');
 %Op, cont, fifleval
@@ -21,6 +21,6 @@
 %NED no fiffel
 %plot(t1,y1,t3,y3); grid on; xlabel('Time[s]'); ylabel('y[m]'); title('Measured position response to 0.78 m step'); xlim([0 10]); hold on; plot([0 10],[0.908 0.908],'k--'); plot([5.5 5.5],[0 1],'k'); plot([0 10],[0.912 0.912],'k--'); legend('With container','Without container','Error band','Settle time','Location','southeast');
 %OP fiffel
-%plot(t6,y6,t4,y4); grid on; xlabel('Time[s]'); ylabel('y[m]'); title('Measured position response to 0.78 m step'); xlim([0 10]); hold on; plot([0 10],[0.128 0.128],'k--'); plot([5.5 5.5],[0 1],'k'); plot([0 10],[0.132 0.132],'k--'); legend('With container','Without container','Error band','Settle time','Location','northeast');
+plot(t6,y6,t4,y4); grid on; xlabel('Time[s]'); ylabel('y[m]'); title('Measured position response to 0.78 m step'); xlim([0 10]); hold on; plot([0 10],[0.128 0.128],'k--'); plot([5.5 5.5],[0 1],'k'); plot([0 10],[0.132 0.132],'k--'); legend('With container','Without container','Error band','Settle time','Location','northeast');
 %NED fiffel
 %plot(t7,y7,t5,y5); grid on; xlabel('Time[s]'); ylabel('y[m]'); title('Measured position response to 0.78 m step'); xlim([0 10]); hold on; plot([0 10],[0.908 0.908],'k--'); plot([5.5 5.5],[0 1],'k'); plot([0 10],[0.912 0.912],'k--'); legend('With container','Without container','Error band','Settle time','Location','southeast');

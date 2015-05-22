@@ -19,9 +19,18 @@ idx = find(t > t_xs2 & t_ys2 > t);
 a(idx) = a(idx) - mean(a(idx));
 
 plot(t,a);
+xlabel('Time [s]'); 
+ylabel('\theta [rad]');
+title('Acceptance test of ACC (angle)'); 
+grid on;
 hold on;
-plot(t, ones(length(t),1) * 0.087, '--k')
-plot(t, ones(length(t),1) * -0.087, '--k')
-
-plot(t, ones(length(t),1) * 0.004, 'r')
-plot(t, ones(length(t),1) * -0.004, 'r')
+plot(t, ones(length(t),1) * 0.087, '--k'); %Max \theta when moving container
+plot(t, ones(length(t),1) * 0.004, 'r'); %Max \theta when picking/placing container
+plot([14.86 14.86],[-0.01 0.01],'r'); %Y-action
+plot([20 20],[-0.01 0.01],'r'); %Y-done
+plot([42.8 42.8],[-0.01 0.01],'r'); %Y-action
+plot([48.24 48.24],[-0.01 0.01],'r'); %Y-done
+plot(t, ones(length(t),1) * -0.087, '--k'); %Max \theta when moving container
+plot(t, ones(length(t),1) * -0.004, 'r'); %Max \theta when picking/placing container
+legend('Measured \theta','Max \theta when moving container','Max \theta when picking/placing container','Location','northeast');
+xlim([0 53.61]);
