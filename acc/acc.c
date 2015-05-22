@@ -96,11 +96,9 @@ void *controller(void * args)
     
     disable_magnet();
 
-    mq_send(to_y, (char *) &reset_pos_flag, sizeof(reset_pos_flag), 0);
+    mq_send(to_y, (char *) &reset_y_pos, sizeof(reset_pos_flag), 0);
     mq_receive(from_y, buf, buf_len, 0);
 
-    mq_send(to_x, (char *) &reset_pos_flag, sizeof(reset_pos_flag), 0);
-    mq_receive(from_x, buf, buf_len, 0);
     mq_send(from_c, (char *) &cmd, sizeof(cmd), 0);
   }
 }
