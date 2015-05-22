@@ -26,6 +26,7 @@ pthread_t thread_logger;
 
 void *controller(void * args)
 {
+  setbuf(stdout, NULL);
   printf("Starting controller task\n");
   mqd_t to_x, from_x;
   mqd_t to_y, from_y;
