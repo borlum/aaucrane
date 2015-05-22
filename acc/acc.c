@@ -58,7 +58,8 @@ void *controller(void * args)
   mq_receive(from_y, buf, buf_len, 0);
   mq_send(to_x, (char*) &tmp, sizeof(double), 0);
   mq_receive(from_x, buf, buf_len, 0);
-  
+  mq_send(from_c, (char *) &cmd, sizeof(cmd), 0);
+
   while(1){
     printf("Crane reday for next command... \n");
     mq_receive(to_c, cmd_buf, cmd_buf_len, 0);
@@ -150,6 +151,7 @@ int init(){
   
   pthread_create(&thread_controller, NULL, controller, NULL);
   pthread_create(&thread_logger, NULL, task_logger, NULL);
+  mq_receive(from_c, buf, buf_len, 0);
 
   return 0;
 }
