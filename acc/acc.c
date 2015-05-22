@@ -39,7 +39,8 @@ void *controller(void * args)
   size_t cmd_buf_len = BUFFER_SIZE;
   char cmd_buf[BUFFER_SIZE];
 
-  int tmp = 0;
+  int start_pos_x = 0.4;
+  int start_pos_y = 0.27;
 
   to_x = mq_open(Q_TO_X, O_WRONLY);
   from_x = mq_open(Q_FROM_X, O_RDONLY);
@@ -54,9 +55,9 @@ void *controller(void * args)
   pthread_create(&thread_xcontroller, NULL, task_x_axis_controller, NULL); /* Starts with a ref @ 0 */
   pthread_create(&thread_ycontroller, NULL, task_y_axis_controller, NULL);  /* Starts with a ref @ 0 */
   /* Wait untill (0,0) has been reached */
-  mq_send(to_y, (char*) &tmp, sizeof(double), 0);
+  mq_send(to_y, (char*) &start_pos_y, sizeof(double), 0);
   mq_receive(from_y, buf, buf_len, 0);
-  mq_send(to_x, (char*) &tmp, sizeof(double), 0);
+  mq_send(to_x, (char*) &start_pos_x, sizeof(double), 0);
   mq_receive(from_x, buf, buf_len, 0);
   mq_send(from_c, (char *) &cmd, sizeof(cmd), 0);
 
