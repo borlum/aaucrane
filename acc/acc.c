@@ -34,7 +34,8 @@ void *controller(void * args)
   size_t buf_len = BUFFER_SIZE;
   char buf[BUFFER_SIZE];
   
-  double reset_pos_flag = 0.2;
+  double reset_x_pos = 0.2;
+  double reset_y_pos = 0.2;
   
 
   crane_cmd_t* cmd;
@@ -54,9 +55,9 @@ void *controller(void * args)
   pthread_create(&thread_xcontroller, NULL, task_x_axis_controller, NULL); /* Starts with a ref @ 0 */
   pthread_create(&thread_ycontroller, NULL, task_y_axis_controller, NULL);  /* Starts with a ref @ 0 */
   /* Wait untill (0,0) has been reached */
-  mq_send(to_y, (char*) &reset_pos_flag, sizeof(double), 0);
+  mq_send(to_y, (char*) &reset_x_pos, sizeof(double), 0);
   mq_receive(from_y, buf, buf_len, 0);
-  mq_send(to_x, (char*) &reset_pos_flag, sizeof(double), 0);
+  mq_send(to_x, (char*) &reset_y_pos, sizeof(double), 0);
   mq_receive(from_x, buf, buf_len, 0);
   
   while(1){
@@ -162,7 +163,7 @@ void place_containers(){
 }
 
 int main(int argc,char* argv[]){  
-  init_logger();
+  init_logger("/var/www/html/data/acc/acc/", sizeof("/var/www/html/data/acc/acc/"));
   if( init() == -1)
     exit(-1);
 
