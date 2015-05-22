@@ -61,11 +61,11 @@ int main(int argc, char* argv[])
 
     /*SAMPLE SENSORS*/
     fprintf(fp, "%f,", get_old_angle_raw());
-    fprintf(fp, "%f,", get_angle_raw());
-    fprintf(fp, "%f,", get_xpos_raw());
-    fprintf(fp, "%f,", get_ypos_raw());
-    fprintf(fp, "%f,", get_motorx_velocity_raw());
-    fprintf(fp, "%f,", get_motory_velocity_raw());
+    fprintf(fp, "%f,", get_angle());
+    fprintf(fp, "%f,", get_xpos());
+    fprintf(fp, "%f,", get_ypos());
+    fprintf(fp, "%f,", get_motorx_velocity());
+    fprintf(fp, "%f,", get_motory_velocity());
     fprintf(fp, "%f,", get_motorx_voltage());
     fprintf(fp, "%f,", get_motory_voltage());
     fprintf(fp, "\n");
