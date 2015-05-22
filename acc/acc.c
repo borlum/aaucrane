@@ -151,7 +151,6 @@ int init(){
   
   pthread_create(&thread_controller, NULL, controller, NULL);
   pthread_create(&thread_logger, NULL, task_logger, NULL);
-  mq_receive(from_c, buf, buf_len, 0);
 
   return 0;
 }
@@ -163,8 +162,10 @@ void place_containers(){
 
 int main(int argc,char* argv[]){  
   init_logger("/var/www/html/data/acc/acc/", sizeof("/var/www/html/data/acc/acc/"));
+
   if( init() == -1)
     exit(-1);
+  mq_receive(from_c, buf, buf_len, 0);
 
   printf("Before enable_logger\n");
   if (enable_logger() == 0)
