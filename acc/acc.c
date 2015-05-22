@@ -26,20 +26,20 @@ pthread_t thread_logger;
 
 void *controller(void * args)
 {
+  setbuf(stdout, NULL);
   printf("Starting controller task\n");
   mqd_t to_x, from_x;
   mqd_t to_y, from_y;
   mqd_t to_c, from_c;
 
   size_t buf_len = BUFFER_SIZE;
-  char buf[BUFFER_SIZE];
-  
-  double reset_pos_flag = 0.2;
-  
+  char buf[BUFFER_SIZE];  
 
   crane_cmd_t* cmd;
   size_t cmd_buf_len = BUFFER_SIZE;
   char cmd_buf[BUFFER_SIZE];
+
+  int tmp = 0;
 
   to_x = mq_open(Q_TO_X, O_WRONLY);
   from_x = mq_open(Q_FROM_X, O_RDONLY);
@@ -54,9 +54,9 @@ void *controller(void * args)
   pthread_create(&thread_xcontroller, NULL, task_x_axis_controller, NULL); /* Starts with a ref @ 0 */
   pthread_create(&thread_ycontroller, NULL, task_y_axis_controller, NULL);  /* Starts with a ref @ 0 */
   /* Wait untill (0,0) has been reached */
-  mq_send(to_y, (char*) &reset_pos_flag, sizeof(double), 0);
+  mq_send(to_y, (char*) &tmp, sizeof(double), 0);
   mq_receive(from_y, buf, buf_len, 0);
-  mq_send(to_x, (char*) &reset_pos_flag, sizeof(double), 0);
+  mq_send(to_x, (char*) &tmp, sizeof(double), 0);
   mq_receive(from_x, buf, buf_len, 0);
   
   while(1){
@@ -95,13 +95,14 @@ void *controller(void * args)
     
     disable_magnet();
 
-    mq_send(to_y, (char *) &reset_pos_flag, sizeof(reset_pos_flag), 0);
+    mq_send(to_y, (char *) &(cmd->carry_height), sizeof(cmd->carry_height), 0);
     mq_receive(from_y, buf, buf_len, 0);
     mq_send(from_c, (char *) &cmd, sizeof(cmd), 0);
   }
 }
 
 int init(){
+  setbuf(stdout, NULL);
 #ifndef TEST
   initialize_crane();  
   run_motorx(0);
