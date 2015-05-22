@@ -162,11 +162,9 @@ void place_containers(){
 
 int main(int argc,char* argv[]){  
   init_logger("/var/www/html/data/acc/acc/", sizeof("/var/www/html/data/acc/acc/"));
-
   if( init() == -1)
     exit(-1);
-  mq_receive(from_c, buf, buf_len, 0);
-
+  
   printf("Before enable_logger\n");
   if (enable_logger() == 0)
     printf("Logger enabled\n");
@@ -202,7 +200,10 @@ int main(int argc,char* argv[]){
   => Magnet skal være i: Y_OFF_SET - 6*container højde.
   */
   cmd.carry_height = Y_OFF_SET - (CONTAINER_HEIGHT * 6);
-  
+
+  /* Wait until AUU Crane is ready */
+  mq_receive(from_c, buf, buf_len, 0);
+
   while(1) {
     printf ("Enter a crane command <row,col row,col>:\n");
     scanf("%d,%d %d,%d", &source_row, &source_col, &dest_row, &dest_col);
