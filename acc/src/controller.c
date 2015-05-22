@@ -23,6 +23,7 @@ RT_TASK *rt_logger;
 
 void *task_x_axis_controller(void * argc)
 {
+  setbuf(stdout, NULL);
   int hit_count = 0;
   int received_new_ref = 0;
 
@@ -99,6 +100,7 @@ void *task_x_axis_controller(void * argc)
 
 void *task_y_axis_controller(void * argc)
 {
+  setbuf(stdout, NULL);
   int hit_count = 0;
   int received_new_ref = 0;
   
