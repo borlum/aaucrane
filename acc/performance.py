@@ -9,7 +9,6 @@ if __name__ == '__main__':
     random.seed(42)
     try:
         acc = subprocess.Popen("stdbuf -oL sudo ./acc", shell = True, stdout = subprocess.PIPE, stdin = subprocess.PIPE)
-        time.sleep(20)
     except:
         print("....")
     else:
