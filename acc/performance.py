@@ -8,7 +8,7 @@ import time
 if __name__ == '__main__':
     random.seed(42)
     try:
-        acc = subprocess.Popen("stdbuf -oL sudo ./acc", shell = True, stdout = subprocess.PIPE, stdin = subprocess.PIPE)
+        acc = subprocess.Popen("stdbuf -oL ./a.out", shell = True, stdout = subprocess.PIPE, stdin = subprocess.PIPE)
     except:
         print("....")
     else:
@@ -27,10 +27,12 @@ if __name__ == '__main__':
                     break
                 
             msg = "{0},{1} {2},{3}\n".format(source_col, source_row, dest_col, dest_row)
-            #resp = acc.pop().communicate(input=bytes(msg, 'ascii'), timeout=30)[0]
-            acc.stdin.write(bytes(msg, 'ascii'))
-            
+            print(bytes(msg, 'ascii'))
+            resp = acc.communicate(input=bytes(msg, 'ascii'), timeout=30)[0]
+            #print(acc.stdin.write(bytes(msg, 'ascii')))
+            #acc.call(msg)
+            print(resp)
             source_col = dest_col
             dest_col = random.randint(1, 22)
 
-        acc.communicate()
+        #acc.communicate()
