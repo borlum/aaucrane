@@ -34,8 +34,8 @@ void *controller(void * args)
   size_t buf_len = BUFFER_SIZE;
   char buf[BUFFER_SIZE];
   
-  double reset_x_pos = 0.2;
-  double reset_y_pos = 0.2;
+  double reset_x_pos = 0.4;
+  double reset_y_pos = 0.27;
   
 
   crane_cmd_t* cmd;
@@ -156,8 +156,9 @@ int init(){
 }
 
 void place_containers(){
-  for(int i = 0; i <=3; i++)
-    update_status(i, 0, STACK_OCCUPIED);
+  update_status(22, 0, STACK_OCCUPIED);
+  //for(int i = 0; i <=3; i++)
+  //  update_status(i, 0, STACK_OCCUPIED);
 }
 
 int main(int argc,char* argv[]){  
