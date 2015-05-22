@@ -55,9 +55,9 @@ void *controller(void * args)
   pthread_create(&thread_xcontroller, NULL, task_x_axis_controller, NULL); /* Starts with a ref @ 0 */
   pthread_create(&thread_ycontroller, NULL, task_y_axis_controller, NULL);  /* Starts with a ref @ 0 */
   /* Wait untill (0,0) has been reached */
-  mq_send(to_y, (char*) &reset_x_pos, sizeof(double), 0);
+  mq_send(to_y, (char*) &reset_y_pos, sizeof(double), 0);
   mq_receive(from_y, buf, buf_len, 0);
-  mq_send(to_x, (char*) &reset_y_pos, sizeof(double), 0);
+  mq_send(to_x, (char*) &reset_x_pos, sizeof(double), 0);
   mq_receive(from_x, buf, buf_len, 0);
   
   while(1){
