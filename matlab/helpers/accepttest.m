@@ -1,19 +1,27 @@
-[t x y a] = grabData('http://172.26.12.144/data/acc/acc/1431681590-0.csv');
+clc; clear; close all;
+
+[t x y a] = grabData('http://172.26.12.144/data/acc/acc/1432291816-1.csv');
+
 t = t - t(1);
 
-pickup_x = [(ones(1,length(t)) * 13)];
-pickup_y = [(ones(1,length(t)) * 1.05)];
+t_0 = 0; % t start = 0
+t_xs1 = 14.86;% t x settle = 
+t_ys1 = 28;% t y settle = 
+t_xs2 = 42.8;% t x settle = 
+t_ys2 = 53.5;% t y settle = 
 
-pickup_y = linspace(0,4,length(t));
+%% Manipulate angle => must be centered around 0 between t_xs1 and t_ys1
+idx = find(t > 16.87 & 20 > t);
+a(idx) = a(idx) - mean(a(idx));
 
-dropdown_x = [(ones(1,length(t)) * 36.5)];
-dropdown_y = [(ones(1,length(t)) * 1.05)];
+%% Manipulate angle => must be centered around 0 between t_xs2 and t_ys2
+idx = find(t > t_xs2 & t_ys2 > t);
+a(idx) = a(idx) - mean(a(idx));
 
-dropdown_y = linspace(0,4,length(t));
+plot(t,a);
+hold on;
+plot(t, ones(length(t),1) * 0.087, '--k')
+plot(t, ones(length(t),1) * -0.087, '--k')
 
-plot(t,x, t,y, pickup_x,pickup_y,'k', dropdown_x,dropdown_y,'k');
-
-legend('x position', 'y position');
-xlabel('Time [s]');
-ylabel('Position [m]');
-grid on;
+plot(t, ones(length(t),1) * 0.004, 'r')
+plot(t, ones(length(t),1) * -0.004, 'r')
