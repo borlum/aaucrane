@@ -137,7 +137,7 @@ int init(){
        mq_unlink(Q_FROM_C) == -1
        ){
     printf("ERROR: %s\n", strerror(errno));
-    return -1;
+    //return -1;
   }
   
   if ( mq_open(Q_TO_X, O_RDONLY | O_CREAT, 0664, &attr) == -1 ||
