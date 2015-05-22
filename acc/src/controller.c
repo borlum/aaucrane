@@ -27,7 +27,7 @@ void *task_x_axis_controller(void * argc)
   int hit_count = 0;
   int received_new_ref = 0;
 
-  double x_ref = 0.4;
+  double x_ref = 0;
   double out = 0;
 
   mqd_t input, output;

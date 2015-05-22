@@ -51,14 +51,15 @@ void *controller(void * args)
   to_c = mq_open(Q_TO_C, O_RDONLY);
   from_c = mq_open(Q_FROM_C, O_WRONLY);
 
-  /* Wait for the crane is @ 0,0 */
+  /* Create controller tasks */
   pthread_create(&thread_xcontroller, NULL, task_x_axis_controller, NULL); /* Starts with a ref @ 0 */
   pthread_create(&thread_ycontroller, NULL, task_y_axis_controller, NULL);  /* Starts with a ref @ 0 */
-  /* Wait untill (0,0) has been reached */
+  /* Wait untill (start_pos_x, start_pos_y) has been reached */
   mq_send(to_y, (char*) &start_pos_y, sizeof(double), 0);
   mq_receive(from_y, buf, buf_len, 0);
   mq_send(to_x, (char*) &start_pos_x, sizeof(double), 0);
   mq_receive(from_x, buf, buf_len, 0);
+  printf("STUFF");
   mq_send(from_c, (char *) &cmd, sizeof(cmd), 0);
 
   while(1){
