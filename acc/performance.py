@@ -3,11 +3,12 @@
 import sys
 import subprocess
 import random
+import time
 
 if __name__ == '__main__':
     random.seed(42)
     try:
-        acc = subprocess.Popen("stdbuf -oL sudo ./acc", shell = True, stdout = subprocess.PIPE)
+        acc = subprocess.Popen("stdbuf -oL sudo ./acc", shell = True, stdout = subprocess.PIPE, stdin = subprocess.PIPE)
     except:
         print("....")
     else:
@@ -24,9 +25,12 @@ if __name__ == '__main__':
                     print(line)
                 if(line == b'Enter a crane command <row,col row,col>:\n'):
                     break
-
-            input("Hit enter")
-            acc.stdout.write("{0},{1} {2},{3}\n", source_col, source_row, dest_col, dest_row)
+                
+            msg = "{0},{1} {2},{3}\n".format(source_col, source_row, dest_col, dest_row)
+            #resp = acc.pop().communicate(input=bytes(msg, 'ascii'), timeout=30)[0]
+            acc.stdin.write(bytes(msg, 'ascii'))
             
             source_col = dest_col
             dest_col = random.randint(1, 22)
+
+        acc.communicate()
