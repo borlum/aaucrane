@@ -156,7 +156,7 @@ int init(){
 }
 
 void place_containers(){
-  update_status(22, 0, STACK_OCCUPIED)
+  update_status(22, 0, STACK_OCCUPIED);
   /* for(int i = 22; i <=22; i++) */
   /*   update_status(i, 0, STACK_OCCUPIED); */
 }
