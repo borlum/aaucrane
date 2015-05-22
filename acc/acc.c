@@ -32,10 +32,7 @@ void *controller(void * args)
   mqd_t to_c, from_c;
 
   size_t buf_len = BUFFER_SIZE;
-  char buf[BUFFER_SIZE];
-  
-  double reset_pos_flag = 0.2;
-  
+  char buf[BUFFER_SIZE];  
 
   crane_cmd_t* cmd;
   size_t cmd_buf_len = BUFFER_SIZE;
@@ -95,13 +92,14 @@ void *controller(void * args)
     
     disable_magnet();
 
-    mq_send(to_y, (char *) &reset_pos_flag, sizeof(reset_pos_flag), 0);
+    mq_send(to_y, (char *) &(cmd->carry_height), sizeof(reset_pos_flag), 0);
     mq_receive(from_y, buf, buf_len, 0);
     mq_send(from_c, (char *) &cmd, sizeof(cmd), 0);
   }
 }
 
 int init(){
+  setbuf(stdout, NULL);
 #ifndef TEST
   initialize_crane();  
   run_motorx(0);
