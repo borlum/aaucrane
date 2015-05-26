@@ -189,7 +189,8 @@ int main(int argc,char* argv[]){
 
   init_stack();
   place_containers();
-  
+  disable_magent();
+
   mqd_t to_c, from_c;
   to_c = mq_open(Q_TO_C, O_WRONLY);
   from_c = mq_open(Q_FROM_C, O_RDONLY);
@@ -209,7 +210,7 @@ int main(int argc,char* argv[]){
 
   /* Wait until AUU Crane is ready */
   mq_receive(from_c, buf, buf_len, 0);
-
+  disable_magent();
   while(1) {
     printf ("Enter a crane command <row,col row,col>:\n");
     scanf("%d,%d %d,%d", &source_row, &source_col, &dest_row, &dest_col);
