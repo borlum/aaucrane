@@ -20,7 +20,7 @@ kt = 0.03;
 % Motor modstand
 ra = 0.43;
 
-CONTAINER = 0;
+CONTAINER = 1;
 UP        = 1;
 
 if CONTAINER == 1
