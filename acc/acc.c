@@ -189,7 +189,7 @@ int main(int argc,char* argv[]){
 
   init_stack();
   place_containers();
-  disable_magent();
+  disable_magnet();
 
   mqd_t to_c, from_c;
   to_c = mq_open(Q_TO_C, O_WRONLY);
