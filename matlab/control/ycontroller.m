@@ -20,10 +20,10 @@ omega_d = 4.6/(Ts*Sigma_d); % = 1.1500
 %margin(Hywu); = GM = inf, PM = 89.7
 X = 42; % Find the dB at the calculated bandwidth frequency 
 Pywu =  10^(X/20);
-%Pywu = 75.9;
-Pywu = 64; %WITH CONTAINER UP
+Pywu = 75.9;
+%Pywu = 64; %WITH CONTAINER UP
 wcu = bandwidth(feedback(Pywu*Hywu, 1));
-%step(feedback(Pywu*Hywu, 1)*0.78); grid on; xlabel('t'); ylabel('y[m]'); title('Step response of y-axis @ 0.78'); xlim([0 7]); hold on; plot([0 7],[0.8580 0.8580],'k--');stepinfo(feedback(Pywu*Hywu, 1)*0.78)
+step(feedback(Pywu*Hywu, 1)*0.78); grid on; xlabel('t'); ylabel('y[m]'); title('Step response of y-axis @ 0.78'); xlim([0 7]); hold on; plot([0 7],[0.7855 0.7855],'k--');plot([0 7],[0.7745 0.7745],'k--');stepinfo(feedback(Pywu*Hywu, 1)*0.78)
 %hold off; plot(WCU); grid on; xlabel('t[seconds]'); ylabel('y[m]'); title('Zoomed step response of y-axis @ -0.78'); hold on; plot([0 10],[-0.778 -0.778],'k--'); plot([0 10],[-0.782 -0.782],'k--')
 
 %margin(Hywd); = GM = inf, PM = 89.3
@@ -43,6 +43,14 @@ Pynu = 42; %NO CONTAINER UP
 ncu = bandwidth(feedback(Pynu*Hynu, 1));
 %step(feedback(Pynu*Hynu, 1)*0.78); grid on; xlabel('t'); ylabel('y[m]'); title('Step response of y-axis @ 0.78'); xlim([0 7]); stepinfo(feedback(Pynu*Hynu, 1)*0.78)
 %hold off; plot(NCU); grid on; xlabel('t[seconds]'); ylabel('y[m]'); title('Zoomed step response of y-axis @ -0.78'); hold on; plot([0 8],[-0.778 -0.778],'k--'); plot([0 8],[-0.782 -0.782],'k--')
+
+
+
+
+
+
+
+
 
 %margin(Hynd); = GM = inf, PM = 89.6
 X = 34.3; % Find the dB at the calculated bandwidth frequency 

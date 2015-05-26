@@ -26,12 +26,54 @@ grid on;
 hold on;
 plot(t, ones(length(t),1) * 0.087, '--k'); %Max \theta when moving container
 plot(t, ones(length(t),1) * 0.004, 'r'); %Max \theta when picking/placing container
-plot([14.86 14.86],[-0.01 0.01],'r'); %Y-action
-plot([20 20],[-0.01 0.01],'r'); %Y-done
-plot([42.8 42.8],[-0.01 0.01],'r'); %Y-action
-plot([48.24 48.24],[-0.01 0.01],'r'); %Y-done
+plot([14.86 14.86],[-0.087 0.087],'m'); %Y-action
+plot([27 27],[-0.087 0.087],'m'); %Y-done
+plot([42.8 42.8],[-0.087 0.087],'m'); %Y-action
+plot([53.5 53.5],[-0.087 0.087],'m'); %Y-done
 plot(t, ones(length(t),1) * -0.087, '--k'); %Max \theta when moving container
 plot(t, ones(length(t),1) * -0.004, 'r'); %Max \theta when picking/placing container
 legend('Measured \theta','Max \theta when moving container','Max \theta when picking/placing container','Location','northeast');
 xlim([0 53.61]);
 ylim([-0.15 0.15]);
+%% Plot of the X-axis movement
+% idx = find(t > 40);
+% x(idx) = x(idx) - 0.03;
+% 
+% plot(t,x);
+% xlabel('Time [s]'); 
+% ylabel('Position [m]');
+% title('Acceptance test of ACC (x-axis)'); 
+% grid on;
+% hold on;
+% plot(t, ones(length(t),1) * (3.59-0.05+0.0055), '--k');
+% plot([15 15],[3.25 3.75],'r'); %X-Done
+% plot([27 27],[3.25 3.75],'r'); %X-action
+% plot([42.8 42.8],[0.25 0.75],'r'); %X-done
+% plot(t, ones(length(t),1) * 0.4445, '--k');
+% plot(t, ones(length(t),1) * (3.59-0.05-0.0055), '--k'); 
+% plot(t, ones(length(t),1) * 0.4555, '--k');
+% legend('Measured Position','Error band','Action indicator','Location','northeast');
+% xlim([0 53.61]);
+% %ylim([-0.15 0.15]);
+%% Plot of the Y-axis movement
+%idx = find(t > 40);
+%x(idx) = x(idx) - 0.03;
+
+% plot(t,y);
+% xlabel('Time [s]'); 
+% ylabel('Position [m]');
+% title('Acceptance test of ACC (y-axis)'); 
+% grid on;
+% hold on;
+% plot(t, ones(length(t),1) * 0.268, '--k');
+% plot([15 15],[0.24 0.3],'r'); %X-Done
+% plot([20 20],[1 1.07],'r'); %X-Done
+% plot([27 27],[0.24 0.3],'r'); %X-action
+% plot([42.8 42.8],[0.24 0.3],'r'); %X-done
+% plot([49 49],[1 1.07],'r'); %X-Done
+% plot(t, ones(length(t),1) * 0.272, '--k');
+% plot(t, ones(length(t),1) * 1.052, '--k'); 
+% plot(t, ones(length(t),1) * 1.048, '--k');
+% legend('Measured Position','Error band','Action indicator','Location','southwest');
+% xlim([0 53.61]);
+%ylim([-0.15 0.15]);
