@@ -6,7 +6,7 @@ comedi_t *NI_card;
 int *NI_card;
 #endif
 
-#define ANGLE_OFFSET 0.452 - 0.010
+#define ANGLE_OFFSET 0.452 - 0.037
 
 static const double MAX_MOTOR_OUTPUT = 12.5;
 static const double MIN_MOTOR_OUTPUT = 0;
