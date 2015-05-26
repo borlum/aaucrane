@@ -34,3 +34,4 @@ plot(t, ones(length(t),1) * -0.087, '--k'); %Max \theta when moving container
 plot(t, ones(length(t),1) * -0.004, 'r'); %Max \theta when picking/placing container
 legend('Measured \theta','Max \theta when moving container','Max \theta when picking/placing container','Location','northeast');
 xlim([0 53.61]);
+ylim([-0.15 0.15]);
